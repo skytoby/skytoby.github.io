@@ -1,2 +1,0 @@
-# skytoby.github.io
-blog
