@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<?xml-stylesheet type="text/xsl" href="http://skytoby.github.io/sitemap.xsl"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://skytoby.github.io/</loc>
+    <lastmod>2019-04-14T21:18:20+08:00</lastmod>
+    <priority>0</priority>
+  </url>
   
   <url>
     <loc>http://skytoby.github.io/post/my-frist-blog/</loc>
     <lastmod>2019-04-14T21:18:20+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
@@ -14,14 +21,10 @@
   </url>
   
   <url>
-    <loc>http://skytoby.github.io/</loc>
-    <lastmod>2019-04-14T21:18:20+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>http://skytoby.github.io/about/</loc>
     <lastmod>2019-04-14T21:16:22+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
