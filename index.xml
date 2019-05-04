@@ -2,31 +2,23 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Even - A super concise theme for Hugo</title>
-    <link>http://skytoby.github.io/</link>
+    <link>http://localhost:1313/</link>
     <description>Recent content on Even - A super concise theme for Hugo</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Sun, 14 Apr 2019 21:18:20 +0800</lastBuildDate>
+    <language>zh-cn</language>
+    <copyright>skytoby</copyright>
+    <lastBuildDate>Sun, 14 Apr 2019 21:16:22 +0800</lastBuildDate>
     
-	<atom:link href="http://skytoby.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>My Frist Blog</title>
-      <link>http://skytoby.github.io/post/my-frist-blog/</link>
-      <pubDate>Sun, 14 Apr 2019 21:18:20 +0800</pubDate>
-      
-      <guid>http://skytoby.github.io/post/my-frist-blog/</guid>
-      <description>大家好，我是skytoby。</description>
-    </item>
     
     <item>
       <title>About</title>
-      <link>http://skytoby.github.io/about/</link>
+      <link>http://localhost:1313/about/</link>
       <pubDate>Sun, 14 Apr 2019 21:16:22 +0800</pubDate>
       
-      <guid>http://skytoby.github.io/about/</guid>
-      <description>simple life</description>
+      <guid>http://localhost:1313/about/</guid>
+      <description>个人博客，记录学习、工作、生活的点点滴滴。</description>
     </item>
     
   </channel>
