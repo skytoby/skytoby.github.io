@@ -2,14 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Even - A super concise theme for Hugo</title>
-    <link>http://localhost:1313/tags/</link>
+    <link>http://skytoby.github.io/tags/</link>
     <description>Recent content in Tags on Even - A super concise theme for Hugo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>skytoby</copyright>
+    <lastBuildDate>Sat, 04 May 2019 11:16:23 +0800</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://skytoby.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>hugo</title>
+      <link>http://skytoby.github.io/tags/hugo/</link>
+      <pubDate>Sat, 04 May 2019 11:16:23 +0800</pubDate>
+      
+      <guid>http://skytoby.github.io/tags/hugo/</guid>
+      <description></description>
+    </item>
     
   </channel>
 </rss>
