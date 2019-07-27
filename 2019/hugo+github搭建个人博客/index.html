@@ -1,0 +1,839 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hugo," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前记最近想自己建立个人的博客，也很久没写过博客，趁着这个学习过程，记录一下hugo+github搭建个人博客。当时看到一个个人博客，排版挺好的，就复制了那个博客版本，建立了本博客。Markdown格式用的编辑工具是Typora。通过该文，你将会在短时间建立个人的博客。
+环境准备1.github安装基本的软件安装，下载完成后，直接点击安装，配置好path环境变量。
+2.建立GitHub账户进入git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hugo+github搭建个人博客">
+<meta property="og:url" content="http://zproo.github.io/2019/hugo+github搭建个人博客/index.html">
+<meta property="og:site_name" content="skytoby">
+<meta property="og:description" content="前记最近想自己建立个人的博客，也很久没写过博客，趁着这个学习过程，记录一下hugo+github搭建个人博客。当时看到一个个人博客，排版挺好的，就复制了那个博客版本，建立了本博客。Markdown格式用的编辑工具是Typora。通过该文，你将会在短时间建立个人的博客。
+环境准备1.github安装基本的软件安装，下载完成后，直接点击安装，配置好path环境变量。
+2.建立GitHub账户进入git">
+<meta property="og:image" content="http://zproo.github.io/img/hugo/hugossh.jpg">
+<meta property="og:image" content="http://zproo.github.io/img/hugo/hugolocal.jpg">
+<meta property="og:image" content="http://zproo.github.io/img/hugo/hugoremote.jpg">
+<meta property="og:updated_time" content="2019-07-27T07:40:07.134Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hugo+github搭建个人博客">
+<meta name="twitter:description" content="前记最近想自己建立个人的博客，也很久没写过博客，趁着这个学习过程，记录一下hugo+github搭建个人博客。当时看到一个个人博客，排版挺好的，就复制了那个博客版本，建立了本博客。Markdown格式用的编辑工具是Typora。通过该文，你将会在短时间建立个人的博客。
+环境准备1.github安装基本的软件安装，下载完成后，直接点击安装，配置好path环境变量。
+2.建立GitHub账户进入git">
+<meta name="twitter:image" content="http://zproo.github.io/img/hugo/hugossh.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zproo.github.io/2019/hugo+github搭建个人博客/"/>
+
+  <title> hugo+github搭建个人博客 | skytoby </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+    
+    <header id="header_post" class="header" itemscope itemtype="http://schema.org/WPHeader" style="background-image: url('http://ortur5wom.bkt.clouddn.com/home_bg.jpg');">
+      <div class="header-inner-post"><a class="site-home" href="/">skytoby</a>
+
+<div class="site-meta custom-logo">
+  
+  
+  
+     
+  
+
+  
+  
+  
+  <p class="site-title">skytoby  </p>
+  <p class="site-subtitle"> </p>
+  
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+           <li class="menu-item menu-item-关于">
+             <a href="/about" rel="section">
+               
+               
+               关于
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-目录">
+             <a href="/archives" rel="section">
+               
+               
+               目录
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-首页">
+             <a href="/" rel="section">
+               
+               
+               首页
+             </a>
+           </li>
+        
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+      <div class="header-post"> 
+  <div class="post-header">
+      <div class="tags">
+      
+        <a href="/tags/hugo/" rel="tag" title="hugo">hugo</a>
+      
+      </div>
+      <h1>hugo+github搭建个人博客</h1>
+      <h2 class="subtitle"></h2>
+      <div class="post-time">
+        <span class="post-meta-item-text">Posted on </span>
+        <time itemprop="dateCreated" datetime="2019-05-04T11:16:23+08:00" content="2019-05-04" title="2019-05-04 11:16:23">
+          2019-05-04
+        </time>
+      </div>
+  </div>
+ </div>
+    </header>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                hugo+github搭建个人博客
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2019-05-04T11:16:23+08:00" content="2019-05-04">
+              2019-05-04
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2019/hugo+github搭建个人博客/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/hugo+github搭建个人博客/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+             <span id="/2019/hugo+github搭建个人博客/" class="leancloud_visitors" data-flag-title="hugo+github搭建个人博客">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前记"><a href="#前记" class="headerlink" title="前记"></a>前记</h2><p>最近想自己建立个人的博客，也很久没写过博客，趁着这个学习过程，记录一下hugo+github搭建个人博客。当时看到一个个人博客，排版挺好的，就复制了那个<a href="https://blog.olowolo.com/about/" target="_blank" rel="external">博客</a>版本，建立了本博客。Markdown格式用的编辑工具是<a href="https://www.typora.io/" target="_blank" rel="external">Typora</a>。通过该文，你将会在短时间建立个人的博客。</p>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><h3 id="1-github安装"><a href="#1-github安装" class="headerlink" title="1.github安装"></a>1.<a href="https://github.com/" target="_blank" rel="external">github安装</a></h3><p>基本的软件安装，下载完成后，直接点击安装，配置好path环境变量。</p>
+<h3 id="2-建立GitHub账户"><a href="#2-建立GitHub账户" class="headerlink" title="2.建立GitHub账户"></a>2.建立GitHub账户</h3><p>进入github官网进行注册个人账号，需要输入用户名、密码和绑定的邮箱。</p>
+<p>注册完成后，可以建立一个仓库（仓库名称一定要是 <strong>用户名.github.io</strong>），这个仓库以后直接就是个人博客内容提交的地方。</p>
+<h3 id="3-本地github配置"><a href="#3-本地github配置" class="headerlink" title="3.本地github配置"></a>3.本地github配置</h3><p>git bash 全局配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git config --global user.name &quot;你的注册用户名&quot;</div><div class="line">git config --global user.email &quot;你的邮箱&quot;</div></pre></td></tr></table></figure>
+<p>git bash 生成ssh key</p>
+<p><code>ssh-keygen -t rsa -C &quot;你的邮箱&quot;</code></p>
+<p>一直按enter即可，直到生成ssh key</p>
+<p><img src="/img/hugo/hugossh.jpg" alt="hugossh"></p>
+<p>按照提示的路径打开id_rsa.pub文件，将其内容复制到github个人设置-SSH and GPG keys一栏。</p>
+<p>这样本地就和远程的git仓库进行了绑定，可以git push git commit等基本的操作。</p>
+<h3 id="4-hugo安装"><a href="#4-hugo安装" class="headerlink" title="4.hugo安装"></a>4.hugo安装</h3><p>进入<a href="http://www.gohugo.io/" target="_blank" rel="external">hugo官网</a>下载,选择相应的版本进行下载，解压即可，将hugo.exe路径添加到环境变量。</p>
+<p>hugo version验证是否配置成功。<a href="https://gohugo.io/getting-started/installing/" target="_blank" rel="external">其他安装请参考官网</a></p>
+<p>到此环境准备的工作已经全部完成，下面将介绍具体的hugo操作。</p>
+<h2 id="hugo基本操作"><a href="#hugo基本操作" class="headerlink" title="hugo基本操作"></a>hugo基本操作</h2><h3 id="1-建站"><a href="#1-建站" class="headerlink" title="1.建站"></a>1.建站</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">D:\blog&gt;hugo new site test</div><div class="line">Congratulations! Your new Hugo site is created in D:\blog\test.</div><div class="line">Just a few more steps and you&apos;re ready to go:</div><div class="line">1. Download a theme into the same-named folder.</div><div class="line">   Choose a theme from https://themes.gohugo.io/, or</div><div class="line">   create your own with the &quot;hugo new theme &lt;THEMENAME&gt;&quot; command.</div><div class="line">2. Perhaps you want to add some content. You can add single files</div><div class="line">   with &quot;hugo new &lt;SECTIONNAME&gt;\&lt;FILENAME&gt;.&lt;FORMAT&gt;&quot;.</div><div class="line">3. Start the built-in live server via &quot;hugo server&quot;.</div><div class="line">Visit https://gohugo.io/ for quickstart guide and full documentation.</div></pre></td></tr></table></figure>
+<p>建站后的目录结构如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">├── archetypes</div><div class="line">├── content</div><div class="line">├── data</div><div class="line">├── layouts</div><div class="line">├── static</div><div class="line">├── themes</div><div class="line">└── config.toml</div></pre></td></tr></table></figure>
+<p><strong>archetypes</strong>：存储.md的模板文件</p>
+<p><strong>content</strong>：存储网址的所有内容</p>
+<p><strong>data</strong>：存储数据文件供模板调用</p>
+<p><strong>layouts</strong>：存储.html模板</p>
+<p><strong>static</strong>：存储图片，css,js等静态文件</p>
+<p><strong>themes</strong>：存储主题</p>
+<p><strong>config.toml</strong>：网站配置文件</p>
+<h3 id="2-下载主题"><a href="#2-下载主题" class="headerlink" title="2.下载主题"></a>2.下载主题</h3><p>hugo默认不带主题，需要下载主题，才能工作。可以在hugo<a href="https://themes.gohugo.io/" target="_blank" rel="external">主题网站</a>选择主题下载。</p>
+<p>进入根目录下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">D:\blog\test&gt;git clone https://github.com/olOwOlo/hugo-theme-even themes/even</div><div class="line">Cloning into &apos;themes/even&apos;...</div><div class="line">remote: Enumerating objects: 1410, done.</div><div class="line">Receiving objects:  11% (159/1410), 340.01 KiB | 2.00 KiB/s</div></pre></td></tr></table></figure>
+<p>检查themes目录下的even主题是否下载成功,even主题模板<a href="https://github.com/olOwOlo/hugo-theme-even/blob/master/README-zh.md" target="_blank" rel="external">使用说明</a>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">D:\blog\test\themes\even&gt;tree</div><div class="line">├─archetypes</div><div class="line">├─data</div><div class="line">│  └─even</div><div class="line">├─exampleSite</div><div class="line">│  └─content</div><div class="line">│      └─post</div><div class="line">├─i18n</div><div class="line">├─images</div><div class="line">├─layouts</div><div class="line">│  ├─partials</div><div class="line">│  │  └─post</div><div class="line">│  ├─post</div><div class="line">│  ├─shortcodes</div><div class="line">│  └─_default</div><div class="line">├─src</div><div class="line">│  ├─css</div><div class="line">│  │  ├─_common</div><div class="line">│  │  ├─_custom</div><div class="line">│  │  └─_partial</div><div class="line">│  │      ├─_footer</div><div class="line">│  │      ├─_header</div><div class="line">│  │      └─_post</div><div class="line">│  ├─fonts</div><div class="line">│  │  ├─chancery</div><div class="line">│  │  └─iconfont</div><div class="line">│  └─js</div><div class="line">└─static</div><div class="line">    ├─dist</div><div class="line">    │  └─src</div><div class="line">    │      └─fonts</div><div class="line">    │          ├─chancery</div><div class="line">    │          └─iconfont</div><div class="line">    ├─img</div><div class="line">    │  └─reward</div><div class="line">    └─lib</div><div class="line">        ├─fancybox</div><div class="line">        ├─flowchartDiagrams</div><div class="line">        ├─highlight</div><div class="line">        ├─jquery</div><div class="line">        ├─js-sequence-diagrams</div><div class="line">        ├─slideout</div><div class="line">        └─timeago</div></pre></td></tr></table></figure>
+<h3 id="3-新建文章"><a href="#3-新建文章" class="headerlink" title="3.新建文章"></a>3.新建文章</h3><p>hugo new xx.md新建文章</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">D:\blog\test&gt;hugo new about.md</div><div class="line">D:\blog\test\content\about.md created</div></pre></td></tr></table></figure>
+<p>打开about.md文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">title: &quot;About&quot;</div><div class="line">date: 2019-05-04T16:57:27+08:00</div><div class="line">draft: true</div></pre></td></tr></table></figure>
+<p>title为文章标题，draft表示是否为草稿，编辑完成后要将其改为false，否则编译会跳过草稿文件。</p>
+<p><strong>备注</strong>：md文件中图片的位置放在站点根目录下的static目录下，在static目录下新建img目录，在插入图片时，输入的位置为(/img/xx.jpg)即可。</p>
+<p>对应博客文件一般放在content/post目录下：</p>
+<p><code>hugo new post/first_blog.md</code></p>
+<h3 id="4-启动hugo自带服务器"><a href="#4-启动hugo自带服务器" class="headerlink" title="4.启动hugo自带服务器"></a>4.启动hugo自带服务器</h3><p>在根目录下hugo server后，可以使用hugo内置服务器预览博客。–theme选项可以指定主题，–watch选项可以在修改文件后直接刷新浏览器，–buildDrafts包括标记为draft的内容。</p>
+<p>本例选用的是<a href="https://github.com/olOwOlo/hugo-theme-even" target="_blank" rel="external">even主题</a>，注意启动的时候，需要配置config.toml文件，直接将GitHub even的config复制到配置文件即可。</p>
+<p>具体的config文件配置说明，文件中已经已有详细的配置说明。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">D:\blog\test&gt;hugo server --theme=even --buildDrafts --watch</div><div class="line">Building sites … WARN 2019/05/04 17:29:33 Page&apos;s .Hugo is deprecated and will be removed in a future release. Use the global hugo function.</div><div class="line">WARN 2019/05/04 17:29:33 Page&apos;s .RSSLink is deprecated and will be removed in a future release. Use the Output Format&apos;s link, e.g. something like:</div><div class="line">    &#123;&#123; with .OutputFormats.Get &quot;RSS&quot; &#125;&#125;&#123;&#123; .RelPermalink &#125;&#125;&#123;&#123; end &#125;&#125;.</div><div class="line">WARN 2019/05/04 17:29:33 Page&apos;s .URL is deprecated and will be removed in a future release. Use .Permalink or .RelPermalink. If what you want is the front matter URL value, use .Pa</div><div class="line"></div><div class="line">                   | EN</div><div class="line">+------------------+----+</div><div class="line">  Pages            | 12</div><div class="line">  Paginator pages  |  0</div><div class="line">  Non-page files   |  0</div><div class="line">  Static files     | 40</div><div class="line">  Processed images |  0</div><div class="line">  Aliases          |  2</div><div class="line">  Sitemaps         |  1</div><div class="line">  Cleaned          |  0</div><div class="line"></div><div class="line">Total in 268 ms</div><div class="line">Watching for changes in D:\blog\test\&#123;content,data,layouts,static,themes&#125;</div><div class="line">Watching for config changes in D:\blog\test\config.toml</div><div class="line">Environment: &quot;development&quot;</div><div class="line">Serving pages from memory</div><div class="line">Running in Fast Render Mode. For full rebuilds on change: hugo server --disableFastRender</div><div class="line">Web Server is available at http://localhost:1313/ (bind address 127.0.0.1)</div><div class="line">Press Ctrl+C to stop</div></pre></td></tr></table></figure>
+<p>在浏览器中输入<a href="http://localhost:1313/后，界面如下：" target="_blank" rel="external">http://localhost:1313/后，界面如下：</a></p>
+<p><img src="/img/hugo/hugolocal.jpg" alt="hugolocal"></p>
+<h3 id="5-hugo高级配置"><a href="#5-hugo高级配置" class="headerlink" title="5.hugo高级配置"></a>5.hugo高级配置</h3><p>在之前新建md文件是默认只有title、date、draft，还要其他的type属性。</p>
+<p>hugo支持TOML、YAML、JSON格式的Front Matter。</p>
+<p>除了必要的date与title参数外，你可以选择性的使用其他参数</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="meta">---</span></div><div class="line"><span class="attr">title:</span> <span class="string">"文章标题"</span></div><div class="line"><span class="attr">description:</span> <span class="string">"文章的描述信息"</span></div><div class="line"><span class="attr">tags:</span> <span class="string">[</span> <span class="string">"标签1"</span><span class="string">,</span> <span class="string">"标签2"</span><span class="string">,</span> <span class="string">"标签3"</span> <span class="string">]</span></div><div class="line"><span class="attr">categories:</span> <span class="string">[</span> <span class="string">"分类1"</span><span class="string">,</span> <span class="string">"分类2"</span> <span class="string">]</span></div><div class="line"><span class="attr">keywords:</span> <span class="string">[</span> <span class="string">"Hugo"</span><span class="string">,</span> <span class="string">"keyword"</span> <span class="string">]</span></div><div class="line"><span class="attr">date:</span> <span class="number">2012</span><span class="bullet">-04</span><span class="bullet">-06</span></div><div class="line"><span class="attr">lastmod:</span> <span class="number">2015</span><span class="bullet">-12</span><span class="bullet">-23</span></div><div class="line"><span class="comment"># CJKLanguage: Chinese, Japanese, Korean</span></div><div class="line"><span class="attr">isCJKLanguage:</span> <span class="literal">true</span></div><div class="line"><span class="comment"># 如果draft为true，除非使用 --buildDrafts 参数，否则不会发布文章</span></div><div class="line"><span class="attr">draft:</span> <span class="literal">false</span></div><div class="line"><span class="comment"># 设置文章的过期时间，如果是已过期的文章则不会发布，除非使用 --buildExpired 参数</span></div><div class="line"><span class="attr">expiryDate:</span> <span class="number">2020</span><span class="bullet">-01</span><span class="bullet">-01</span></div><div class="line"><span class="comment"># 设置文章的发布时间，如果是未来的时间则不会发布，除非使用 --buildFuture 参数</span></div><div class="line"><span class="attr">publishDate:</span> <span class="number">2020</span><span class="bullet">-01</span><span class="bullet">-01</span></div><div class="line"><span class="comment"># 排序你的文章</span></div><div class="line"><span class="attr">weight:</span> <span class="number">40</span></div><div class="line"><span class="comment"># 使用这两个参数将会重置permalink，默认使用文件名</span></div><div class="line"><span class="attr">url:</span> </div><div class="line"><span class="attr">slug:</span> </div><div class="line"><span class="comment"># 别名将通过重定向实现</span></div><div class="line"><span class="attr">aliases:</span></div><div class="line"><span class="bullet">  -</span> <span class="string">别名1</span></div><div class="line"><span class="bullet">  -</span> <span class="string">/posts/my-original-url/</span></div><div class="line"><span class="bullet">  -</span> <span class="string">/2010/01/01/another-url.html</span></div><div class="line"><span class="comment"># type 与 layout 参数将会改变 Hugo 寻找该文章模板的顺序，将在下一节细述</span></div><div class="line"><span class="attr">type:</span> <span class="string">review</span></div><div class="line"><span class="attr">layout:</span> <span class="string">reviewarticle</span></div><div class="line"><span class="comment"># 三个比较复杂的参数</span></div><div class="line"><span class="attr">taxonomies:</span></div><div class="line"><span class="attr">linkTitle:</span> </div><div class="line"><span class="attr">outputs:</span></div><div class="line"><span class="comment"># 实验性的参数</span></div><div class="line"><span class="attr">markup:</span> <span class="string">"md"</span></div><div class="line"><span class="comment"># 你还可以自定义任何参数，这些参数可以在模板中使用</span></div><div class="line"><span class="attr">include_toc:</span> <span class="literal">true</span></div><div class="line"><span class="attr">show_comments:</span> <span class="literal">false</span></div><div class="line"><span class="meta">---</span></div></pre></td></tr></table></figure>
+<p>通过以上的介绍，基本上可以满足一个简单的博客要求，下面将介绍如何同步到github。</p>
+<p>本地站点上传</p>
+<p>将生成的页面上传到自己的GitHub参考中，完成站点的部署。</p>
+<p>在根目录下输入：</p>
+<p><code>hugo --theme=even --baseUrl=&quot;http://用户名.github.io&quot;</code></p>
+<p>baseUrl是和第一步中建立的个人仓库（用户名.github.io）进行了关联。</p>
+<p>hugo完成后会在站点根目录下生成public文件夹。</p>
+<p>进行下列操作上传所有的文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">cd public</div><div class="line">git init</div><div class="line">git remote add origin https://github.com/用户名/用户名.github.io.git</div><div class="line">git add --a</div><div class="line">git commit -m &quot;first commit&quot;</div><div class="line">git push -u origin master</div></pre></td></tr></table></figure>
+<p>上传完成后，输入<a href="https://用户名.github.io就可以访问自己的站点了。" target="_blank" rel="external">https://用户名.github.io就可以访问自己的站点了。</a></p>
+<p><img src="/img/hugo/hugoremote.jpg" alt="hugoremote"></p>
+<p>以后的博客基本上会上传到github中，希望这篇文章，可以让你快速建立个人站点，具体其他的优化配置，可以参考模板中的说明。还是希望自己以后多写博客，多总结，加油！</p>
+<h2 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h2><p><a href="https://blog.olowolo.com/post/hugo-quick-start/" target="_blank" rel="external">https://blog.olowolo.com/post/hugo-quick-start/</a></p>
+<p><a href="https://blog.csdn.net/weixin_38233274/article/details/80279836" target="_blank" rel="external">https://blog.csdn.net/weixin_38233274/article/details/80279836</a></p>
+<p><a href="https://blog.csdn.net/kikajack/article/details/80413052" target="_blank" rel="external">https://blog.csdn.net/kikajack/article/details/80413052</a></p>
+
+      
+    </div>
+
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hugo/" rel="tag">#hugo</a>
+          
+        </div>
+      
+
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="skytoby" />
+          <p class="site-author-name" itemprop="name">skytoby</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳、毕业于电子科技大学 Android、程序员 <br/><br/>座右铭:今天不想跑，所以才去跑。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/caoxiaoliang" target="_blank" title="GitHub">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://me.csdn.net/cao861544325" target="_blank" title="CSDN">
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前记"><span class="nav-text">前记</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境准备"><span class="nav-text">环境准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-github安装"><span class="nav-text">1.github安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-建立GitHub账户"><span class="nav-text">2.建立GitHub账户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-本地github配置"><span class="nav-text">3.本地github配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-hugo安装"><span class="nav-text">4.hugo安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hugo基本操作"><span class="nav-text">hugo基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-建站"><span class="nav-text">1.建站</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-下载主题"><span class="nav-text">2.下载主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-新建文章"><span class="nav-text">3.新建文章</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-启动hugo自带服务器"><span class="nav-text">4.启动hugo自带服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-hugo高级配置"><span class="nav-text">5.hugo高级配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考博客"><span class="nav-text">参考博客</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skytoby</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme Next
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'https-zproo-github-io';
+      var disqus_identifier = '2019/hugo+github搭建个人博客/';
+      var disqus_title = "hugo+github搭建个人博客";
+      var disqus_url = 'http://zproo.github.io/2019/hugo+github搭建个人博客/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("GHEN8u6QufHhkX6hJMzNpKeN-gzGzoHsz", "Gq4sJwz8T6cywiaHlBGFDbE4");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+</html>

@@ -1,54 +1,67 @@
-<?xml-stylesheet type="text/xsl" href="http://skytoby.github.io/sitemap.xsl"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://skytoby.github.io/categories/</loc>
-    <lastmod>2019-05-04T11:16:23+08:00</lastmod>
-    <priority>0</priority>
+    <loc>http://zproo.github.io/2019/hugo+github%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</loc>
+    
+    <lastmod>2019-07-27T07:40:07.134Z</lastmod>
+    
   </url>
   
   <url>
-    <loc>http://skytoby.github.io/</loc>
-    <lastmod>2019-05-04T11:16:23+08:00</lastmod>
-    <priority>0</priority>
+    <loc>http://zproo.github.io/about/index.html</loc>
+    
+    <lastmod>2019-07-27T07:38:27.156Z</lastmod>
+    
   </url>
   
   <url>
-    <loc>http://skytoby.github.io/post/</loc>
-    <lastmod>2019-05-04T11:16:23+08:00</lastmod>
-    <priority>0</priority>
+    <loc>http://zproo.github.io/project/index.html</loc>
+    
+    <lastmod>2019-07-22T08:54:01.986Z</lastmod>
+    
   </url>
   
   <url>
-    <loc>http://skytoby.github.io/tags/</loc>
-    <lastmod>2019-05-04T11:16:23+08:00</lastmod>
-    <priority>0</priority>
+    <loc>http://zproo.github.io/tags/index.html</loc>
+    
+    <lastmod>2019-07-22T08:54:01.986Z</lastmod>
+    
   </url>
   
   <url>
-    <loc>http://skytoby.github.io/categories/hugo/</loc>
-    <lastmod>2019-05-04T11:16:23+08:00</lastmod>
-    <priority>0</priority>
+    <loc>http://zproo.github.io/project/stylesheets/style.css</loc>
+    
+    <lastmod>2019-07-22T08:54:01.986Z</lastmod>
+    
   </url>
   
   <url>
-    <loc>http://skytoby.github.io/tags/hugo/</loc>
-    <lastmod>2019-05-04T11:16:23+08:00</lastmod>
-    <priority>0</priority>
+    <loc>http://zproo.github.io/project/canvas-ribbon/index.html</loc>
+    
+    <lastmod>2019-07-22T08:54:01.986Z</lastmod>
+    
   </url>
   
   <url>
-    <loc>http://skytoby.github.io/post/hugo&#43;github%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</loc>
-    <lastmod>2019-05-04T11:16:23+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <loc>http://zproo.github.io/google091459981c22016a.html</loc>
+    
+    <lastmod>2019-07-22T08:54:01.970Z</lastmod>
+    
   </url>
   
   <url>
-    <loc>http://skytoby.github.io/about/</loc>
-    <lastmod>2019-04-14T21:16:22+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <loc>http://zproo.github.io/project/README.html</loc>
+    
+    <lastmod>2019-07-22T08:54:01.970Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/project/canvas-ribbon/canvas-ribbon.min.js</loc>
+    
+    <lastmod>2019-07-22T08:54:01.970Z</lastmod>
+    
   </url>
   
 </urlset>
