@@ -100,16 +100,16 @@
 <meta property="og:description" content="前记最近想自己建立个人的博客，也很久没写过博客，趁着这个学习过程，记录一下hugo+github搭建个人博客。当时看到一个个人博客，排版挺好的，就复制了那个博客版本，建立了本博客。Markdown格式用的编辑工具是Typora。通过该文，你将会在短时间建立个人的博客。
 环境准备1.github安装基本的软件安装，下载完成后，直接点击安装，配置好path环境变量。
 2.建立GitHub账户进入git">
-<meta property="og:image" content="http://zproo.github.io/img/hugo/hugossh.jpg">
-<meta property="og:image" content="http://zproo.github.io/img/hugo/hugolocal.jpg">
-<meta property="og:image" content="http://zproo.github.io/img/hugo/hugoremote.jpg">
-<meta property="og:updated_time" content="2019-07-27T07:40:07.134Z">
+<meta property="og:image" content="http://zproo.github.io/.io//hugo/hugossh.jpg">
+<meta property="og:image" content="http://zproo.github.io/.io//hugo/hugolocal.jpg">
+<meta property="og:image" content="http://zproo.github.io/.io//hugo/hugoremote.jpg">
+<meta property="og:updated_time" content="2019-07-28T10:38:10.246Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hugo+github搭建个人博客">
 <meta name="twitter:description" content="前记最近想自己建立个人的博客，也很久没写过博客，趁着这个学习过程，记录一下hugo+github搭建个人博客。当时看到一个个人博客，排版挺好的，就复制了那个博客版本，建立了本博客。Markdown格式用的编辑工具是Typora。通过该文，你将会在短时间建立个人的博客。
 环境准备1.github安装基本的软件安装，下载完成后，直接点击安装，配置好path环境变量。
 2.建立GitHub账户进入git">
-<meta name="twitter:image" content="http://zproo.github.io/img/hugo/hugossh.jpg">
+<meta name="twitter:image" content="http://zproo.github.io/.io//hugo/hugossh.jpg">
 
 
 
@@ -163,14 +163,15 @@
   
   
   
-     
+    
   
 
   
   
-  
-  <p class="site-title">skytoby  </p>
-  <p class="site-subtitle"> </p>
+  <div class="site-meta">  
+      <span class="site-title">skytoby</span> 
+  </div>
+  <p class="site-subtitle"></p>
   
 </div>
 
@@ -230,9 +231,7 @@
   
 
   
-</nav>
-
- </div>
+</nav> </div>
       <div class="header-post"> 
   <div class="post-header">
       <div class="tags">
@@ -345,7 +344,7 @@
 <p>git bash 生成ssh key</p>
 <p><code>ssh-keygen -t rsa -C &quot;你的邮箱&quot;</code></p>
 <p>一直按enter即可，直到生成ssh key</p>
-<p><img src="/img/hugo/hugossh.jpg" alt="hugossh"></p>
+<p><img src="/.io//hugo/hugossh.jpg" alt="hugossh"></p>
 <p>按照提示的路径打开id_rsa.pub文件，将其内容复制到github个人设置-SSH and GPG keys一栏。</p>
 <p>这样本地就和远程的git仓库进行了绑定，可以git push git commit等基本的操作。</p>
 <h3 id="4-hugo安装"><a href="#4-hugo安装" class="headerlink" title="4.hugo安装"></a>4.hugo安装</h3><p>进入<a href="http://www.gohugo.io/" target="_blank" rel="external">hugo官网</a>下载,选择相应的版本进行下载，解压即可，将hugo.exe路径添加到环境变量。</p>
@@ -379,7 +378,7 @@
 <p>具体的config文件配置说明，文件中已经已有详细的配置说明。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">D:\blog\test&gt;hugo server --theme=even --buildDrafts --watch</div><div class="line">Building sites … WARN 2019/05/04 17:29:33 Page&apos;s .Hugo is deprecated and will be removed in a future release. Use the global hugo function.</div><div class="line">WARN 2019/05/04 17:29:33 Page&apos;s .RSSLink is deprecated and will be removed in a future release. Use the Output Format&apos;s link, e.g. something like:</div><div class="line">    &#123;&#123; with .OutputFormats.Get &quot;RSS&quot; &#125;&#125;&#123;&#123; .RelPermalink &#125;&#125;&#123;&#123; end &#125;&#125;.</div><div class="line">WARN 2019/05/04 17:29:33 Page&apos;s .URL is deprecated and will be removed in a future release. Use .Permalink or .RelPermalink. If what you want is the front matter URL value, use .Pa</div><div class="line"></div><div class="line">                   | EN</div><div class="line">+------------------+----+</div><div class="line">  Pages            | 12</div><div class="line">  Paginator pages  |  0</div><div class="line">  Non-page files   |  0</div><div class="line">  Static files     | 40</div><div class="line">  Processed images |  0</div><div class="line">  Aliases          |  2</div><div class="line">  Sitemaps         |  1</div><div class="line">  Cleaned          |  0</div><div class="line"></div><div class="line">Total in 268 ms</div><div class="line">Watching for changes in D:\blog\test\&#123;content,data,layouts,static,themes&#125;</div><div class="line">Watching for config changes in D:\blog\test\config.toml</div><div class="line">Environment: &quot;development&quot;</div><div class="line">Serving pages from memory</div><div class="line">Running in Fast Render Mode. For full rebuilds on change: hugo server --disableFastRender</div><div class="line">Web Server is available at http://localhost:1313/ (bind address 127.0.0.1)</div><div class="line">Press Ctrl+C to stop</div></pre></td></tr></table></figure>
 <p>在浏览器中输入<a href="http://localhost:1313/后，界面如下：" target="_blank" rel="external">http://localhost:1313/后，界面如下：</a></p>
-<p><img src="/img/hugo/hugolocal.jpg" alt="hugolocal"></p>
+<p><img src="/.io//hugo/hugolocal.jpg" alt="hugolocal"></p>
 <h3 id="5-hugo高级配置"><a href="#5-hugo高级配置" class="headerlink" title="5.hugo高级配置"></a>5.hugo高级配置</h3><p>在之前新建md文件是默认只有title、date、draft，还要其他的type属性。</p>
 <p>hugo支持TOML、YAML、JSON格式的Front Matter。</p>
 <p>除了必要的date与title参数外，你可以选择性的使用其他参数</p>
@@ -394,7 +393,7 @@
 <p>进行下列操作上传所有的文件。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">cd public</div><div class="line">git init</div><div class="line">git remote add origin https://github.com/用户名/用户名.github.io.git</div><div class="line">git add --a</div><div class="line">git commit -m &quot;first commit&quot;</div><div class="line">git push -u origin master</div></pre></td></tr></table></figure>
 <p>上传完成后，输入<a href="https://用户名.github.io就可以访问自己的站点了。" target="_blank" rel="external">https://用户名.github.io就可以访问自己的站点了。</a></p>
-<p><img src="/img/hugo/hugoremote.jpg" alt="hugoremote"></p>
+<p><img src="/.io//hugo/hugoremote.jpg" alt="hugoremote"></p>
 <p>以后的博客基本上会上传到github中，希望这篇文章，可以让你快速建立个人站点，具体其他的优化配置，可以参考模板中的说明。还是希望自己以后多写博客，多总结，加油！</p>
 <h2 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h2><p><a href="https://blog.olowolo.com/post/hugo-quick-start/" target="_blank" rel="external">https://blog.olowolo.com/post/hugo-quick-start/</a></p>
 <p><a href="https://blog.csdn.net/weixin_38233274/article/details/80279836" target="_blank" rel="external">https://blog.csdn.net/weixin_38233274/article/details/80279836</a></p>
@@ -427,6 +426,20 @@
         </div>
       
 
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/hexo+github搭建个人博客/" rel="prev" title="hexo+github搭建个人博客">
+                hexo+github搭建个人博客 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
       
 
       
@@ -496,7 +509,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-count">2</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -506,7 +519,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">2</span>
                 <span class="site-state-item-name">tags</span>
               
             </div>

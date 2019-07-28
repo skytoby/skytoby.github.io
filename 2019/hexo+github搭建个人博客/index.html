@@ -1,0 +1,865 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hexo," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="本来想用hugo建立个人博客，但是那个主题的文章目录太不友好了，找了很久没办法，只能用hexo了，在hexo中找到了比较合适的模块就用hexo建立个人博客了，以后基本上就用这个模板了，也记录下建立的方式吧！
+一、搭建本地环境1、安装Git，下载地址：点击
+下载后，按提示进行安装即可，作用是：把本地的内容提交到github上去
+注意：官网下载速度不是很快，可以去其他地方搜索相关资源。
+2、安装Nod">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo+github搭建个人博客">
+<meta property="og:url" content="http://zproo.github.io/2019/hexo+github搭建个人博客/index.html">
+<meta property="og:site_name" content="skytoby">
+<meta property="og:description" content="本来想用hugo建立个人博客，但是那个主题的文章目录太不友好了，找了很久没办法，只能用hexo了，在hexo中找到了比较合适的模块就用hexo建立个人博客了，以后基本上就用这个模板了，也记录下建立的方式吧！
+一、搭建本地环境1、安装Git，下载地址：点击
+下载后，按提示进行安装即可，作用是：把本地的内容提交到github上去
+注意：官网下载速度不是很快，可以去其他地方搜索相关资源。
+2、安装Nod">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1067785/201707/1067785-20170723164145580-640633554.jpg">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1067785/201707/1067785-20170723164652565-1749835449.jpg">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1067785/201707/1067785-20170723171635190-1087267663.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1067785/201707/1067785-20170719125700115-362387641.jpg">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1067785/201707/1067785-20170719130325130-835583481.jpg">
+<meta property="og:updated_time" content="2019-07-27T09:33:07.341Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hexo+github搭建个人博客">
+<meta name="twitter:description" content="本来想用hugo建立个人博客，但是那个主题的文章目录太不友好了，找了很久没办法，只能用hexo了，在hexo中找到了比较合适的模块就用hexo建立个人博客了，以后基本上就用这个模板了，也记录下建立的方式吧！
+一、搭建本地环境1、安装Git，下载地址：点击
+下载后，按提示进行安装即可，作用是：把本地的内容提交到github上去
+注意：官网下载速度不是很快，可以去其他地方搜索相关资源。
+2、安装Nod">
+<meta name="twitter:image" content="https://images2015.cnblogs.com/blog/1067785/201707/1067785-20170723164145580-640633554.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zproo.github.io/2019/hexo+github搭建个人博客/"/>
+
+  <title> hexo+github搭建个人博客 | skytoby </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+    
+    <header id="header_post" class="header" itemscope itemtype="http://schema.org/WPHeader" style="background-image: url('http://ortur5wom.bkt.clouddn.com/home_bg.jpg');">
+      <div class="header-inner-post"><a class="site-home" href="/">skytoby</a>
+
+<div class="site-meta custom-logo">
+  
+  
+  
+    
+  
+
+  
+  
+  <div class="site-meta">  
+      <span class="site-title">skytoby</span> 
+  </div>
+  <p class="site-subtitle"></p>
+  
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+           <li class="menu-item menu-item-关于">
+             <a href="/about" rel="section">
+               
+               
+               关于
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-目录">
+             <a href="/archives" rel="section">
+               
+               
+               目录
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-首页">
+             <a href="/" rel="section">
+               
+               
+               首页
+             </a>
+           </li>
+        
+      
+
+      
+    </ul>
+  
+
+  
+</nav> </div>
+      <div class="header-post"> 
+  <div class="post-header">
+      <div class="tags">
+      
+        <a href="/tags/hexo/" rel="tag" title="hexo">hexo</a>
+      
+      </div>
+      <h1>hexo+github搭建个人博客</h1>
+      <h2 class="subtitle"></h2>
+      <div class="post-time">
+        <span class="post-meta-item-text">Posted on </span>
+        <time itemprop="dateCreated" datetime="2019-05-12T21:16:23+08:00" content="2019-05-12" title="2019-05-12 21:16:23">
+          2019-05-12
+        </time>
+      </div>
+  </div>
+ </div>
+    </header>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                hexo+github搭建个人博客
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2019-05-12T21:16:23+08:00" content="2019-05-12">
+              2019-05-12
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2019/hexo+github搭建个人博客/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/hexo+github搭建个人博客/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+             <span id="/2019/hexo+github搭建个人博客/" class="leancloud_visitors" data-flag-title="hexo+github搭建个人博客">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本来想用hugo建立个人博客，但是那个主题的文章目录太不友好了，找了很久没办法，只能用hexo了，在hexo中找到了比较合适的模块就用hexo建立个人博客了，以后基本上就用这个模板了，也记录下建立的方式吧！</p>
+<h3 id="一、搭建本地环境"><a href="#一、搭建本地环境" class="headerlink" title="一、搭建本地环境"></a>一、搭建本地环境</h3><p><strong>1、安装Git，下载地址：点击</strong></p>
+<p>下载后，按提示进行安装即可，作用是：把本地的内容提交到github上去</p>
+<p>注意：官网下载速度不是很快，可以去<a href="http://download.csdn.net/download/qq_32365567/9657669" target="_blank" rel="external">其他地方</a>搜索相关资源。</p>
+<p><strong>2、安装Node，下载地址：<a href="https://nodejs.org/en/" target="_blank" rel="external">点击</a></strong></p>
+<p>按顺序安装即可</p>
+<p><strong>3、安装Hexo</strong></p>
+<p>Node和Git都安装好后,创建一个文件夹,如blog,用于存放后期用到的所有的hexo文件。</p>
+<p>在blog文件夹中右键，选择git bash here，打开窗口，输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-cli -g</div></pre></td></tr></table></figure>
+<p>然后输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo --save</div></pre></td></tr></table></figure>
+<p>待安装完成后，输入一下代码，用来查看版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo -v</div></pre></td></tr></table></figure>
+<p><img src="https://images2015.cnblogs.com/blog/1067785/201707/1067785-20170723164145580-640633554.jpg" alt="img"></p>
+<p>然后执行init命令初始化hexo,命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo init</div></pre></td></tr></table></figure>
+<p>至此，全部安装工作已经完成！</p>
+<p>接下来，执行以下代码，用来生成服务，然后在本地访问。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hexo g</div><div class="line">hexo s</div></pre></td></tr></table></figure>
+<p>执行后，会出现代码如图：</p>
+<p><img src="https://images2015.cnblogs.com/blog/1067785/201707/1067785-20170723164652565-1749835449.jpg" alt="img"></p>
+<p>在浏览器中输入<a href="http://localhost:4000/" target="_blank" rel="external">http://localhost:4000/</a> ，可以访问即表示本地hexo发布成功。</p>
+<h3 id="二、搭建GitHub环境"><a href="#二、搭建GitHub环境" class="headerlink" title="二、搭建GitHub环境"></a><strong>二、搭建GitHub环境</strong></h3><p><strong>1、在GitHub官方注册账号</strong></p>
+<p><strong>2、New repository</strong></p>
+<p><strong>此处，注意Owner的名称与repository的前半部分必须一致，例如：</strong></p>
+<p><img src="https://images2015.cnblogs.com/blog/1067785/201707/1067785-20170723171635190-1087267663.png" alt="img"></p>
+<p><strong>3、开启GitHub pages</strong></p>
+<p>打开这个库的setting页面，找到GitHub Pages，创建即可，创建成功后，便可以通过浏览器访问owner.github.io</p>
+<p><strong>三、将本地Hexo与github page 联系起来</strong></p>
+<p><strong>1、配置</strong>Git个人信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">1 git config --system user.name &quot;yourusername&quot;</div><div class="line">2 git config --system user.email &quot;youremail@163.com&quot;</div></pre></td></tr></table></figure>
+<p>运行截图如下：</p>
+<p><img src="https://images2015.cnblogs.com/blog/1067785/201707/1067785-20170719125700115-362387641.jpg" alt="img"></p>
+<p>2、配置Deployment</p>
+<p>在_config.yml文件中找到deployment，然后配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1 deploy:</div><div class="line">2   type: git</div><div class="line">3   repo: git@github.com:githubname/githubname.github.io.git</div><div class="line">4   branch: master</div></pre></td></tr></table></figure>
+<p>注意：内容一定要保证无空格，否则会报错；</p>
+<p>3、发布到Github</p>
+<p>输入如下命令：hexo clean &amp;&amp; hexo g &amp;&amp; hexo d；</p>
+<p>也可以分三步：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1 hexo clean</div><div class="line">2 hexo generate</div><div class="line">3 hexo deploy</div></pre></td></tr></table></figure>
+<p>在执行deploy中，会弹出输入框如下，分别输入在GitHub上的账号密码即可；</p>
+<p><img src="https://images2015.cnblogs.com/blog/1067785/201707/1067785-20170719130325130-835583481.jpg" alt="img"></p>
+<p>这样就实现了本地与GitHub的连接，当然也可以通过SSH Keys方式。两种方式都可以~</p>
+<p>备注：也可以直接进入public目录，git操作到github</p>
+<h3 id="三、更换主题"><a href="#三、更换主题" class="headerlink" title="三、更换主题"></a>三、更换主题</h3><p>更换主题主要是两步，先下载主题然后放到博客中的themes文件夹（专门用来存放主题）下，再修改主题的配置文件_config.yml中相关参数，启用themes文件夹下新增的主题。这里用Next主题做示例。</p>
+<p>下载Next主题。<br>进入 hexoBlog/themes 文件夹中，打开Git Bash面板，输入：<br>git clone <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">https://github.com/iissnan/hexo-theme-next</a> themes/next</p>
+<p>   1.把主题包克隆到themes文件夹中即可。</p>
+<ol>
+<li>启用主题<br>与所有 Hexo 主题启用的模式一样。 当 克隆/下载 完成后，打开themes下的主题配置文件_config.yml， 找到 theme 字段，并将其值更改为 next（注意冒号后面要留一个 空格）。</li>
+<li>验证主题<br>清除并重新生成hexo静态文件，启动本地服务器，然后通过 <a href="http://localhost:4000/" target="_blank" rel="external">http://localhost:4000/</a> 预览博客：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hexo clean      #清除静态文件</div><div class="line">hexo g          #重新生成静态文件</div><div class="line">hexo s      #启动服务器</div></pre></td></tr></table></figure>
+<p>如果网络没问题，通过域名访问你的博客也可以看到刚换的新主题了。</p>
+<h3 id="四、博客操作"><a href="#四、博客操作" class="headerlink" title="四、博客操作"></a>四、博客操作</h3><p>新建文章</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new post test</div></pre></td></tr></table></figure>
+<p>执行上面命令会新建一篇名为‘test’的文章，源文件会自动生成到hexoBlog/source/_post 路径下，后缀为点md ，直接打开编辑就可以了。编辑完保存，然后再依次执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hexo clean </div><div class="line">hexo g </div><div class="line">hexo d</div></pre></td></tr></table></figure>
+<p>在博客就可以看到你的文章了（有时候网络问题生成会比较慢，需要等几分钟才可以看到）。</p>
+<p>新建页面<br>新建标签、分类、关于我等各种页面，并在博客的菜单栏中显示。这里以新建‘标签’页面来做示范。<br>创建页面</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new page &apos;tags&apos;</div></pre></td></tr></table></figure>
+<p>会在hexoBlog/source路径下自动生成一个名为tags的文件夹，里面包含一个index.md的文件，在这个文件中添加对应的页面类型type: tags：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: tags</div><div class="line">date: 2018-09-16 16:20:05</div><div class="line">type: &quot;tags&quot;</div><div class="line">---</div></pre></td></tr></table></figure>
+<p>把页面路径添加到菜单中。<br>编辑主题配置文件（themes/_config.yml）,找到munu字段，添加tag: /tags（格式为item_name: link），如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">menu:</div><div class="line">    home: /</div><div class="line">    tag: /tags    #‘标签’’页面的路径</div></pre></td></tr></table></figure>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a href="https://blog.csdn.net/qijian2003122/article/details/82805732" target="_blank" rel="external">https://blog.csdn.net/qijian2003122/article/details/82805732</a> </p>
+<p><a href="https://www.cnblogs.com/Dreamice/p/7205231.html" target="_blank" rel="external">https://www.cnblogs.com/Dreamice/p/7205231.html</a></p>
+
+      
+    </div>
+
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hexo/" rel="tag">#hexo</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/hugo+github搭建个人博客/" rel="next" title="hugo+github搭建个人博客">
+                <i class="fa fa-chevron-left"></i> hugo+github搭建个人博客
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="skytoby" />
+          <p class="site-author-name" itemprop="name">skytoby</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳、毕业于电子科技大学 Android、程序员 <br/><br/>座右铭:今天不想跑，所以才去跑。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/caoxiaoliang" target="_blank" title="GitHub">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://me.csdn.net/cao861544325" target="_blank" title="CSDN">
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、搭建本地环境"><span class="nav-text">一、搭建本地环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、搭建GitHub环境"><span class="nav-text">二、搭建GitHub环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、更换主题"><span class="nav-text">三、更换主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、博客操作"><span class="nav-text">四、博客操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-text">参考资料</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skytoby</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme Next
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'https-zproo-github-io';
+      var disqus_identifier = '2019/hexo+github搭建个人博客/';
+      var disqus_title = "hexo+github搭建个人博客";
+      var disqus_url = 'http://zproo.github.io/2019/hexo+github搭建个人博客/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("GHEN8u6QufHhkX6hJMzNpKeN-gzGzoHsz", "Gq4sJwz8T6cywiaHlBGFDbE4");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+</html>
