@@ -1,0 +1,1024 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="systemserver,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="基于Android10.0，分析SystemServer启动  一、SystemServer启动上一节中讲到了从开机到SystemServer中main方法的启动过程，下面将介绍下SystemServer中的main方法，该方法主要执行的主要流程如下： 1234567SystemServer.main   SystemServer.run       performPendingShutdown">
+<meta name="keywords" content="systemserver">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android系统SystemServer启动（下）">
+<meta property="og:url" content="http://zproo.github.io/2019/Android系统SystemServer启动（下）/index.html">
+<meta property="og:site_name" content="skytoby">
+<meta property="og:description" content="基于Android10.0，分析SystemServer启动  一、SystemServer启动上一节中讲到了从开机到SystemServer中main方法的启动过程，下面将介绍下SystemServer中的main方法，该方法主要执行的主要流程如下： 1234567SystemServer.main   SystemServer.run       performPendingShutdown">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-08-14T01:16:05.203Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android系统SystemServer启动（下）">
+<meta name="twitter:description" content="基于Android10.0，分析SystemServer启动  一、SystemServer启动上一节中讲到了从开机到SystemServer中main方法的启动过程，下面将介绍下SystemServer中的main方法，该方法主要执行的主要流程如下： 1234567SystemServer.main   SystemServer.run       performPendingShutdown">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zproo.github.io/2019/Android系统SystemServer启动（下）/">
+
+  <title> Android系统SystemServer启动（下） | skytoby </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+    
+    <header id="header_post" class="header" itemscope="" itemtype="http://schema.org/WPHeader" style="background-image: url('http://ortur5wom.bkt.clouddn.com/home_bg.jpg');">
+      <div class="header-inner-post"><a class="site-home" href="/">skytoby</a>
+
+<div class="site-meta custom-logo">
+  
+  
+  
+    <div class="site-meta-headline">
+      <a>
+        <img class="custom-logo-image" src="/images/logo.png" style="width: 50px" alt="skytoby">
+      </a>
+    </div>
+  
+
+  
+  
+  
+  
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+           <li class="menu-item menu-item-关于">
+             <a href="/about" rel="section">
+               
+               
+               关于
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-目录">
+             <a href="/archives" rel="section">
+               
+               
+               目录
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-首页">
+             <a href="/" rel="section">
+               
+               
+               首页
+             </a>
+           </li>
+        
+      
+
+      
+    </ul>
+  
+
+  
+</nav> </div>
+      <div class="header-post"> 
+  <div class="post-header">
+      <div class="tags">
+      
+        <a href="/tags/systemserver/" rel="tag" title="systemserver">systemserver</a>
+      
+      </div>
+      <h1>Android系统SystemServer启动（下）</h1>
+      <h2 class="subtitle"></h2>
+      <div class="post-time">
+        <span class="post-meta-item-text">Posted on </span>
+        <time itemprop="dateCreated" datetime="2019-05-18T21:18:23+08:00" content="2019-05-18" title="2019-05-18 21:18:23">
+          2019-05-18
+        </time>
+      </div>
+  </div>
+ </div>
+    </header>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Android系统SystemServer启动（下）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2019-05-18T21:18:23+08:00" content="2019-05-18">
+              2019-05-18
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2019/Android系统SystemServer启动（下）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/Android系统SystemServer启动（下）/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+             <span id="/2019/Android系统SystemServer启动（下）/" class="leancloud_visitors" data-flag-title="Android系统SystemServer启动（下）">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>基于Android10.0，分析SystemServer启动</p>
+</blockquote>
+<h3 id="一、SystemServer启动"><a href="#一、SystemServer启动" class="headerlink" title="一、SystemServer启动"></a>一、SystemServer启动</h3><p>上一节中讲到了从开机到SystemServer中main方法的启动过程，下面将介绍下SystemServer中的main方法，该方法主要执行的主要流程如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SystemServer.main</span><br><span class="line">   SystemServer.run</span><br><span class="line">       performPendingShutdown</span><br><span class="line">       createSystemContext</span><br><span class="line">       startBootstrapServices</span><br><span class="line">       startCoreServices</span><br><span class="line">       startOtherServices</span><br></pre></td></tr></table></figure>
+<h4 id="1-1-SystemServer-main"><a href="#1-1-SystemServer-main" class="headerlink" title="1.1 SystemServer.main"></a>1.1 SystemServer.main</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * The main entry point from zygote.</span><br><span class="line"> */</span><br><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    new SystemServer().run();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-2-SystemServer-run"><a href="#1-2-SystemServer-run" class="headerlink" title="1.2 SystemServer.run"></a>1.2 SystemServer.run</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br></pre></td><td class="code"><pre><span class="line">private void run() &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            traceBeginAndSlog(&quot;InitBeforeStartServices&quot;);</span><br><span class="line">            //如果系统时间是1970之前，则将系统时间设置为1970</span><br><span class="line">            // If a device&apos;s clock is before 1970 (before 0), a lot of</span><br><span class="line">            // APIs crash dealing with negative numbers, notably</span><br><span class="line">            // java.io.File#setLastModified, so instead we fake it and</span><br><span class="line">            // hope that time from cell towers or NTP fixes it shortly.</span><br><span class="line">            if (System.currentTimeMillis() &lt; EARLIEST_SUPPORTED_TIME) &#123;</span><br><span class="line">                Slog.w(TAG, &quot;System clock is before 1970; setting to 1970.&quot;);</span><br><span class="line">                SystemClock.setCurrentTimeMillis(EARLIEST_SUPPORTED_TIME);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            //</span><br><span class="line">            // Default the timezone property to GMT if not set.</span><br><span class="line">            //</span><br><span class="line">            //设置时区,如果没有默认GMT</span><br><span class="line">            String timezoneProperty =  SystemProperties.get(&quot;persist.sys.timezone&quot;);</span><br><span class="line">            if (timezoneProperty == null || timezoneProperty.isEmpty()) &#123;</span><br><span class="line">                Slog.w(TAG, &quot;Timezone not set; setting to GMT.&quot;);</span><br><span class="line">                SystemProperties.set(&quot;persist.sys.timezone&quot;, &quot;GMT&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            //设置默认语言</span><br><span class="line">            // If the system has &quot;persist.sys.language&quot; and friends set, replace them with</span><br><span class="line">            // &quot;persist.sys.locale&quot;. Note that the default locale at this point is calculated</span><br><span class="line">            // using the &quot;-Duser.locale&quot; command line flag. That flag is usually populated by</span><br><span class="line">            // AndroidRuntime using the same set of system properties, but only the system_server</span><br><span class="line">            // and system apps are allowed to set them.</span><br><span class="line">            //</span><br><span class="line">            // NOTE: Most changes made here will need an equivalent change to</span><br><span class="line">            // core/jni/AndroidRuntime.cpp</span><br><span class="line">            if (!SystemProperties.get(&quot;persist.sys.language&quot;).isEmpty()) &#123;</span><br><span class="line">                final String languageTag = Locale.getDefault().toLanguageTag();</span><br><span class="line"></span><br><span class="line">                SystemProperties.set(&quot;persist.sys.locale&quot;, languageTag);</span><br><span class="line">                SystemProperties.set(&quot;persist.sys.language&quot;, &quot;&quot;);</span><br><span class="line">                SystemProperties.set(&quot;persist.sys.country&quot;, &quot;&quot;);</span><br><span class="line">                SystemProperties.set(&quot;persist.sys.localevar&quot;, &quot;&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            //配置systemserver </span><br><span class="line">            // The system server should never make non-oneway calls</span><br><span class="line">            Binder.setWarnOnBlocking(true);</span><br><span class="line">            // The system server should always load safe labels</span><br><span class="line">            PackageItemInfo.setForceSafeLabels(true);</span><br><span class="line">            </span><br><span class="line">            //SQLite配置</span><br><span class="line">            // Default to FULL within the system server.</span><br><span class="line">            SQLiteGlobal.sDefaultSyncMode = SQLiteGlobal.SYNC_MODE_FULL;</span><br><span class="line"></span><br><span class="line">            // Deactivate SQLiteCompatibilityWalFlags until settings provider is initialized</span><br><span class="line">            SQLiteCompatibilityWalFlags.init(null);</span><br><span class="line"></span><br><span class="line">            // Here we go!</span><br><span class="line">            Slog.i(TAG, &quot;Entered the Android system server!&quot;);</span><br><span class="line">            int uptimeMillis = (int) SystemClock.elapsedRealtime();</span><br><span class="line">            EventLog.writeEvent(EventLogTags.BOOT_PROGRESS_SYSTEM_RUN, uptimeMillis);</span><br><span class="line">            if (!mRuntimeRestart) &#123;</span><br><span class="line">                MetricsLogger.histogram(null, &quot;boot_system_server_init&quot;, uptimeMillis);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            // In case the runtime switched since last boot (such as when</span><br><span class="line">            // the old runtime was removed in an OTA), set the system</span><br><span class="line">            // property so that it is in sync. We can | xq oqi&apos;t do this in</span><br><span class="line">            // libnativehelper&apos;s JniInvocation::Init code where we already</span><br><span class="line">            // had to fallback to a different runtime because it is</span><br><span class="line">            // running as root and we need to be the system user to set</span><br><span class="line">            // the property. http://b/11463182</span><br><span class="line">            //变更虚拟机的库文件</span><br><span class="line">            SystemProperties.set(&quot;persist.sys.dalvik.vm.lib.2&quot;,                    VMRuntime.getRuntime().vmLibrary());</span><br><span class="line">            </span><br><span class="line">            //清除vm内存增长上限，由于启动过程中需要更多的虚拟机内存空间</span><br><span class="line">            // Mmmmmm... more memory! </span><br><span class="line">            VMRuntime.getRuntime().clearGrowthLimit();</span><br><span class="line">          </span><br><span class="line">            //设置内存的可能有效使用率为0.8</span><br><span class="line">            // The system server has to run all of the time, so it needs to be</span><br><span class="line">            // as efficient as possible with its memory usage.</span><br><span class="line">            VMRuntime.getRuntime().setTargetHeapUtilization(0.8f);</span><br><span class="line">          </span><br><span class="line">           //针对部分设备依赖于运行时就产生指纹信息，因此需要在开机完成前定义</span><br><span class="line">            // Some devices rely on runtime fingerprint generation, so make sure</span><br><span class="line">            // we&apos;ve defined it before booting further.</span><br><span class="line">            Build.ensureFingerprintProperty();</span><br><span class="line">           </span><br><span class="line">            //访问环境变量前，需要明确指定用户</span><br><span class="line">            // Within the system server, it is an error to access Environment paths without</span><br><span class="line">            // explicitly specifying a user.</span><br><span class="line">            Environment.setUserRequired(true);</span><br><span class="line">            </span><br><span class="line">            //拒绝接受bundles</span><br><span class="line">            // Within the system server, any incoming Bundles should be defused</span><br><span class="line">            // to avoid throwing BadParcelableException.</span><br><span class="line">            BaseBundle.setShouldDefuse(true);</span><br><span class="line">            //开启trace for parcel</span><br><span class="line">            // Within the system server, when parceling exceptions, include the stack trace</span><br><span class="line">            Parcel.setStackTraceParceling(true);</span><br><span class="line"></span><br><span class="line">            //确保系统的binder调用，总运行在前台优先级</span><br><span class="line">            // Ensure binder calls into the system always run at foreground priority.</span><br><span class="line">            BinderInternal.disableBackgroundScheduling(true);</span><br><span class="line">            //增加system_server binder线程池的线程数为31，默认是16</span><br><span class="line">            // Increase the number of binder threads in system_server</span><br><span class="line">            BinderInternal.setMaxThreads(sMaxBinderThreads);</span><br><span class="line">            //进程等级为前台优先级</span><br><span class="line">            // Prepare the main looper thread (this thread).</span><br><span class="line">            android.os.Process.setThreadPriority(</span><br><span class="line">                android.os.Process.THREAD_PRIORITY_FOREGROUND);</span><br><span class="line">            android.os.Process.setCanSelfBackground(false);</span><br><span class="line">            </span><br><span class="line">            //主线程looper在当前线程运行</span><br><span class="line">            Looper.prepareMainLooper();</span><br><span class="line">            Looper.getMainLooper().setSlowLogThresholdMs(</span><br><span class="line">                    SLOW_DISPATCH_THRESHOLD_MS, SLOW_DELIVERY_THRESHOLD_MS);</span><br><span class="line">            </span><br><span class="line">            //加载android_servers.so库，该库源码在frameworks/base/services/目录下</span><br><span class="line">            // Initialize native services.</span><br><span class="line">            System.loadLibrary(&quot;android_servers&quot;);</span><br><span class="line"></span><br><span class="line">            //检查上次关机过程是否失败</span><br><span class="line">            // Check whether we failed to shut down last time we tried.</span><br><span class="line">            // This call may not return.</span><br><span class="line">            performPendingShutdown();</span><br><span class="line">           </span><br><span class="line">            //初始化系统上下文</span><br><span class="line">            // Initialize the system context.</span><br><span class="line">            createSystemContext();</span><br><span class="line">            </span><br><span class="line">            //创建系统服务管理</span><br><span class="line">            // Create the system service manager.</span><br><span class="line">            mSystemServiceManager = new SystemServiceManager(mSystemContext);</span><br><span class="line">            mSystemServiceManager.setStartInfo(mRuntimeRestart,</span><br><span class="line">                    mRuntimeStartElapsedTime, mRuntimeStartUptime);</span><br><span class="line">            //将mSystemServiceManager添加到本地服务的成员sLocalServiceObjects中</span><br><span class="line">            LocalServices.addService(SystemServiceManager.class, mSystemServiceManager);</span><br><span class="line">            </span><br><span class="line">            //开启systemserver初始化任务的线程池</span><br><span class="line">            // Prepare the thread pool for init tasks that can be parallelized</span><br><span class="line">            SystemServerInitThreadPool.get();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            traceEnd();  // InitBeforeStartServices</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // Start services.</span><br><span class="line">        try &#123;</span><br><span class="line">            traceBeginAndSlog(&quot;StartServices&quot;);</span><br><span class="line">            startBootstrapServices();  //引导服务</span><br><span class="line">            startCoreServices();       //核心服务</span><br><span class="line">            startOtherServices();      //其他服务</span><br><span class="line">            //关闭systemserver初始化任务的线程池</span><br><span class="line">            SystemServerInitThreadPool.shutdown();</span><br><span class="line">        &#125; catch (Throwable ex) &#123;</span><br><span class="line">            Slog.e(&quot;System&quot;, &quot;******************************************&quot;);</span><br><span class="line">            Slog.e(&quot;System&quot;, &quot;************ Failure starting system services&quot;, ex);</span><br><span class="line">            throw ex;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            traceEnd();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        StrictMode.initVmDefaults(null);</span><br><span class="line"></span><br><span class="line">        if (!mRuntimeRestart &amp;&amp; !isFirstBootOrUpgrade()) &#123;</span><br><span class="line">            int uptimeMillis = (int) SystemClock.elapsedRealtime();</span><br><span class="line">            MetricsLogger.histogram(null, &quot;boot_system_server_ready&quot;, uptimeMillis);</span><br><span class="line">            final int MAX_UPTIME_MILLIS = 60 * 1000;</span><br><span class="line">            if (uptimeMillis &gt; MAX_UPTIME_MILLIS) &#123;</span><br><span class="line">                Slog.wtf(SYSTEM_SERVER_TIMING_TAG,</span><br><span class="line">                        &quot;SystemServer init took too long. uptimeMillis=&quot; + uptimeMillis);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // Diagnostic to ensure that the system is in a base healthy state. Done here as a common</span><br><span class="line">        // non-zygote process.</span><br><span class="line">        if (!VMRuntime.hasBootImageSpaces()) &#123;</span><br><span class="line">            Slog.wtf(TAG, &quot;Runtime is not running with a boot image!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        //循环执行</span><br><span class="line">        // Loop forever.</span><br><span class="line">        Looper.loop();</span><br><span class="line">        throw new RuntimeException(&quot;Main thread loop unexpectedly exited&quot;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-3-performPendingShutdown"><a href="#1-3-performPendingShutdown" class="headerlink" title="1.3 performPendingShutdown"></a>1.3 performPendingShutdown</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">private void performPendingShutdown() &#123;</span><br><span class="line">       final String shutdownAction = SystemProperties.get(</span><br><span class="line">               ShutdownThread.SHUTDOWN_ACTION_PROPERTY, &quot;&quot;);</span><br><span class="line">       //如果关机异常</span><br><span class="line">       if (shutdownAction != null &amp;&amp; shutdownAction.length() &gt; 0) &#123;</span><br><span class="line">           boolean reboot = (shutdownAction.charAt(0) == &apos;1&apos;);</span><br><span class="line"></span><br><span class="line">           final String reason;</span><br><span class="line">           if (shutdownAction.length() &gt; 1) &#123;</span><br><span class="line">               reason = shutdownAction.substring(1, shutdownAction.length());</span><br><span class="line">           &#125; else &#123;</span><br><span class="line">               reason = null;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           // If it&apos;s a pending reboot into recovery to apply an update,</span><br><span class="line">           // always make sure uncrypt gets executed properly when needed.</span><br><span class="line">           // If &apos;/cache/recovery/block.map&apos; hasn&apos;t been created, stop the</span><br><span class="line">           // reboot which will fail for sure, and get a chance to capture a</span><br><span class="line">           // bugreport when that&apos;s still feasible. (Bug: 26444951)</span><br><span class="line">           // /cache/recovery/block.map不存在则直接返回</span><br><span class="line">           if (reason != null &amp;&amp; reason.startsWith(PowerManager.REBOOT_RECOVERY_UPDATE)) &#123;</span><br><span class="line">               File packageFile = new File(UNCRYPT_PACKAGE_FILE);</span><br><span class="line">               if (packageFile.exists()) &#123;</span><br><span class="line">                   String filename = null;</span><br><span class="line">                   try &#123;</span><br><span class="line">                       filename = FileUtils.readTextFile(packageFile, 0, null);</span><br><span class="line">                   &#125; catch (IOException e) &#123;</span><br><span class="line">                       Slog.e(TAG, &quot;Error reading uncrypt package file&quot;, e);</span><br><span class="line">                   &#125;</span><br><span class="line"></span><br><span class="line">                   if (filename != null &amp;&amp; filename.startsWith(&quot;/data&quot;)) &#123;</span><br><span class="line">                       if (!new File(BLOCK_MAP_FILE).exists()) &#123;</span><br><span class="line">                           Slog.e(TAG, &quot;Can&apos;t find block map file, uncrypt failed or &quot; +</span><br><span class="line">                                      &quot;unexpected runtime restart?&quot;);</span><br><span class="line">                           return;</span><br><span class="line">                       &#125;</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           Runnable runnable = new Runnable() &#123;</span><br><span class="line">               @Override</span><br><span class="line">               public void run() &#123;</span><br><span class="line">                   synchronized (this) &#123;</span><br><span class="line">                       //重启</span><br><span class="line">                       ShutdownThread.rebootOrShutdown(null, reboot, reason);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;;</span><br><span class="line">           </span><br><span class="line">           //通知ui</span><br><span class="line">           // ShutdownThread must run on a looper capable of displaying the UI.</span><br><span class="line">           Message msg = Message.obtain(UiThread.getHandler(), runnable);</span><br><span class="line">           msg.setAsynchronous(true);</span><br><span class="line">           UiThread.getHandler().sendMessage(msg);</span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-4-createSystemContext"><a href="#1-4-createSystemContext" class="headerlink" title="1.4 createSystemContext"></a>1.4 createSystemContext</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">private void createSystemContext() &#123;</span><br><span class="line">      //创建systemserver进程的上下文信息</span><br><span class="line">      ActivityThread activityThread = ActivityThread.systemMain();</span><br><span class="line">      mSystemContext = activityThread.getSystemContext();</span><br><span class="line">      mSystemContext.setTheme(DEFAULT_SYSTEM_THEME);</span><br><span class="line">      //设置主题</span><br><span class="line">      final Context systemUiContext = activityThread.getSystemUiContext();</span><br><span class="line">      systemUiContext.setTheme(DEFAULT_SYSTEM_THEME);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-5-startBootstrapServices"><a href="#1-5-startBootstrapServices" class="headerlink" title="1.5 startBootstrapServices"></a>1.5 startBootstrapServices</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * Starts the small tangle of critical services that are needed to get</span><br><span class="line">    * the system off the ground.  These services have complex mutual dependencies</span><br><span class="line">    * which is why we initialize them all in one place here.  Unless your service</span><br><span class="line">    * is also entwined in these dependencies, it should be initialized in one of</span><br><span class="line">    * the other functions.</span><br><span class="line">    */</span><br><span class="line">   private void startBootstrapServices() &#123;  </span><br><span class="line">       //读取systemconfig</span><br><span class="line">       Slog.i(TAG, &quot;Reading configuration...&quot;);</span><br><span class="line">       final String TAG_SYSTEM_CONFIG = &quot;ReadingSystemConfig&quot;;</span><br><span class="line">       traceBeginAndSlog(TAG_SYSTEM_CONFIG);</span><br><span class="line">       SystemServerInitThreadPool.get().submit(SystemConfig::getInstance, TAG_SYSTEM_CONFIG);</span><br><span class="line">       traceEnd();</span><br><span class="line">       </span><br><span class="line">       //启动installd服务</span><br><span class="line">       // Wait for installd to finish starting up so that it has a chance to</span><br><span class="line">       // create critical directories such as /data/user with the appropriate</span><br><span class="line">       // permissions.  We need this to complete before we initialize other services.</span><br><span class="line">       traceBeginAndSlog(&quot;StartInstaller&quot;);</span><br><span class="line">       Installer installer = mSystemServiceManager.startService(Installer.class);</span><br><span class="line">       traceEnd();</span><br><span class="line">      </span><br><span class="line">       //启动DeviceIdentifiersPolicyService服务</span><br><span class="line">       // In some cases after launching an app we need to access device identifiers,</span><br><span class="line">       // therefore register the device identifier policy before the activity manager.</span><br><span class="line">       traceBeginAndSlog(&quot;DeviceIdentifiersPolicyService&quot;);</span><br><span class="line">       mSystemServiceManager.startService(DeviceIdentifiersPolicyService.class);</span><br><span class="line">       traceEnd();</span><br><span class="line"></span><br><span class="line">       //启动 ActivityManagerService服务</span><br><span class="line">       // Activity manager runs the show.</span><br><span class="line">       traceBeginAndSlog(&quot;StartActivityManager&quot;);</span><br><span class="line">       mActivityManagerService = mSystemServiceManager.startService(</span><br><span class="line">               ActivityManagerService.Lifecycle.class).getService();</span><br><span class="line">       mActivityManagerService.setSystemServiceManager(mSystemServiceManager);</span><br><span class="line">       mActivityManagerService.setInstaller(installer);</span><br><span class="line">       traceEnd();</span><br><span class="line">       </span><br><span class="line">       //启动 PowerManagerService服务</span><br><span class="line">       // Power manager needs to be started early because other services need it.</span><br><span class="line">       // Native daemons may be watching for it to be registered so it must be ready</span><br><span class="line">       // to handle incoming binder calls immediately (including being able to verify</span><br><span class="line">       // the permissions for those calls).</span><br><span class="line">       traceBeginAndSlog(&quot;StartPowerManager&quot;);</span><br><span class="line">       mPowerManagerService = mSystemServiceManager.startService(PowerManagerService.class);</span><br><span class="line">       traceEnd();</span><br><span class="line">       </span><br><span class="line">       //初始化PowerManagement</span><br><span class="line">       // Now that the power manager has been started, let the activity manager</span><br><span class="line">       // initialize power management features.</span><br><span class="line">       traceBeginAndSlog(&quot;InitPowerManagement&quot;);</span><br><span class="line">       mActivityManagerService.initPowerManagement();</span><br><span class="line">       traceEnd();</span><br><span class="line"></span><br><span class="line">       //启动 RecoverySystemService服务</span><br><span class="line">       // Bring up recovery system in case a rescue party needs a reboot</span><br><span class="line">       traceBeginAndSlog(&quot;StartRecoverySystemService&quot;);</span><br><span class="line">       mSystemServiceManager.startService(RecoverySystemService.class);</span><br><span class="line">       traceEnd();</span><br><span class="line">       </span><br><span class="line">       //通知正在启动</span><br><span class="line">       // Now that we have the bare essentials of the OS up and running, take</span><br><span class="line">       // note that we just booted, which might send out a rescue party if</span><br><span class="line">       // we&apos;re stuck in a runtime restart loop.</span><br><span class="line">       RescueParty.noteBoot(mSystemContext);</span><br><span class="line"></span><br><span class="line">       //启动 LightsService服务</span><br><span class="line">       // Manages LEDs and display backlight so we need it to bring up the display.</span><br><span class="line">       traceBeginAndSlog(&quot;StartLightsService&quot;);</span><br><span class="line">       mSystemServiceManager.startService(LightsService.class);</span><br><span class="line">       traceEnd();</span><br><span class="line">       </span><br><span class="line">       //启动 SidekickService服务</span><br><span class="line">       traceBeginAndSlog(&quot;StartSidekickService&quot;);</span><br><span class="line">       // Package manager isn&apos;t started yet; need to use SysProp not hardware feature</span><br><span class="line">       if (SystemProperties.getBoolean(&quot;config.enable_sidekick_graphics&quot;, false)) &#123;</span><br><span class="line">           mSystemServiceManager.startService(WEAR_SIDEKICK_SERVICE_CLASS);</span><br><span class="line">       &#125;</span><br><span class="line">       traceEnd();</span><br><span class="line"></span><br><span class="line">       //启动 DisplayManagerService服务</span><br><span class="line">       // Display manager is needed to provide display metrics before package manager</span><br><span class="line">       // starts up.</span><br><span class="line">       traceBeginAndSlog(&quot;StartDisplayManager&quot;);</span><br><span class="line">       mDisplayManagerService = mSystemServiceManager.startService(DisplayManagerService.class);</span><br><span class="line">       traceEnd();</span><br><span class="line">       </span><br><span class="line">       //Phase100:初始化package manager之前，需要默认的显示</span><br><span class="line">       // We need the default display before we can initialize the package manager.</span><br><span class="line">       traceBeginAndSlog(&quot;WaitForDisplay&quot;);</span><br><span class="line">       mSystemServiceManager.startBootPhase(SystemService.PHASE_WAIT_FOR_DEFAULT_DISPLAY);</span><br><span class="line">       traceEnd();</span><br><span class="line">        </span><br><span class="line">       //加密状态下只运行核心应用</span><br><span class="line">       // Only run &quot;core&quot; apps if we&apos;re encrypting the device.</span><br><span class="line">       String cryptState = VoldProperties.decrypt().orElse(&quot;&quot;);</span><br><span class="line">       if (ENCRYPTING_STATE.equals(cryptState)) &#123;</span><br><span class="line">           Slog.w(TAG, &quot;Detected encryption in progress - only parsing core apps&quot;);</span><br><span class="line">           mOnlyCore = true;</span><br><span class="line">       &#125; else if (ENCRYPTED_STATE.equals(cryptState)) &#123;</span><br><span class="line">           Slog.w(TAG, &quot;Device encrypted - only parsing core apps&quot;);</span><br><span class="line">           mOnlyCore = true;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       // Start the package manager.</span><br><span class="line">       if (!mRuntimeRestart) &#123;</span><br><span class="line">           MetricsLogger.histogram(null, &quot;boot_package_manager_init_start&quot;,</span><br><span class="line">                   (int) SystemClock.elapsedRealtime());</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       //启动PackageManagerService</span><br><span class="line">       traceBeginAndSlog(&quot;StartPackageManagerService&quot;);</span><br><span class="line">       mPackageManagerService = PackageManagerService.main(mSystemContext, installer,</span><br><span class="line">               mFactoryTestMode != FactoryTest.FACTORY_TEST_OFF, mOnlyCore);</span><br><span class="line">       mFirstBoot = mPackageManagerService.isFirstBoot();</span><br><span class="line">       mPackageManager = mSystemContext.getPackageManager();</span><br><span class="line">       traceEnd();</span><br><span class="line">       if (!mRuntimeRestart &amp;&amp; !isFirstBootOrUpgrade()) &#123;</span><br><span class="line">           MetricsLogger.histogram(null, &quot;boot_package_manager_init_ready&quot;,</span><br><span class="line">                   (int) SystemClock.elapsedRealtime());</span><br><span class="line">       &#125;</span><br><span class="line">       //管理A/B OTA dexopt</span><br><span class="line">       //A/B 是系统有两个分区，一个是新版本一个是旧版本，主要用于升级</span><br><span class="line">       // Manages A/B OTA dexopting. This is a bootstrap service as we need it to rename</span><br><span class="line">       // A/B artifacts after boot, before anything else might touch/need them.</span><br><span class="line">       // Note: this isn&apos;t needed during decryption (we don&apos;t have /data anyways).</span><br><span class="line">       if (!mOnlyCore) &#123;</span><br><span class="line">           boolean disableOtaDexopt = SystemProperties.getBoolean(&quot;config.disable_otadexopt&quot;,</span><br><span class="line">                   false);</span><br><span class="line">           if (!disableOtaDexopt) &#123;</span><br><span class="line">               traceBeginAndSlog(&quot;StartOtaDexOptService&quot;);</span><br><span class="line">               try &#123;</span><br><span class="line">                   OtaDexoptService.main(mSystemContext, mPackageManagerService);</span><br><span class="line">               &#125; catch (Throwable e) &#123;</span><br><span class="line">                   reportWtf(&quot;starting OtaDexOptService&quot;, e);</span><br><span class="line">               &#125; finally &#123;</span><br><span class="line">                   traceEnd();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       //启动UserManagerService</span><br><span class="line">       traceBeginAndSlog(&quot;StartUserManagerService&quot;);</span><br><span class="line">       mSystemServiceManager.startService(UserManagerService.LifeCycle.class);</span><br><span class="line">       traceEnd();</span><br><span class="line">       </span><br><span class="line">       // Initialize attribute cache used to cache resources from packages.</span><br><span class="line">       traceBeginAndSlog(&quot;InitAttributerCache&quot;);</span><br><span class="line">       AttributeCache.init(mSystemContext);</span><br><span class="line">       traceEnd();</span><br><span class="line">      </span><br><span class="line">       // 通过AMS设置系统集成Application</span><br><span class="line">       // Set up the Application instance for the system process and get started.</span><br><span class="line">       traceBeginAndSlog(&quot;SetSystemProcess&quot;);</span><br><span class="line">       mActivityManagerService.setSystemProcess();</span><br><span class="line">       traceEnd();</span><br><span class="line"></span><br><span class="line">       // DisplayManagerService needs to setup android.display scheduling related policies</span><br><span class="line">       // since setSystemProcess() would have overridden policies due to setProcessGroup</span><br><span class="line">       mDisplayManagerService.setupSchedulerPolicies();</span><br><span class="line">       </span><br><span class="line">       //启动OverlayManagerService</span><br><span class="line">       // Manages Overlay packages</span><br><span class="line">       traceBeginAndSlog(&quot;StartOverlayManagerService&quot;);</span><br><span class="line">       OverlayManagerService overlayManagerService = new OverlayManagerService(</span><br><span class="line">               mSystemContext, installer);</span><br><span class="line">       mSystemServiceManager.startService(overlayManagerService);</span><br><span class="line">       traceEnd();</span><br><span class="line"></span><br><span class="line">       if (SystemProperties.getInt(&quot;persist.sys.displayinset.top&quot;, 0) &gt; 0) &#123;</span><br><span class="line">           // DisplayManager needs the overlay immediately.</span><br><span class="line">           overlayManagerService.updateSystemUiContext();</span><br><span class="line">           LocalServices.getService(DisplayManagerInternal.class).onOverlayChanged();</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       //线程池启动SensorService</span><br><span class="line">       // The sensor service needs access to package manager service, app ops</span><br><span class="line">       // service, and permissions service, therefore we start it after them.</span><br><span class="line">       // Start sensor service in a separate thread. Completion should be checked</span><br><span class="line">       // before using it.</span><br><span class="line">       mSensorServiceStart = SystemServerInitThreadPool.get().submit(() -&gt; &#123;</span><br><span class="line">           TimingsTraceLog traceLog = new TimingsTraceLog(</span><br><span class="line">                   SYSTEM_SERVER_TIMING_ASYNC_TAG, Trace.TRACE_TAG_SYSTEM_SERVER);</span><br><span class="line">           traceLog.traceBegin(START_SENSOR_SERVICE);</span><br><span class="line">           startSensorService();</span><br><span class="line">           traceLog.traceEnd();</span><br><span class="line">       &#125;, START_SENSOR_SERVICE);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-6-startCoreServices"><a href="#1-6-startCoreServices" class="headerlink" title="1.6 startCoreServices"></a>1.6 startCoreServices</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * Starts some essential services that are not tangled up in the bootstrap process.</span><br><span class="line">    */</span><br><span class="line">   private void startCoreServices() &#123;</span><br><span class="line">       </span><br><span class="line">       //启动BatteryService服务</span><br><span class="line">       traceBeginAndSlog(&quot;StartBatteryService&quot;);</span><br><span class="line">       // Tracks the battery level.  Requires LightService.</span><br><span class="line">       mSystemServiceManager.startService(BatteryService.class);</span><br><span class="line">       traceEnd();</span><br><span class="line"></span><br><span class="line">       //启动UsageStatsService服务</span><br><span class="line">       // Tracks application usage stats.</span><br><span class="line">       traceBeginAndSlog(&quot;StartUsageService&quot;);</span><br><span class="line">       mSystemServiceManager.startService(UsageStatsService.class);</span><br><span class="line">       mActivityManagerService.setUsageStatsManager(</span><br><span class="line">               LocalServices.getService(UsageStatsManagerInternal.class));</span><br><span class="line">       traceEnd();</span><br><span class="line"></span><br><span class="line">       //启动WebViewUpdateService服务</span><br><span class="line">       // Tracks whether the updatable WebView is in a ready state and watches for update installs.</span><br><span class="line">       if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_WEBVIEW)) &#123;</span><br><span class="line">           traceBeginAndSlog(&quot;StartWebViewUpdateService&quot;);</span><br><span class="line">           mWebViewUpdateService = mSystemServiceManager.startService(WebViewUpdateService.class);</span><br><span class="line">           traceEnd();</span><br><span class="line">       &#125;</span><br><span class="line">        </span><br><span class="line">       //记录binder calls时间</span><br><span class="line">       // Tracks cpu time spent in binder calls</span><br><span class="line">       traceBeginAndSlog(&quot;StartBinderCallsStatsService&quot;);</span><br><span class="line">       BinderCallsStatsService.start();</span><br><span class="line">       traceEnd();</span><br><span class="line"></span><br><span class="line">       //启动BugreportManagerService服务</span><br><span class="line">       // Service to capture bugreports.</span><br><span class="line">       traceBeginAndSlog(&quot;StartBugreportManagerService&quot;);</span><br><span class="line">       mSystemServiceManager.startService(BugreportManagerService.class);</span><br><span class="line">       traceEnd();</span><br><span class="line"></span><br><span class="line">       //启动GpuService服务</span><br><span class="line">       // Serivce for GPU and GPU driver.</span><br><span class="line">       traceBeginAndSlog(&quot;GpuService&quot;);</span><br><span class="line">       mSystemServiceManager.startService(GpuService.class);</span><br><span class="line">       traceEnd();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-7-startOtherServices"><a href="#1-7-startOtherServices" class="headerlink" title="1.7 startOtherServices"></a>1.7 startOtherServices</h4><p>该方法较长，有一千多行，逻辑很简单，主要是启动一系列的服务分类，后面将会对服务进行一个简单分类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Starts a miscellaneous grab bag of stuff that has yet to be refactored</span><br><span class="line"> * and organized.</span><br><span class="line"> */</span><br><span class="line">private void startOtherServices() &#123;</span><br><span class="line">        ...</span><br><span class="line">        //resolver</span><br><span class="line">        mContentResolver = context.getContentResolver();</span><br><span class="line">       ...</span><br><span class="line">       //provider</span><br><span class="line">        mActivityManagerService.installSystemProviders();</span><br><span class="line">        ...</span><br><span class="line">        //alarm</span><br><span class="line">        mSystemServiceManager.startService(AlarmManagerService.class);</span><br><span class="line">        //Watchdog</span><br><span class="line">        final Watchdog watchdog = Watchdog.getInstance();</span><br><span class="line">        watchdog.init(context, mActivityManagerService);</span><br><span class="line">        //inputManager</span><br><span class="line">        inputManager = new InputManagerService(context);</span><br><span class="line">        //wms</span><br><span class="line">        wm = WindowManagerService.main(context, inputManager,</span><br><span class="line">                mFactoryTestMode != FactoryTest.FACTORY_TEST_LOW_LEVEL,</span><br><span class="line">                !mFirstBoot, mOnlyCore, new PhoneWindowManager());</span><br><span class="line">        ServiceManager.addService(Context.WINDOW_SERVICE, wm, /* allowIsolated= */ false,</span><br><span class="line">                DUMP_FLAG_PRIORITY_CRITICAL | DUMP_FLAG_PROTO);</span><br><span class="line">        ServiceManager.addService(Context.INPUT_SERVICE, inputManager,</span><br><span class="line">                /* allowIsolated= */ false, DUMP_FLAG_PRIORITY_CRITICAL); </span><br><span class="line">        mActivityManagerService.setWindowManager(wm);</span><br><span class="line">        wm.onInitReady();</span><br><span class="line">        //Bluetooth</span><br><span class="line">        mSystemServiceManager.startService(BluetoothService.class); </span><br><span class="line">        //见packagemanagerservice启动</span><br><span class="line">        mPackageManagerService.updatePackagesIfNeeded();</span><br><span class="line">        mPackageManagerService.performFstrimIfNeeded();</span><br><span class="line">        //statu</span><br><span class="line">        statusBar = new StatusBarManagerService(context, wm);</span><br><span class="line">        ServiceManager.addService(Context.STATUS_BAR_SERVICE, statusBar);</span><br><span class="line">        mSystemServiceManager.startService(WIFI_SERVICE_CLASS);</span><br><span class="line">        location = new LocationManagerService(context);</span><br><span class="line">        //dream</span><br><span class="line">        // Dreams (interactive idle-time views, a/k/a screen savers, and doze mode)</span><br><span class="line">        mSystemServiceManager.startService(DreamManagerService.class);</span><br><span class="line">        ...</span><br><span class="line">        // It is now time to start up the app processes..</span><br><span class="line">        vibrator.systemReady();</span><br><span class="line">        lockSettings.systemReady();</span><br><span class="line">        </span><br><span class="line">        //phase480和phase500</span><br><span class="line">        mSystemServiceManager.startBootPhase(SystemService.PHASE_LOCK_SETTINGS_READY);</span><br><span class="line">        mSystemServiceManager.startBootPhase(SystemService.PHASE_SYSTEM_SERVICES_READY);</span><br><span class="line">        </span><br><span class="line">        //准备好window、packagemanager、display服务</span><br><span class="line">        wm.systemReady();</span><br><span class="line">        mPackageManagerService.systemReady();</span><br><span class="line">        mDisplayManagerService.systemReady(safeMode, mOnlyCore);</span><br><span class="line">        ...</span><br><span class="line">        //phase 520</span><br><span class="line">      mSystemServiceManager.startBootPhase(SystemService.PHASE_DEVICE_SPECIFIC_SERVICES_READY);</span><br><span class="line">       mActivityManagerService.systemReady(() -&gt; &#123;</span><br><span class="line">          //phase 550</span><br><span class="line">          mSystemServiceManager.startBootPhase(</span><br><span class="line">                SystemService.PHASE_ACTIVITY_MANAGER_READY);</span><br><span class="line">           ...</span><br><span class="line">          //phase 600</span><br><span class="line">          mSystemServiceManager.startBootPhase(</span><br><span class="line">                SystemService.PHASE_THIRD_PARTY_APPS_CAN_START);</span><br><span class="line">           ...</span><br><span class="line">    &#125;, BOOT_TIMINGS_TRACE_LOG);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>SystemServer启动各种服务的最后一个环节是AMS.systemReady,这里以后会对AMS启动流程详细介绍。</p>
+<p>这样SystemServer的主线程的启动流程就结束了，进入loop状态，等待其他线程通过handler发送消息到主线程再处理。</p>
+<h3 id="二、服务启动阶段"><a href="#二、服务启动阶段" class="headerlink" title="二、服务启动阶段"></a>二、服务启动阶段</h3><p>整个SystemServer的启动过程中，mSystemServiceManager.startBootPhase一直在其中：</p>
+<p>systemserver进程创建准备完成<br><strong>0-100</strong><br>创建DPS、AMS、PMS、RSS、LS、SS、DMS服务<br><strong>100-480</strong><br>创建PKMS、UMS、OMS、BS、BMS等服务<br>480-500无任何操作<br><strong>500-520</strong><br>WMS、PMS、PKMS、DMS依次调用systemReady方法<br><strong>520-550</strong><br>定制的特殊服务<br><strong>550-600</strong><br>启动SystemUi,剩下服务调用systemReady,启动watchDog<br><strong>600-1000</strong><br>各种服务调用systemRunning方法，AMS调用finishBooting</p>
+<p>其中PHASE_BOOT_COMPLETED=1000，该阶段是Boot和home应用启动完成。系统服务更倾向监听该阶段，而不是注册广播ACTION_BOOT_COMPLETED,从而降低系统延迟。</p>
+<p>各个阶段在源码的位置大概如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public final class SystemServer&#123;</span><br><span class="line">       private void startBootstrapServices() &#123;  </span><br><span class="line">           //phase100</span><br><span class="line">            mSystemServiceManager.startBootPhase(SystemService.PHASE_WAIT_FOR_DEFAULT_DISPLAY);</span><br><span class="line">       &#125;</span><br><span class="line">       private void startOtherServices() &#123;</span><br><span class="line">           //phase480</span><br><span class="line">           mSystemServiceManager.startBootPhase(SystemService.PHASE_LOCK_SETTINGS_READY);</span><br><span class="line">           //phase500</span><br><span class="line">           mSystemServiceManager.startBootPhase(SystemService.PHASE_SYSTEM_SERVICES_READY);</span><br><span class="line">           //phase 520</span><br><span class="line">           mSystemServiceManager.startBootPhase(SystemService.PHASE_DEVICE_SPECIFIC_SERVICES_READY);</span><br><span class="line">           mActivityManagerService.systemReady(() -&gt; &#123;</span><br><span class="line">              //phase 550</span><br><span class="line">           mSystemServiceManager.startBootPhase(SystemService.PHASE_ACTIVITY_MANAGER_READY);</span><br><span class="line">              ...</span><br><span class="line">              //phase 600</span><br><span class="line">           mSystemServiceManager.startBootPhase(SystemService.PHASE_THIRD_PARTY_APPS_CAN_START);</span><br><span class="line">              ...</span><br><span class="line">        &#125;, BOOT_TIMINGS_TRACE_LOG);</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class ActivityManagerService</span><br><span class="line"> 	final void finishBooting() &#123;</span><br><span class="line">      	 ...</span><br><span class="line">      	 //phase 1000</span><br><span class="line">      	 mSystemServiceManager.startBootPhase(SystemService.PHASE_BOOT_COMPLETED);</span><br><span class="line">      	 ...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面将介绍下每个阶段完成的工作：</p>
+<h4 id="2-1-Phase-0"><a href="#2-1-Phase-0" class="headerlink" title="2.1 Phase 0"></a>2.1 Phase 0</h4><p>创建下面引导服务<br>DeviceIdentifiersPolicyService<br>ActivityManagerService<br>PowerManagerService<br>RecoverySystemService<br>LightsService<br>SidekickService<br>DisplayManagerService</p>
+<h4 id="2-2-Phase-100"><a href="#2-2-Phase-100" class="headerlink" title="2.2 Phase 100"></a>2.2 Phase 100</h4><p>进入阶段PHASE_WAIT_FOR_DEFAULT_DISPLAY=100回调服务<br>onBootPhase(100)<br>DisplayManagerService监听调用<br>然后创建下面服务<br>PackageManagerService<br>UserManagerService<br>OverlayManagerService<br>BatteryService<br>UsageStatsService<br>WebViewUpdateService<br>BinderCallsStatsService<br>BugreportManagerService<br>GpuService</p>
+<h4 id="2-3-Phase-480"><a href="#2-3-Phase-480" class="headerlink" title="2.3 Phase 480"></a>2.3 Phase 480</h4><p>进入PHASE_LOCK_SETTINGS_READY=480回调服务</p>
+<p>onBootPhase(480)<br>DevicePolicyManagerService监听调用<br>进入阶段480后立马进入到500</p>
+<h4 id="2-4-Phase-500"><a href="#2-4-Phase-500" class="headerlink" title="2.4 Phase 500"></a>2.4 Phase 500</h4><p>进入PHASE_SYSTEM_SERVICES_READY=500<br>进入到这个阶段，服务能安全的调用核心系统服务<br>各大服务执行systemReady</p>
+<p>  wm.systemReady();<br>  mPowerManagerService.systemReady()<br>  mPackageManagerService.systemReady()<br>  mDisplayManagerService.systemReady()</p>
+<p> DeviceSpecificServices</p>
+<h4 id="2-5-Phase-520"><a href="#2-5-Phase-520" class="headerlink" title="2.5 Phase 520"></a>2.5 Phase 520</h4><p>进入到PHASE_DEVICE_SPECIFIC_SERVICES_READY=520</p>
+<p> onBootPhase(520)</p>
+<p> DeviceSpecificServices监听调用，为厂商定制的一些特殊服务</p>
+<p>最后执行AMS.SystemReady</p>
+<h4 id="2-6-Phase-550"><a href="#2-6-Phase-550" class="headerlink" title="2.6 Phase 550"></a>2.6 Phase 550</h4><p>进入到PHASE_ACTIVITY_MANAGER_READY=550</p>
+<p> onBootPhase(550)</p>
+<p>此时 AMS.mSystemReady = true,已经准备就绪，该阶段服务能广播Intent，但是systemserver主线程并没有就绪.</p>
+<p>主要是个服务执行systemReady，还有AMS启动Native crash监控，加载webview,启动SystemUi等</p>
+<p>mActivityManagerService.startObservingNativeCrashes();<br>mWebViewUpdateService.prepareWebViewInSystemServer();<br>CarServiceHelperService<br>startSystemUi(context, windowManagerF)<br>networkManagementF.systemReady()<br>networkPolicyF.networkScoreAndNetworkManagementServiceReady()<br>ipSecServiceF.systemReady()<br>networkStatsF.systemReady()<br>connectivityF.systemReady()<br>networkPolicyF.systemReady()<br>Watchdog.getInstance().start();<br>mPackageManagerService.waitForAppDataPrepared()</p>
+<h4 id="2-7-Phase-600"><a href="#2-7-Phase-600" class="headerlink" title="2.7 Phase 600"></a>2.7 Phase 600</h4><p>进入到PHASE_THIRD_PARTY_APPS_CAN_START=600</p>
+<p> onBootPhase(600)</p>
+<p>主要是各种服务的systemRunning</p>
+<p>NetworkStackClient.getInstance().start(context);<br>locationF.systemRunning()<br>countryDetectorF.systemRunning()<br>networkTimeUpdaterF.systemRunning()<br>inputManagerF.systemRunning()<br>telephonyRegistryF.systemRunning()<br>mediaRouterF.systemRunning()<br>mmsServiceF.systemRunning()<br>incident.systemRunning()</p>
+<h4 id="2-8-Phase-1000"><a href="#2-8-Phase-1000" class="headerlink" title="2.8 Phase 1000"></a>2.8 Phase 1000</h4><p>经过一序列的流程，最后执行AMS.finishBooting，则进入到PHASE_BOOT_COMPLETED=1000</p>
+<p> onBootPhase(1000)</p>
+<p>到此，系统服务启动完成，systemsever进程启动完成进入到Loop().loop状态，等待消息队列MessageQueue中的消息到来，则马上进入执行状态。</p>
+<h3 id="三、服务类别"><a href="#三、服务类别" class="headerlink" title="三、服务类别"></a>三、服务类别</h3><p>systemsever进程，从源码的角度分为引导服务，核心服务，其他服务3类，主要如下：</p>
+<h4 id="1-引导服务（11个）"><a href="#1-引导服务（11个）" class="headerlink" title="1.引导服务（11个）"></a>1.引导服务（11个）</h4><p>DeviceIdentifiersPolicyService<br>ActivityManagerService<br>PowerManagerService<br>RecoverySystemService<br>LightsService<br>SidekickService<br>DisplayManagerService<br>PackageManagerService<br>UserManagerService<br>OverlayManagerService<br>SensorService</p>
+<h4 id="2-核心服务（6个）"><a href="#2-核心服务（6个）" class="headerlink" title="2.核心服务（6个）"></a>2.核心服务（6个）</h4><p>BatteryService<br>UsageStatsService<br>WebViewUpdateService<br>BinderCallsStatsService<br>BugreportManagerService<br>GpuService</p>
+<h4 id="3-其他服务（100个-）"><a href="#3-其他服务（100个-）" class="headerlink" title="3.其他服务（100个+）"></a>3.其他服务（100个+）</h4><table>
+<thead>
+<tr>
+<th>KeyAttestationApplicationIdProviderService</th>
+<th>KeyChainSystemService</th>
+<th style="text-align:left">SchedulingPolicyService</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TelecomLoaderService</td>
+<td>AccountManagerService</td>
+<td style="text-align:left">ContentService</td>
+</tr>
+<tr>
+<td>DropBoxManagerService</td>
+<td>VibratorService</td>
+<td style="text-align:left">DynamicAndroidService</td>
+</tr>
+<tr>
+<td>ConsumerIrService</td>
+<td>AlarmManagerService</td>
+<td style="text-align:left">InputManagerService</td>
+</tr>
+<tr>
+<td>WindowManagerService</td>
+<td>VrManagerService</td>
+<td style="text-align:left">BluetoothService</td>
+</tr>
+<tr>
+<td>IpConnectivityMetrics</td>
+<td>NetworkWatchlistService</td>
+<td style="text-align:left">PinnerService</td>
+</tr>
+<tr>
+<td>InputMethodManagerService</td>
+<td>AccessibilityManagerService</td>
+<td style="text-align:left">StartStorageManagerService</td>
+</tr>
+<tr>
+<td>StorageStatsService</td>
+<td>UiModeManagerService</td>
+<td style="text-align:left">LockSettingsService</td>
+</tr>
+<tr>
+<td>PersistentDataBlockService</td>
+<td>OemLockService</td>
+<td style="text-align:left">DeviceIdleController</td>
+</tr>
+<tr>
+<td>DevicePolicyManagerService</td>
+<td>StatusBarManagerService</td>
+<td style="text-align:left">ClipboardService</td>
+</tr>
+<tr>
+<td>NetworkManagementService</td>
+<td>StartIpSecService</td>
+<td style="text-align:left">TextServicesManagerService</td>
+</tr>
+<tr>
+<td>TextClassificationManagerService</td>
+<td>NetworkScoreService</td>
+<td style="text-align:left">NetworkStatsService</td>
+</tr>
+<tr>
+<td>NetworkPolicyManagerService</td>
+<td>WifiService</td>
+<td style="text-align:left">WifiScanningService</td>
+</tr>
+<tr>
+<td>RttService</td>
+<td>WifiAwareService</td>
+<td style="text-align:left">WifiP2pService</td>
+</tr>
+<tr>
+<td>LowpanService</td>
+<td>EthernetService</td>
+<td style="text-align:left">ConnectivityService</td>
+</tr>
+<tr>
+<td>NsdService</td>
+<td>SystemUpdateManagerService</td>
+<td style="text-align:left">UpdateLockService</td>
+</tr>
+<tr>
+<td>NotificationManagerService</td>
+<td>DeviceStorageMonitorService</td>
+<td style="text-align:left">LocationManagerService</td>
+</tr>
+<tr>
+<td>CountryDetectorService</td>
+<td>TimeDetectorService</td>
+<td style="text-align:left">SearchManagerService</td>
+</tr>
+<tr>
+<td>WallpaperManagerService</td>
+<td>AudioService</td>
+<td style="text-align:left">BroadcastRadioService</td>
+</tr>
+<tr>
+<td>MidiService</td>
+<td>UsbService</td>
+<td style="text-align:left">SerialService</td>
+</tr>
+<tr>
+<td>HardwarePropertiesManagerService</td>
+<td>TwilightService</td>
+<td style="text-align:left">ColorDisplayService</td>
+</tr>
+<tr>
+<td>JobSchedulerService</td>
+<td>SoundTriggerService</td>
+<td style="text-align:left">TrustManagerService</td>
+</tr>
+<tr>
+<td>BackupManagerService</td>
+<td>AppWidgerService</td>
+<td style="text-align:left">VoiceInteractionManagerService</td>
+</tr>
+<tr>
+<td>GestureLauncherService</td>
+<td>SensorNotificationService</td>
+<td style="text-align:left">ContextHubSystemService</td>
+</tr>
+<tr>
+<td>ContextHubSystemService</td>
+<td>DiskStatsService</td>
+<td style="text-align:left">TimeZoneRulesManagerService</td>
+</tr>
+<tr>
+<td>NetworkTimeUpdateService</td>
+<td>EmergencyAffordanceService</td>
+<td style="text-align:left">DreamManagerService</td>
+</tr>
+<tr>
+<td>GraphicsStatsService</td>
+<td>CoverageService</td>
+<td style="text-align:left">PrintManagerService</td>
+</tr>
+<tr>
+<td>CompanionDeviceManagerService</td>
+<td>RestrictionsManagerService</td>
+<td style="text-align:left">MediaSessionService</td>
+</tr>
+<tr>
+<td>MediaUpdateService</td>
+<td>HdmiControlService</td>
+<td style="text-align:left">TvInputManagerService</td>
+</tr>
+<tr>
+<td>MediaResourceMonitorService</td>
+<td>TvRemoteService</td>
+<td style="text-align:left">MediaRouterService</td>
+</tr>
+<tr>
+<td>FingerprintService</td>
+<td>BackgroundDexOptService</td>
+<td style="text-align:left">PruneInstantAppsJobService</td>
+</tr>
+<tr>
+<td>ShortcutService</td>
+<td>LauncherAppsService</td>
+<td style="text-align:left">CrossProfileAppsService</td>
+</tr>
+<tr>
+<td>MediaProjectionManagerService</td>
+<td>WearConfigService</td>
+<td style="text-align:left">WearConnectivityService</td>
+</tr>
+<tr>
+<td>WearTimeService</td>
+<td>WearLeftyService</td>
+<td style="text-align:left">WearGlobalActionsService</td>
+</tr>
+<tr>
+<td>SliceManagerService</td>
+<td>CameraServiceProxy</td>
+<td style="text-align:left">IoTSystemService</td>
+</tr>
+<tr>
+<td>StatsCompanionService</td>
+<td>MmsServiceBroker</td>
+<td style="text-align:left">AutofillManagerService</td>
+</tr>
+<tr>
+<td>DeviceSpecificServices</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>以后的文章将介绍一些常用的Service。</p>
+<p>下面是华为荣耀9（Android9.0），SystemServer的开机日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br></pre></td><td class="code"><pre><span class="line">--------- beginning of main</span><br><span class="line">--------- beginning of system</span><br><span class="line">07-29 14:46:25.853  1296  1296 I SystemServer: InitBeforeStartServices</span><br><span class="line">07-29 14:46:25.857  1296  1296 I SystemServer: Entered the Android system server!</span><br><span class="line">07-29 14:46:26.175  1296  1296 I SystemServer: StartServices</span><br><span class="line">07-29 14:46:26.175  1296  1296 I SystemServer: Reading configuration...</span><br><span class="line">07-29 14:46:26.175  1296  1296 I SystemServer: ReadingSystemConfig</span><br><span class="line">07-29 14:46:26.175  1296  1296 I SystemServer: StartInstaller</span><br><span class="line">07-29 14:46:26.180  1296  1296 I SystemServer: DeviceIdentifiersPolicyService</span><br><span class="line">07-29 14:46:26.184  1296  1296 I SystemServer: StartActivityManager</span><br><span class="line">07-29 14:46:26.682  1296  1296 I SystemServer: StartPowerManager</span><br><span class="line">07-29 14:46:26.746  1296  1296 I SystemServer: PG Manager service</span><br><span class="line">07-29 14:46:26.748  1296  1296 I SystemServer: InitPowerManagement</span><br><span class="line">07-29 14:46:26.750  1296  1296 I SystemServer: StartRecoverySystemService</span><br><span class="line">07-29 14:46:26.755  1296  1296 I SystemServer: StartLightsService</span><br><span class="line">07-29 14:46:26.766  1296  1296 I SystemServer: StartSidekickService</span><br><span class="line">07-29 14:46:26.766  1296  1296 I SystemServer: StartDisplayManager</span><br><span class="line">07-29 14:46:26.800  1296  1296 I SystemServer: HwSecurityService start success</span><br><span class="line">07-29 14:46:26.800  1296  1296 I SystemServer: WaitForDisplay</span><br><span class="line">07-29 14:46:26.804  1296  1296 I SystemServer: StartPackageManagerService</span><br><span class="line">07-29 14:46:26.804  1296  1296 I SystemServer: Package Manager</span><br><span class="line">07-29 14:46:29.388  1296  1296 I SystemServer: Finish_StartPackageManagerService</span><br><span class="line">07-29 14:46:29.389  1296  1296 I SystemServer: StartOtaDexOptService</span><br><span class="line">07-29 14:46:29.390  1296  1296 I SystemServer: StartUserManagerService</span><br><span class="line">07-29 14:46:29.390  1296  1296 I SystemServer: InitAttributerCache</span><br><span class="line">07-29 14:46:29.390  1296  1296 I SystemServer: SetSystemProcess</span><br><span class="line">07-29 14:46:29.398  1296  1296 I SystemServer: StartOverlayManagerService</span><br><span class="line">07-29 14:46:29.399  1296  1296 I SystemServer: StartBatteryService</span><br><span class="line">07-29 14:46:29.467  1296  1296 I SystemServer: StartUsageService</span><br><span class="line">07-29 14:46:29.501  1296  1296 I SystemServer: StartWebViewUpdateService</span><br><span class="line">07-29 14:46:29.504  1296  1296 I SystemServer: StartBinderCallsStatsService</span><br><span class="line">07-29 14:46:29.506  1296  1309 I SystemServer: SecondaryZygotePreload</span><br><span class="line">07-29 14:46:29.506  1296  1296 I SystemServer: StartKeyAttestationApplicationIdProviderService</span><br><span class="line">07-29 14:46:29.507  1296  1296 I SystemServer: StartKeyChainSystemService</span><br><span class="line">07-29 14:46:29.508  1296  1296 I SystemServer: StartSchedulingPolicyService</span><br><span class="line">07-29 14:46:29.509  1296  1296 I SystemServer: StartTelecomLoaderService</span><br><span class="line">07-29 14:46:29.509  1296  1296 I SystemServer: StartTelephonyRegistry</span><br><span class="line">07-29 14:46:29.509  1296  1296 I SystemServer: Telephony Registry</span><br><span class="line">07-29 14:46:29.511  1296  1296 I SystemServer: StartEntropyMixer</span><br><span class="line">07-29 14:46:29.709  1296  1296 I SystemServer: StartAccountManagerService</span><br><span class="line">07-29 14:46:29.713  1296  1296 I SystemServer: StartContentService</span><br><span class="line">07-29 14:46:29.717  1296  1296 I SystemServer: InstallSystemProviders</span><br><span class="line">07-29 14:46:29.779  1296  1296 I SystemServer: StartDropBoxManager</span><br><span class="line">07-29 14:46:29.780  1296  1296 I SystemServer: StartVibratorService</span><br><span class="line">07-29 14:46:29.784  1296  1296 I SystemServer: StartConsumerIrService</span><br><span class="line">07-29 14:46:29.784  1296  1296 I SystemServer: StartAlarmManagerService</span><br><span class="line">07-29 14:46:29.795  1296  1296 I SystemServer: Init Watchdog</span><br><span class="line">07-29 14:46:29.796  1296  1296 I SystemServer: StartInputManagerService</span><br><span class="line">07-29 14:46:29.796  1296  1296 I SystemServer: Input Manager</span><br><span class="line">07-29 14:46:29.827  1296  1296 I SystemServer: StartHwSysResManagerService</span><br><span class="line">07-29 14:46:29.899  1296  1296 I SystemServer: StartWindowManagerService</span><br><span class="line">07-29 14:46:29.996  1296  1296 I SystemServer: SetWindowManagerService</span><br><span class="line">07-29 14:46:30.016  1296  1296 I SystemServer: WindowManagerServiceOnInitReady</span><br><span class="line">07-29 14:46:30.046  1296  1296 I SystemServer: StartVrManagerService</span><br><span class="line">07-29 14:46:30.049  1296  1296 I SystemServer: StartInputManager</span><br><span class="line">07-29 14:46:30.054  1296  1296 I SystemServer: DisplayManagerWindowManagerAndInputReady</span><br><span class="line">07-29 14:46:30.054  1296  1296 I SystemServer: StartBluetoothService</span><br><span class="line">07-29 14:46:30.062  1296  1296 I SystemServer: IpConnectivityMetrics</span><br><span class="line">07-29 14:46:30.066  1296  1296 I SystemServer: NetworkWatchlistService</span><br><span class="line">07-29 14:46:30.074  1296  1296 I SystemServer: PinnerService</span><br><span class="line">07-29 14:46:30.075  1296  1296 I SystemServer: ZrHungService</span><br><span class="line">07-29 14:46:30.077  1296  1296 I SystemServer: StartInputMethodManagerLifecycle</span><br><span class="line">07-29 14:46:30.077  1296  1296 I SystemServer: Input Method Service</span><br><span class="line">07-29 14:46:30.091  1296  1296 I SystemServer: Secure Input Method Service</span><br><span class="line">07-29 14:46:30.103  1296  1296 I SystemServer: StartAccessibilityManagerService</span><br><span class="line">07-29 14:46:30.105  1296  1296 I SystemServer: MakeDisplayReady</span><br><span class="line">07-29 14:46:30.125  1296  1296 I SystemServer: StartStorageManagerService</span><br><span class="line">07-29 14:46:30.156  1296  1296 I SystemServer: StartStorageStatsService</span><br><span class="line">07-29 14:46:30.158  1296  1296 I SystemServer: StartUiModeManager</span><br><span class="line">07-29 14:46:30.159  1296  1296 I SystemServer: UpdatePackagesIfNeeded</span><br><span class="line">07-29 14:46:30.159  1296  1296 I SystemServer: PerformFstrimIfNeeded</span><br><span class="line">07-29 14:46:30.164  1296  1296 I SystemServer: StartLockSettingsService</span><br><span class="line">07-29 14:46:30.191  1296  1296 I SystemServer: StartDeviceIdleController</span><br><span class="line">07-29 14:46:30.202  1296  1296 I SystemServer: StartDevicePolicyManager</span><br><span class="line">07-29 14:46:30.257  1296  1296 I SystemServer: StartStatusBarManagerService</span><br><span class="line">07-29 14:46:30.257  1296  1296 I SystemServer: Status Bar</span><br><span class="line">07-29 14:46:30.259  1296  1296 I SystemServer: StartClipboardService</span><br><span class="line">07-29 14:46:30.263  1296  1296 I SystemServer: StartNetworkManagementService</span><br><span class="line">07-29 14:46:30.274  1296  1296 I SystemServer: StartIpSecService</span><br><span class="line">07-29 14:46:30.276  1296  1296 I SystemServer: StartTextServicesManager</span><br><span class="line">07-29 14:46:30.277  1296  1296 I SystemServer: StartTextClassificationManagerService</span><br><span class="line">07-29 14:46:30.277  1296  1296 I SystemServer: StartNetworkScoreService</span><br><span class="line">07-29 14:46:30.279  1296  1296 I SystemServer: StartNetworkStatsService</span><br><span class="line">07-29 14:46:30.284  1296  1296 I SystemServer: StartNetworkPolicyManagerService</span><br><span class="line">07-29 14:46:30.289  1296  1296 I SystemServer: StartWifi</span><br><span class="line">07-29 14:46:30.789  1296  1296 I SystemServer: StartWifiScanning</span><br><span class="line">07-29 14:46:30.790  1296  1296 I SystemServer: StartWifiP2P</span><br><span class="line">07-29 14:46:30.806  1296  1296 I SystemServer: StartEthernet</span><br><span class="line">07-29 14:46:30.807  1296  1296 I SystemServer: StartConnectivityService</span><br><span class="line">07-29 14:46:30.865  1296  1296 I SystemServer: StartNsdService</span><br><span class="line">07-29 14:46:30.867  1296  1296 I SystemServer: StartSystemUpdateManagerService</span><br><span class="line">07-29 14:46:30.868  1296  1296 I SystemServer: StartUpdateLockService</span><br><span class="line">07-29 14:46:30.869  1296  1296 I SystemServer: StartNotificationManager</span><br><span class="line">07-29 14:46:31.017  1296  1296 I SystemServer: StartDeviceMonitor</span><br><span class="line">07-29 14:46:31.020  1296  1296 I SystemServer: TUI Connect enable true</span><br><span class="line">07-29 14:46:31.022  1296  1296 I SystemServer: VR Display enable true</span><br><span class="line">07-29 14:46:31.023  1296  1296 I SystemServer: StartLocationManagerService</span><br><span class="line">07-29 14:46:31.023  1296  1296 I SystemServer: Location Manager</span><br><span class="line">07-29 14:46:31.041  1296  1296 I SystemServer: StartCountryDetectorService</span><br><span class="line">07-29 14:46:31.042  1296  1296 I SystemServer: StartSearchManagerService</span><br><span class="line">07-29 14:46:31.043  1296  1296 I SystemServer: StartWallpaperManagerService</span><br><span class="line">07-29 14:46:31.048  1296  1296 I SystemServer: StartTrustManager</span><br><span class="line">07-29 14:46:31.049  1296  1296 I SystemServer: StartAudioService</span><br><span class="line">07-29 14:46:31.133  1296  1296 I SystemServer: StartDockObserver</span><br><span class="line">07-29 14:46:31.134  1296  1296 I SystemServer: StartWiredAccessoryManager</span><br><span class="line">07-29 14:46:31.134  1296  1296 I SystemServer: StartMidiManager</span><br><span class="line">07-29 14:46:31.135  1296  1296 I SystemServer: StartUsbService</span><br><span class="line">07-29 14:46:31.154  1296  1296 I SystemServer: StartSerialService</span><br><span class="line">07-29 14:46:31.155  1296  1296 I SystemServer: StartHardwarePropertiesManagerService</span><br><span class="line">07-29 14:46:31.156  1296  1296 I SystemServer: StartTwilightService</span><br><span class="line">07-29 14:46:31.166  1296  1296 I SystemServer: StartSoundTrigger</span><br><span class="line">07-29 14:46:31.167  1296  1296 I SystemServer: StartBackupManager</span><br><span class="line">07-29 14:46:31.167  1296  1296 I SystemServer: StartAppWidgerService</span><br><span class="line">07-29 14:46:31.172  1296  1296 I SystemServer: StartVoiceRecognitionManager</span><br><span class="line">07-29 14:46:31.173  1296  1296 I SystemServer: StartSensorNotification</span><br><span class="line">07-29 14:46:31.173  1296  1296 I SystemServer: StartContextHubSystemService</span><br><span class="line">07-29 14:46:31.224  1296  1296 I SystemServer: StartDiskStatsService</span><br><span class="line">07-29 14:46:31.226  1296  1296 I SystemServer: attestation Service</span><br><span class="line">07-29 14:46:31.234  1296  1296 I SystemServer: StartNetworkTimeUpdateService</span><br><span class="line">07-29 14:46:31.235  1296  1296 I SystemServer: StartCommonTimeManagementService</span><br><span class="line">07-29 14:46:31.236  1296  1296 I SystemServer: CertBlacklister</span><br><span class="line">07-29 14:46:31.237  1296  1296 I SystemServer: StartEmergencyAffordanceService</span><br><span class="line">07-29 14:46:31.237  1296  1296 I SystemServer: StartDreamManager</span><br><span class="line">07-29 14:46:31.237  1296  1296 I SystemServer: AddGraphicsStatsService</span><br><span class="line">07-29 14:46:31.239  1296  1296 I SystemServer: StartPrintManager</span><br><span class="line">07-29 14:46:31.241  1296  1296 I SystemServer: StartCompanionDeviceManager</span><br><span class="line">07-29 14:46:31.242  1296  1296 I SystemServer: StartRestrictionManager</span><br><span class="line">07-29 14:46:31.243  1296  1296 I SystemServer: StartMediaSessionService</span><br><span class="line">07-29 14:46:31.245  1296  1296 I SystemServer: StartMediaUpdateService</span><br><span class="line">07-29 14:46:31.245  1296  1296 I SystemServer: StartMediaResourceMonitor</span><br><span class="line">07-29 14:46:31.246  1296  1296 I SystemServer: StartMediaRouterService</span><br><span class="line">07-29 14:46:31.247  1296  1296 I SystemServer: StartFingerprintSensor</span><br><span class="line">07-29 14:46:31.254  1296  1296 I SystemServer: serviceClass doesn&apos;t null</span><br><span class="line">07-29 14:46:31.254  1296  1296 I SystemServer: start HwFingerPrintService</span><br><span class="line">07-29 14:46:31.258  1296  1296 I SystemServer: FingerPrintService ready</span><br><span class="line">07-29 14:46:31.258  1296  1296 I SystemServer: StartBackgroundDexOptService</span><br><span class="line">07-29 14:46:31.259  1296  1296 I SystemServer: StartPruneInstantAppsJobService</span><br><span class="line">07-29 14:46:31.259  1296  1296 I SystemServer: StartShortcutServiceLifecycle</span><br><span class="line">07-29 14:46:31.260  1296  1296 I SystemServer: StartLauncherAppsService</span><br><span class="line">07-29 14:46:31.261  1296  1296 I SystemServer: StartCrossProfileAppsService</span><br><span class="line">07-29 14:46:31.262  1296  1296 I SystemServer: StartMediaProjectionManager</span><br><span class="line">07-29 14:46:31.264  1296  1296 I SystemServer: StartSliceManagerService</span><br><span class="line">07-29 14:46:31.266  1296  1296 I SystemServer: StartCameraServiceProxy</span><br><span class="line">07-29 14:46:31.268  1296  1296 I SystemServer: StartStatsCompanionService</span><br><span class="line">07-29 14:46:31.326  1296  1296 I SystemServer: StartJitCompilation</span><br><span class="line">07-29 14:46:31.326  1296  1296 I SystemServer: StartMmsService</span><br><span class="line">07-29 14:46:31.326  1296  1296 I SystemServer: StartAutoFillService</span><br><span class="line">07-29 14:46:31.334  1296  1296 I SystemServer: MakeVibratorServiceReady</span><br><span class="line">07-29 14:46:31.335  1296  1296 I SystemServer: MakeLockSettingsServiceReady</span><br><span class="line">07-29 14:46:31.358  1296  1296 I SystemServer: StartBootPhaseLockSettingsReady</span><br><span class="line">07-29 14:46:31.364  1296  1296 I SystemServer: StartBootPhaseSystemServicesReady</span><br><span class="line">07-29 14:46:31.767  1296  1296 I SystemServer: MakeWindowManagerServiceReady</span><br><span class="line">07-29 14:46:31.799  1296  1296 I SystemServer: MakePowerManagerServiceReady</span><br><span class="line">07-29 14:46:31.876  1296  1296 I SystemServer: MakePackageManagerServiceReady</span><br><span class="line">07-29 14:46:32.002  1296  1296 I SystemServer: MakeDisplayManagerServiceReady</span><br><span class="line">07-29 14:46:32.003  1296  1296 I SystemServer: StartDeviceSpecificServices</span><br><span class="line">07-29 14:46:32.003  1296  1296 I SystemServer: StartBootPhaseDeviceSpecificServicesReady</span><br><span class="line">07-29 14:46:32.064  1296  1296 I SystemServer: Making services ready</span><br><span class="line">07-29 14:46:32.064  1296  1296 I SystemServer: StartActivityManagerReadyPhase</span><br><span class="line">07-29 14:46:33.190  1296  1296 I SystemServer: StartObservingNativeCrashes</span><br><span class="line">07-29 14:46:33.190  1296  1296 I SystemServer: StartSystemUI</span><br><span class="line">07-29 14:46:33.191  1296  1309 I SystemServer: WebViewFactoryPreparation</span><br><span class="line">07-29 14:46:34.615  1296  1296 I SystemServer: MakeNetworkManagementServiceReady</span><br><span class="line">07-29 14:46:34.812  1296  1296 I SystemServer: MakeIpSecServiceReady</span><br><span class="line">07-29 14:46:34.812  1296  1296 I SystemServer: MakeNetworkStatsServiceReady</span><br><span class="line">07-29 14:46:34.924  1296  1296 I SystemServer: MakeConnectivityServiceReady</span><br><span class="line">07-29 14:46:34.954  1296  1296 I SystemServer: MakeNetworkPolicyServiceReady</span><br><span class="line">07-29 14:46:35.081  1296  1296 I SystemServer: StartWatchdog</span><br><span class="line">07-29 14:46:35.081  1296  1296 I SystemServer: PhaseThirdPartyAppsCanStart</span><br><span class="line">07-29 14:46:35.225  1296  1296 I SystemServer: MakeLocationServiceReady</span><br><span class="line">07-29 14:46:35.233  1296  1296 I SystemServer: MakeCountryDetectionServiceReady</span><br><span class="line">07-29 14:46:35.233  1296  1296 I SystemServer: MakeNetworkTimeUpdateReady</span><br><span class="line">07-29 14:46:35.234  1296  1296 I SystemServer: MakeCommonTimeManagementServiceReady</span><br><span class="line">07-29 14:46:35.234  1296  1296 I SystemServer: MakeInputManagerServiceReady</span><br><span class="line">07-29 14:46:35.306  1296  1296 I SystemServer: MakeTelephonyRegistryReady</span><br><span class="line">07-29 14:46:35.306  1296  1296 I SystemServer: MakeMediaRouterServiceReady</span><br><span class="line">07-29 14:46:35.306  1296  1296 I SystemServer: MakeMmsServiceReady</span><br><span class="line">07-29 14:46:35.306  1296  1296 I SystemServer: IncidentDaemonReady</span><br><span class="line">07-29 14:46:35.411  1296  1296 I SystemServer: Finish_StartServices</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/systemserver/" rel="tag">#systemserver</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/Android系统SystemServer启动（上）/" rel="next" title="Android系统SystemServer启动（上）">
+                <i class="fa fa-chevron-left"></i> Android系统SystemServer启动（上）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/Android dex，odex，oat，vdex，art文件结构/" rel="prev" title="Android dex，odex，oat，vdex，art文件结构">
+                Android dex，odex，oat，vdex，art文件结构 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="skytoby">
+          <p class="site-author-name" itemprop="name">skytoby</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳、毕业于电子科技大学 Android、程序员 <br><br>座右铭:今天不想跑，所以才去跑。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/caoxiaoliang" target="_blank" title="GitHub">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://me.csdn.net/cao861544325" target="_blank" title="CSDN">
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、SystemServer启动"><span class="nav-text">一、SystemServer启动</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-SystemServer-main"><span class="nav-text">1.1 SystemServer.main</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-SystemServer-run"><span class="nav-text">1.2 SystemServer.run</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-performPendingShutdown"><span class="nav-text">1.3 performPendingShutdown</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-createSystemContext"><span class="nav-text">1.4 createSystemContext</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-startBootstrapServices"><span class="nav-text">1.5 startBootstrapServices</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-startCoreServices"><span class="nav-text">1.6 startCoreServices</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-7-startOtherServices"><span class="nav-text">1.7 startOtherServices</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、服务启动阶段"><span class="nav-text">二、服务启动阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-Phase-0"><span class="nav-text">2.1 Phase 0</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-Phase-100"><span class="nav-text">2.2 Phase 100</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-Phase-480"><span class="nav-text">2.3 Phase 480</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-Phase-500"><span class="nav-text">2.4 Phase 500</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-Phase-520"><span class="nav-text">2.5 Phase 520</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-6-Phase-550"><span class="nav-text">2.6 Phase 550</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-7-Phase-600"><span class="nav-text">2.7 Phase 600</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-8-Phase-1000"><span class="nav-text">2.8 Phase 1000</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、服务类别"><span class="nav-text">三、服务类别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-引导服务（11个）"><span class="nav-text">1.引导服务（11个）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-核心服务（6个）"><span class="nav-text">2.核心服务（6个）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-其他服务（100个-）"><span class="nav-text">3.其他服务（100个+）</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skytoby</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme Next
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'https-zproo-github-io';
+      var disqus_identifier = '2019/Android系统SystemServer启动（下）/';
+      var disqus_title = "Android系统SystemServer启动（下）";
+      var disqus_url = 'http://zproo.github.io/2019/Android系统SystemServer启动（下）/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("GHEN8u6QufHhkX6hJMzNpKeN-gzGzoHsz", "Gq4sJwz8T6cywiaHlBGFDbE4");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+</html>

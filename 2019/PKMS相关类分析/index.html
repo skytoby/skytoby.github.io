@@ -1,0 +1,882 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="PackageManagerService,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="1.Settings类1234567891011121314151617181920// Settins文件 data/system/packages.xmlprivate final File mSettingsFilename;//这个文件不一定存在，是备份文件，如果存在则说明更新packages.xml出错//data/system/packages_backup.xmlprivate fi">
+<meta name="keywords" content="PackageManagerService">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PKMS相关类分析">
+<meta property="og:url" content="http://zproo.github.io/2019/PKMS相关类分析/index.html">
+<meta property="og:site_name" content="skytoby">
+<meta property="og:description" content="1.Settings类1234567891011121314151617181920// Settins文件 data/system/packages.xmlprivate final File mSettingsFilename;//这个文件不一定存在，是备份文件，如果存在则说明更新packages.xml出错//data/system/packages_backup.xmlprivate fi">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://zproo.github.io/2019/PKMS相关类分析/SharedUserSetting.png">
+<meta property="og:image" content="http://zproo.github.io/2019/PKMS相关类分析/SharedUserId.png">
+<meta property="og:image" content="http://zproo.github.io/2019/PKMS相关类分析/systemconfig.png">
+<meta property="og:image" content="http://zproo.github.io/2019/PKMS相关类分析/PackageParser.png">
+<meta property="og:updated_time" content="2019-08-14T08:55:32.795Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PKMS相关类分析">
+<meta name="twitter:description" content="1.Settings类1234567891011121314151617181920// Settins文件 data/system/packages.xmlprivate final File mSettingsFilename;//这个文件不一定存在，是备份文件，如果存在则说明更新packages.xml出错//data/system/packages_backup.xmlprivate fi">
+<meta name="twitter:image" content="http://zproo.github.io/2019/PKMS相关类分析/SharedUserSetting.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zproo.github.io/2019/PKMS相关类分析/">
+
+  <title> PKMS相关类分析 | skytoby </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+    
+    <header id="header_post" class="header" itemscope="" itemtype="http://schema.org/WPHeader" style="background-image: url('http://ortur5wom.bkt.clouddn.com/home_bg.jpg');">
+      <div class="header-inner-post"><a class="site-home" href="/">skytoby</a>
+
+<div class="site-meta custom-logo">
+  
+  
+  
+    <div class="site-meta-headline">
+      <a>
+        <img class="custom-logo-image" src="/images/logo.png" style="width: 50px" alt="skytoby">
+      </a>
+    </div>
+  
+
+  
+  
+  
+  
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+           <li class="menu-item menu-item-关于">
+             <a href="/about" rel="section">
+               
+               
+               关于
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-目录">
+             <a href="/archives" rel="section">
+               
+               
+               目录
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-首页">
+             <a href="/" rel="section">
+               
+               
+               首页
+             </a>
+           </li>
+        
+      
+
+      
+    </ul>
+  
+
+  
+</nav> </div>
+      <div class="header-post"> 
+  <div class="post-header">
+      <div class="tags">
+      
+        <a href="/tags/PackageManagerService/" rel="tag" title="PackageManagerService">PackageManagerService</a>
+      
+      </div>
+      <h1>PKMS相关类分析</h1>
+      <h2 class="subtitle"></h2>
+      <div class="post-time">
+        <span class="post-meta-item-text">Posted on </span>
+        <time itemprop="dateCreated" datetime="2019-06-10T21:18:23+08:00" content="2019-06-10" title="2019-06-10 21:18:23">
+          2019-06-10
+        </time>
+      </div>
+  </div>
+ </div>
+    </header>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                PKMS相关类分析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2019-06-10T21:18:23+08:00" content="2019-06-10">
+              2019-06-10
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2019/PKMS相关类分析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/PKMS相关类分析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+             <span id="/2019/PKMS相关类分析/" class="leancloud_visitors" data-flag-title="PKMS相关类分析">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-Settings类"><a href="#1-Settings类" class="headerlink" title="1.Settings类"></a>1.Settings类</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// Settins文件 data/system/packages.xml</span><br><span class="line">private final File mSettingsFilename;</span><br><span class="line"></span><br><span class="line">//这个文件不一定存在，是备份文件，如果存在则说明更新packages.xml出错</span><br><span class="line">//data/system/packages_backup.xml</span><br><span class="line">private final File mBackupSettingsFilename;</span><br><span class="line"></span><br><span class="line">//data/system/packages.list</span><br><span class="line">private final File mPackageListFilename;</span><br><span class="line"></span><br><span class="line">// key是包名，PackageSetting主要包含app的基本信息，如安装位置，lib位置等</span><br><span class="line"> /** Map from package name to settings */</span><br><span class="line">final ArrayMap&lt;String, PackageSetting&gt; mPackages = new ArrayMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">/*key是类似“android.ui.system”这样的字段，在Android中每个应用都有一个UID，两个相同的UID的应用可以运行在/一个进程中，为了让两个应用运行在一个进程中，需要在manifest中设置sharedUserId这个属性，这个属性是字符串，但是在linux系统中uid是一个整型，因此就有了SharedUserSetting类型，这个类型除了name还有uid(对应linux中的uid),还有一个列表字段，用于记录系统中相同shardUserId的应用。*/</span><br><span class="line">final ArrayMap&lt;String, SharedUserSetting&gt; mSharedUsers =</span><br><span class="line">            new ArrayMap&lt;String, SharedUserSetting&gt;();</span><br><span class="line">   </span><br><span class="line">/*主要保存的是/system/etc/permissions/platform.xml中的permission标签内容，因为Android系统是基于linux的系统，有用户组的概念，platform定义了一些权限，并且定制了哪些用户组具有哪些权限，一旦应用属于某个用户组，那么它就有这个用户组的所有权限*/</span><br><span class="line">final PermissionSettings mPermissions;</span><br></pre></td></tr></table></figure>
+<h3 id="1-1-Setting构造函数"><a href="#1-1-Setting构造函数" class="headerlink" title="1.1 Setting构造函数"></a>1.1 Setting构造函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Settings(File dataDir, PermissionSettings permission, Object lock) &#123;</span><br><span class="line">       mLock = lock;</span><br><span class="line">       mPermissions = permission;</span><br><span class="line">       //创建mRuntimePermissionsPersistence，是Setting内部类</span><br><span class="line">       mRuntimePermissionsPersistence = new RuntimePermissionPersistence(mLock);</span><br><span class="line">       </span><br><span class="line">       //初始化文件路径</span><br><span class="line">       mSystemDir = new File(dataDir, &quot;system&quot;);</span><br><span class="line">       mSystemDir.mkdirs();</span><br><span class="line">       FileUtils.setPermissions(mSystemDir.toString(),</span><br><span class="line">               FileUtils.S_IRWXU|FileUtils.S_IRWXG</span><br><span class="line">               |FileUtils.S_IROTH|FileUtils.S_IXOTH,</span><br><span class="line">               -1, -1);</span><br><span class="line">       mSettingsFilename = new File(mSystemDir, &quot;packages.xml&quot;);</span><br><span class="line">       mBackupSettingsFilename = new File(mSystemDir, &quot;packages-backup.xml&quot;);</span><br><span class="line">       mPackageListFilename = new File(mSystemDir, &quot;packages.list&quot;);</span><br><span class="line">       FileUtils.setPermissions(mPackageListFilename, 0640, SYSTEM_UID, PACKAGE_INFO_GID);</span><br><span class="line"></span><br><span class="line">       final File kernelDir = new File(&quot;/config/sdcardfs&quot;);</span><br><span class="line">       mKernelMappingFilename = kernelDir.exists() ? kernelDir : null;</span><br><span class="line">       </span><br><span class="line">       //下面两个文件路径不推荐使用</span><br><span class="line">       // Deprecated: Needed for migration</span><br><span class="line">       mStoppedPackagesFilename = new File(mSystemDir, &quot;packages-stopped.xml&quot;);</span><br><span class="line">       mBackupStoppedPackagesFilename = new File(mSystemDir, &quot;packages-stopped-backup.xml&quot;);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>Setting构造函数主要工作是创建系统文件夹，一些包管理的文件</p>
+<p>packages.xml、packages-backup.xml是一组，用于描述系统所安装的Package信息，其中packages-backup.xml是packages.xml的备份</p>
+<p>packages.list用于描述系统中存在的所有非系统自带的apk信息以及UID大于10000的apk。当APK有变化时，PKMS就会更新该文件。</p>
+<h3 id="1-2-addSharedUserLPw方法"><a href="#1-2-addSharedUserLPw方法" class="headerlink" title="1.2 addSharedUserLPw方法"></a>1.2 addSharedUserLPw方法</h3><p>该方法将shareUserId name和一个int类型的UID对应起来。UID的定义在Process.java中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">SharedUserSetting addSharedUserLPw(String name, int uid, int pkgFlags, int pkgPrivateFlags) &#123;</span><br><span class="line">      //获取SharedUserSetting对象</span><br><span class="line">      SharedUserSetting s = mSharedUsers.get(name);</span><br><span class="line">      if (s != null) &#123;</span><br><span class="line">          if (s.userId == uid) &#123;</span><br><span class="line">              return s;</span><br><span class="line">          &#125;</span><br><span class="line">          PackageManagerService.reportSettingsProblem(Log.ERROR,</span><br><span class="line">                  &quot;Adding duplicate shared user, keeping first: &quot; + name);</span><br><span class="line">          return null;</span><br><span class="line">      &#125;</span><br><span class="line">      //没有在mSharedUsers找到则新建，并保存起来</span><br><span class="line">      s = new SharedUserSetting(name, pkgFlags, pkgPrivateFlags);</span><br><span class="line">      s.userId = uid;</span><br><span class="line">      if (addUserIdLPw(uid, s, name)) &#123;</span><br><span class="line">          mSharedUsers.put(name, s);</span><br><span class="line">          return s;</span><br><span class="line">      &#125;</span><br><span class="line">      return null;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Defines the root UID.</span><br><span class="line"> */</span><br><span class="line">public static final int ROOT_UID = 0;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Defines the UID/GID under which system code runs.</span><br><span class="line"> */</span><br><span class="line">public static final int SYSTEM_UID = 1000;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Defines the UID/GID under which the telephony code runs.</span><br><span class="line"> */</span><br><span class="line">public static final int PHONE_UID = 1001;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Defines the UID/GID for the user shell.</span><br><span class="line"> */</span><br><span class="line">public static final int SHELL_UID = 2000;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Defines the UID/GID for the log group.</span><br><span class="line"> * @hide</span><br><span class="line"> */</span><br><span class="line">@UnsupportedAppUsage</span><br><span class="line">public static final int LOG_UID = 1007;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Defines the UID/GID for the WIFI supplicant process.</span><br><span class="line"> * @hide</span><br><span class="line"> */</span><br><span class="line">@UnsupportedAppUsage</span><br><span class="line">public static final int WIFI_UID = 1010;</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">//第一个应用package的起始UID为10000</span><br><span class="line"> /**</span><br><span class="line"> * Defines the start of a range of UIDs (and GIDs), going from this</span><br><span class="line"> * number to &#123;@link #LAST_APPLICATION_UID&#125; that are reserved for assigning</span><br><span class="line"> * to applications.</span><br><span class="line"> */</span><br><span class="line">public static final int FIRST_APPLICATION_UID = 10000;</span><br><span class="line">//最后一个应用package的UID为19999</span><br><span class="line">/**</span><br><span class="line"> * Last of application-specific UIDs starting at</span><br><span class="line"> * &#123;@link #FIRST_APPLICATION_UID&#125;.</span><br><span class="line"> */</span><br><span class="line">public static final int LAST_APPLICATION_UID = 19999;</span><br></pre></td></tr></table></figure>
+<p>Setting模块的AndroidManifest.xml里面，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">        xmlns:androidprv=&quot;http://schemas.android.com/apk/prv/res/android&quot;</span><br><span class="line">        package=&quot;com.android.settings&quot;</span><br><span class="line">        coreApp=&quot;true&quot;</span><br><span class="line">        android:sharedUserId=&quot;android.uid.system&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p> 在xml里面android:sharedUserId属性设置为”android.uid.system”。sharedUserId这个属性主要有两个作用：</p>
+<p>1.两个或者多个声明了同一种sharedUserId的应用可以共享彼此的数据</p>
+<p>2.通过声明特定sharedUserId，该应用所在进程将赋予指定的UID。如Setting声明了system的uid，则就可以共享system用户所对应的权限。</p>
+<p>除了了xml了声明sharedUserId外，应用编译的时候还必须使用对应的证书进行签名。如Setting需要platform的签名。</p>
+<h3 id="1-3-PID、UID、GID的区别"><a href="#1-3-PID、UID、GID的区别" class="headerlink" title="1.3 PID、UID、GID的区别"></a>1.3 PID、UID、GID的区别</h3><p>PID是进程的身份识别，程序一旦运行，就会给应用分配唯一的PID。一个应用可能包含多个进程，每个进程有唯一的一个PID。进程终止后PID被系统回收，再次打开应用，会分配一个PID（新进程的PID一般比之前的号大）。</p>
+<p>调用adb shell ps可以查看系统运行的进程。</p>
+<p>UID是用户ID。UID在linux中就是用户ID,表明哪个用户运行了这个程序，主要用于权限的管理。而Android为单用户系统，这时候UID被赋予了新的使命，数据共享，为了实现数据共享，android为每个应用都分配了不同的uid,不像传统的linux，每个用户相同就为之分配相同的UID。</p>
+<p>GID时用户组ID。对于普通的应用程序来说GID等于UID，由于每个应用程序的UID和GID不相同，所以不管是native还是java层都能够达到保护私有数据的作用。</p>
+<p>adb shell cat /proc/PID号/status</p>
+<p>SharedUserSetting类架构</p>
+<p><img src="/2019/PKMS相关类分析/SharedUserSetting.png" alt=""></p>
+<p>PKMS的构造函数创建一个Settings的实例mSettings，mSettings有三个成员变量mSharedUsers，mUserIds，mOtherUserIds。addSharedUserLPw方法都涉及这三个成员变量。SharedUserSetting的成员变量packages是一个PackageSetting类型的ArraySet。PackageSetting继承自PackageSettingBase，PackageSetting保存着package的多种信息。</p>
+<p><img src="/2019/PKMS相关类分析/SharedUserId.png" alt=""></p>
+<h2 id="2-SystemConfig类"><a href="#2-SystemConfig类" class="headerlink" title="2.SystemConfig类"></a>2.SystemConfig类</h2><h3 id="2-1-SystemConfig构造函数"><a href="#2-1-SystemConfig构造函数" class="headerlink" title="2.1 SystemConfig构造函数"></a>2.1 SystemConfig构造函数</h3><p>主要读取下面路径的配置</p>
+<p>/system/etc/、/system/etc/、/vendor/etc、/odm/etc、/oem/etc、/product/etc 目录下sysconfig和permissions</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">SystemConfig() &#123;</span><br><span class="line">       // Read configuration from system</span><br><span class="line">       readPermissions(Environment.buildPath(</span><br><span class="line">               Environment.getRootDirectory(), &quot;etc&quot;, &quot;sysconfig&quot;), ALLOW_ALL);</span><br><span class="line"></span><br><span class="line">       // Read configuration from the old permissions dir</span><br><span class="line">       readPermissions(Environment.buildPath(</span><br><span class="line">               Environment.getRootDirectory(), &quot;etc&quot;, &quot;permissions&quot;), ALLOW_ALL);</span><br><span class="line"></span><br><span class="line">       // Vendors are only allowed to customze libs, features and privapp permissions</span><br><span class="line">       int vendorPermissionFlag = ALLOW_LIBS | ALLOW_FEATURES | ALLOW_PRIVAPP_PERMISSIONS;</span><br><span class="line">       if (Build.VERSION.FIRST_SDK_INT &lt;= Build.VERSION_CODES.O_MR1) &#123;</span><br><span class="line">           // For backward compatibility</span><br><span class="line">           vendorPermissionFlag |= (ALLOW_PERMISSIONS | ALLOW_APP_CONFIGS);</span><br><span class="line">       &#125;</span><br><span class="line">       readPermissions(Environment.buildPath(</span><br><span class="line">               Environment.getVendorDirectory(), &quot;etc&quot;, &quot;sysconfig&quot;), vendorPermissionFlag);</span><br><span class="line">       readPermissions(Environment.buildPath(</span><br><span class="line">               Environment.getVendorDirectory(), &quot;etc&quot;, &quot;permissions&quot;), vendorPermissionFlag);</span><br><span class="line"></span><br><span class="line">       // Allow ODM to customize system configs as much as Vendor, because /odm is another</span><br><span class="line">       // vendor partition other than /vendor.</span><br><span class="line">       int odmPermissionFlag = vendorPermissionFlag;</span><br><span class="line">       readPermissions(Environment.buildPath(</span><br><span class="line">               Environment.getOdmDirectory(), &quot;etc&quot;, &quot;sysconfig&quot;), odmPermissionFlag);</span><br><span class="line">       readPermissions(Environment.buildPath(</span><br><span class="line">               Environment.getOdmDirectory(), &quot;etc&quot;, &quot;permissions&quot;), odmPermissionFlag);</span><br><span class="line"></span><br><span class="line">       String skuProperty = SystemProperties.get(SKU_PROPERTY, &quot;&quot;);</span><br><span class="line">       if (!skuProperty.isEmpty()) &#123;</span><br><span class="line">           String skuDir = &quot;sku_&quot; + skuProperty;</span><br><span class="line"></span><br><span class="line">           readPermissions(Environment.buildPath(</span><br><span class="line">                   Environment.getOdmDirectory(), &quot;etc&quot;, &quot;sysconfig&quot;, skuDir), odmPermissionFlag);</span><br><span class="line">           readPermissions(Environment.buildPath(</span><br><span class="line">                   Environment.getOdmDirectory(), &quot;etc&quot;, &quot;permissions&quot;, skuDir),</span><br><span class="line">                   odmPermissionFlag);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       // Allow OEM to customize features and OEM permissions</span><br><span class="line">       int oemPermissionFlag = ALLOW_FEATURES | ALLOW_OEM_PERMISSIONS;</span><br><span class="line">       readPermissions(Environment.buildPath(</span><br><span class="line">               Environment.getOemDirectory(), &quot;etc&quot;, &quot;sysconfig&quot;), oemPermissionFlag);</span><br><span class="line">       readPermissions(Environment.buildPath(</span><br><span class="line">               Environment.getOemDirectory(), &quot;etc&quot;, &quot;permissions&quot;), oemPermissionFlag);</span><br><span class="line"></span><br><span class="line">       // Allow Product to customize all system configs</span><br><span class="line">       readPermissions(Environment.buildPath(</span><br><span class="line">               Environment.getProductDirectory(), &quot;etc&quot;, &quot;sysconfig&quot;), ALLOW_ALL);</span><br><span class="line">       readPermissions(Environment.buildPath(</span><br><span class="line">               Environment.getProductDirectory(), &quot;etc&quot;, &quot;permissions&quot;), ALLOW_ALL);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>SystemConfig构造函数中主要通过readPermissions函数将对应目录下的xml文件中定义的各个节点读取出来保存到SystemConfig成员变量中。在终端的/system/etc/permissions目录下可以看到很多xml配置文件，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">HWSTF:/system/etc/permissions $ ls -all</span><br><span class="line">total 300</span><br><span class="line">drwxr-xr-x  2 root root  4096 2018-08-08 00:01:00.000000000 +0800 .</span><br><span class="line">drwxr-xr-x 26 root root  4096 2018-08-08 00:01:00.000000000 +0800 ..</span><br><span class="line">-rw-r--r--  1 root root  1515 2018-08-08 00:01:00.000000000 +0800 HiViewTunnel-core.xml</span><br><span class="line">-rw-r--r--  1 root root   830 2018-08-08 00:01:00.000000000 +0800 android.hardware.bluetooth_le.xml</span><br><span class="line">-rw-r--r--  1 root root   927 2018-08-08 00:01:00.000000000 +0800 android.hardware.faketouch.xml</span><br><span class="line">-rw-r--r--  1 root root   834 2018-08-08 00:01:00.000000000 +0800 android.hardware.fingerprint.xml</span><br><span class="line">-rw-r--r--  1 root root   942 2018-08-08 00:01:00.000000000 +0800 android.hardware.location.gps.xml</span><br><span class="line">-rw-r--r--  1 root root   949 2018-08-08 00:01:00.000000000 +0800 android.hardware.location.xml</span><br><span class="line">-rw-r--r--  1 root root   888 2018-08-08 00:01:00.000000000 +0800 android.hardware.nfc.hce.xml</span><br><span class="line">-rw-r--r--  1 root root   891 2018-08-08 00:01:00.000000000 +0800 android.hardware.nfc.hcef.xml</span><br><span class="line">-rw-r--r--  1 root root   921 2018-08-08 00:01:00.000000000 +0800 android.hardware.nfc.xml</span><br><span class="line">-rw-r--r--  1 root root   870 2018-08-08 00:01:00.000000000 +0800 android.hardware.opengles.aep.xml</span><br><span class="line">-rw-r--r--  1 root root   824 2018-08-08 00:01:00.000000000 +0800 </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>这些配置文件都是编译时从framework指定位置拷贝过来的（framework/native/data/etc）,下面是platform.xml里面的部分</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;permissions&gt;</span><br><span class="line"></span><br><span class="line">    &lt;permission name=&quot;android.permission.BLUETOOTH_ADMIN&quot; &gt;</span><br><span class="line">        &lt;group gid=&quot;net_bt_admin&quot; /&gt;</span><br><span class="line">    &lt;/permission&gt;</span><br><span class="line">    &lt;permission name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot; /&gt;</span><br><span class="line">    &lt;assign-permission name=&quot;android.permission.MODIFY_AUDIO_SETTINGS&quot; uid=&quot;media&quot; /&gt;</span><br><span class="line">    &lt;library name=&quot;org.apache.http.legacy&quot;</span><br><span class="line">            file=&quot;/system/framework/org.apache.http.legacy.boot.jar&quot; /&gt;</span><br><span class="line">    &lt;allow-in-power-save package=&quot;com.android.providers.downloads&quot; /&gt;</span><br><span class="line">    &lt;!-- These are the packages that shouldn&apos;t run as system user --&gt;</span><br><span class="line">    &lt;system-user-blacklisted-app package=&quot;com.android.wallpaper.livepicker&quot; /&gt;</span><br><span class="line">    &lt;allow-in-data-usage-save package=&quot;com.dti.att&quot; /&gt;</span><br><span class="line">    &lt;feature name=&quot;android.hardware.vulkan.level&quot; version=&quot;0&quot; /&gt;</span><br><span class="line">    ...</span><br><span class="line"> &lt;/permissions&gt;</span><br></pre></td></tr></table></figure>
+<p>readPermissions方法内部调用readPermissionsFromXml方法来解析xml里面的各个节点，其中xml涉及到的标签内容有permission、assign-permission、library、feature等，这些标签的内容解析出来保存到SystemConfig的对应数据结构的全局变量中，以便管理查询。</p>
+<p>feature用来描述设备是否支持硬件特性；  library用于指定系统库，当应用程序运行时，系统会为进城加载一些必须的库； assign-permission将system中描述的permission与uid关联； permission将permission和gid关联。</p>
+<p>总结下SystemConfig初始化时解析xml文件节点以及对应的全局变量。</p>
+<p><img src="/2019/PKMS相关类分析/systemconfig.png" alt=""></p>
+<h2 id="3-PackageParser"><a href="#3-PackageParser" class="headerlink" title="3. PackageParser"></a>3. PackageParser</h2><p>这个类作用是解析APK，在其类中注释如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Parser for package files (APKs) on disk. This supports apps packaged either</span><br><span class="line"> * as a single &quot;monolithic&quot; APK, or apps packaged as a &quot;cluster&quot; of multiple</span><br><span class="line"> * APKs in a single directory.</span><br><span class="line"> * &lt;p&gt;</span><br><span class="line"> * Apps packaged as multiple APKs always consist of a single &quot;base&quot; APK (with a</span><br><span class="line"> * &#123;@code null&#125; split name) and zero or more &quot;split&quot; APKs (with unique split</span><br><span class="line"> * names). Any subset of those split APKs are a valid install, as long as the</span><br><span class="line"> * following constraints are met:</span><br><span class="line"> * &lt;ul&gt;</span><br><span class="line"> * &lt;li&gt;All APKs must have the exact same package name, version code, and signing</span><br><span class="line"> * certificates.</span><br><span class="line"> * &lt;li&gt;All APKs must have unique split names.</span><br><span class="line"> * &lt;li&gt;All installations must contain a single base APK.</span><br><span class="line"> * &lt;/ul&gt;</span><br><span class="line"> *</span><br><span class="line"> * @hide</span><br><span class="line"> */</span><br></pre></td></tr></table></figure>
+<p>这个类主要用于解析apk安装包，它能解析单一apk文件，也能够解析multiple APKs（一个apk文件里面包含多个apk文件）。这些multiple APKs需要满足下面几个条件：</p>
+<p>1.所有的apk必须具有完全相同的软件包包名，版本代码和签名证书</p>
+<p>2.所有的apk必须具有唯一的拆分名称</p>
+<p>3.所有安装必须含有一个单一的apk</p>
+<p>解析步骤</p>
+<p>1.将apk解析成package</p>
+<p>2.将package转化为packageinfo</p>
+<p>类结构</p>
+<p>里面有很多内部类和方法，下面讲介绍里面的主要内部类以及部分解析的方法</p>
+<h3 id="3-1-内部类"><a href="#3-1-内部类" class="headerlink" title="3.1 内部类"></a>3.1 内部类</h3><h4 id="3-1-1-NewPermissionInfo"><a href="#3-1-1-NewPermissionInfo" class="headerlink" title="3.1.1 NewPermissionInfo"></a>3.1.1 NewPermissionInfo</h4><p>记录新的权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/** @hide */</span><br><span class="line">   public static class NewPermissionInfo &#123;</span><br><span class="line">       //权限名称</span><br><span class="line">       @UnsupportedAppUsage</span><br><span class="line">       public final String name;</span><br><span class="line">       @UnsupportedAppUsage</span><br><span class="line">       //权限的开始版本号</span><br><span class="line">       public final int sdkVersion;</span><br><span class="line">       //文件的版本号，一般为0</span><br><span class="line">       public final int fileVersion;</span><br><span class="line"></span><br><span class="line">       public NewPermissionInfo(String name, int sdkVersion, int fileVersion) &#123;</span><br><span class="line">           this.name = name;</span><br><span class="line">           this.sdkVersion = sdkVersion;</span><br><span class="line">           this.fileVersion = fileVersion;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-1-2-SplitPermissionInfo"><a href="#3-1-2-SplitPermissionInfo" class="headerlink" title="3.1.2  SplitPermissionInfo"></a>3.1.2  SplitPermissionInfo</h4><p>主要记录一个权限拆分为颗粒度更小的权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/** @hide */</span><br><span class="line">   public static class SplitPermissionInfo &#123;</span><br><span class="line">       //表示旧的权限</span><br><span class="line">       public final String rootPerm;</span><br><span class="line">       表示旧的权限拆分为颗粒度更小的权限</span><br><span class="line">       //public final String[] newPerms;</span><br><span class="line">       表示在那个版本上拆分</span><br><span class="line">       //public final int targetSdk;</span><br><span class="line"></span><br><span class="line">       public SplitPermissionInfo(String rootPerm, String[] newPerms, int targetSdk) &#123;</span><br><span class="line">           this.rootPerm = rootPerm;</span><br><span class="line">           this.newPerms = newPerms;</span><br><span class="line">           this.targetSdk = targetSdk;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-1-3-ParsePackageItemArgs"><a href="#3-1-3-ParsePackageItemArgs" class="headerlink" title="3.1.3  ParsePackageItemArgs"></a>3.1.3  ParsePackageItemArgs</h4><p>主要为解析包单个item的参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">static class ParsePackageItemArgs &#123;</span><br><span class="line">        //表示安装包的包对象package</span><br><span class="line">        final Package owner;</span><br><span class="line">        //表示错误信息</span><br><span class="line">        final String[] outError;</span><br><span class="line">        //表示安装包中名字对应的资源id</span><br><span class="line">        final int nameRes;</span><br><span class="line">        //表示安装包中label对应的资源id</span><br><span class="line">        final int labelRes;</span><br><span class="line">        //表示安装包中icon对应的资源id</span><br><span class="line">        final int iconRes;</span><br><span class="line">        //表示安装包中roundIcon对应的资源id</span><br><span class="line">        final int roundIconRes;</span><br><span class="line">        //表示安装包中logo对应的资源id</span><br><span class="line">        final int logoRes;</span><br><span class="line">        //表示安装包中banner对应的资源id</span><br><span class="line">        final int bannerRes;</span><br><span class="line"></span><br><span class="line">        String tag;</span><br><span class="line">        TypedArray sa;</span><br><span class="line"></span><br><span class="line">        ParsePackageItemArgs(Package _owner, String[] _outError,</span><br><span class="line">                int _nameRes, int _labelRes, int _iconRes, int _roundIconRes, int _logoRes,</span><br><span class="line">                int _bannerRes) &#123;</span><br><span class="line">            owner = _owner;</span><br><span class="line">            outError = _outError;</span><br><span class="line">            nameRes = _nameRes;</span><br><span class="line">            labelRes = _labelRes;</span><br><span class="line">            iconRes = _iconRes;</span><br><span class="line">            logoRes = _logoRes;</span><br><span class="line">            bannerRes = _bannerRes;</span><br><span class="line">            roundIconRes = _roundIconRes;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-1-4-ParseComponentArgs"><a href="#3-1-4-ParseComponentArgs" class="headerlink" title="3.1.4  ParseComponentArgs"></a>3.1.4  ParseComponentArgs</h4><p>主要为解析包中单个组件的参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">/** @hide */</span><br><span class="line">   @VisibleForTesting</span><br><span class="line">   public static class ParseComponentArgs extends ParsePackageItemArgs &#123;</span><br><span class="line">       //表示该组件对应的进程，如果设置独立进程则表示为独立进程的名字</span><br><span class="line">       final String[] sepProcesses;</span><br><span class="line">       //表示组件对应的进程的资源id</span><br><span class="line">       final int processRes;</span><br><span class="line">        //表示组件对应的进程的描述id</span><br><span class="line">       final int descriptionRes;</span><br><span class="line">       //表示组件是否可用</span><br><span class="line">       final int enabledRes;</span><br><span class="line">       //表示该组件的标志位</span><br><span class="line">       int flags;</span><br><span class="line"></span><br><span class="line">       public ParseComponentArgs(Package _owner, String[] _outError,</span><br><span class="line">               int _nameRes, int _labelRes, int _iconRes, int _roundIconRes, int _logoRes,</span><br><span class="line">               int _bannerRes,</span><br><span class="line">               String[] _sepProcesses, int _processRes,</span><br><span class="line">               int _descriptionRes, int _enabledRes) &#123;</span><br><span class="line">           super(_owner, _outError, _nameRes, _labelRes, _iconRes, _roundIconRes, _logoRes,</span><br><span class="line">                   _bannerRes);</span><br><span class="line">           sepProcesses = _sepProcesses;</span><br><span class="line">           processRes = _processRes;</span><br><span class="line">           descriptionRes = _descriptionRes;</span><br><span class="line">           enabledRes = _enabledRes;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-1-5-PackageLite"><a href="#3-1-5-PackageLite" class="headerlink" title="3.1.5  PackageLite"></a>3.1.5  PackageLite</h4><p>表示在解析过程中的一个轻量级的独立的安装包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * Lightweight parsed details about a single package.</span><br><span class="line">    */</span><br><span class="line">   public static class PackageLite &#123;</span><br><span class="line">        //表示包名</span><br><span class="line">       @UnsupportedAppUsage</span><br><span class="line">       public final String packageName;</span><br><span class="line">       //表示版本号</span><br><span class="line">       public final int versionCode;</span><br><span class="line">       //表示主版本号</span><br><span class="line">       public final int versionCodeMajor;</span><br><span class="line">       @UnsupportedAppUsage</span><br><span class="line">       //表示安装位置的属性，可以有几个常量的选择，比如PackageInfo.INSTALL_LOACTION_AUTO</span><br><span class="line">       public final int installLocation;</span><br><span class="line">       //表示验证对象</span><br><span class="line">       public final VerifierInfo[] verifiers;</span><br><span class="line"></span><br><span class="line">       //如果有拆包，则表示拆包的名字数组</span><br><span class="line">       /** Names of any split APKs, ordered by parsed splitName */</span><br><span class="line">       public final String[] splitNames;</span><br><span class="line">       </span><br><span class="line">       //拆包是否有feature</span><br><span class="line">       /** Names of any split APKs that are features. Ordered by splitName */</span><br><span class="line">       public final boolean[] isFeatureSplits;</span><br><span class="line">      </span><br><span class="line">       //拆包的uses和config</span><br><span class="line">       /** Dependencies of any split APKs, ordered by parsed splitName */</span><br><span class="line">       public final String[] usesSplitNames;</span><br><span class="line">       public final String[] configForSplit;</span><br><span class="line"></span><br><span class="line">       //表示代码的路径，单个apk对应的是base apk路径，集群apk则是集群apk的目录</span><br><span class="line">       /**</span><br><span class="line">        * Path where this package was found on disk. For monolithic packages</span><br><span class="line">        * this is path to single base APK file; for cluster packages this is</span><br><span class="line">        * path to the cluster directory.</span><br><span class="line">        */</span><br><span class="line">       public final String codePath;</span><br><span class="line">       //base apk的路径</span><br><span class="line">       /** Path of base APK */</span><br><span class="line">       public final String baseCodePath;</span><br><span class="line">       //拆分apk的路径</span><br><span class="line">       /** Paths of any split APKs, ordered by parsed splitName */</span><br><span class="line">       public final String[] splitCodePaths;</span><br><span class="line">       //base apk的调整版本号   </span><br><span class="line">       /** Revision code of base APK */</span><br><span class="line">       public final int baseRevisionCode;</span><br><span class="line">       //拆分apk的调整版本号  </span><br><span class="line">       /** Revision codes of any split APKs, ordered by parsed splitName */</span><br><span class="line">       public final int[] splitRevisionCodes;</span><br><span class="line">       //是不是核心app</span><br><span class="line">       public final boolean coreApp;</span><br><span class="line">       //是不是debug</span><br><span class="line">       public final boolean debuggable;</span><br><span class="line">       //是不是支持多平台，主要是指cpu平台</span><br><span class="line">       public final boolean multiArch;</span><br><span class="line">       //是不是用32位的so库</span><br><span class="line">       public final boolean use32bitAbi;</span><br><span class="line">       //是否需要提取so库</span><br><span class="line">       public final boolean extractNativeLibs;</span><br><span class="line">       //拆分包是否是独立</span><br><span class="line">       public final boolean isolatedSplits;</span><br><span class="line"></span><br><span class="line">       public PackageLite(String codePath, ApkLite baseApk, String[] splitNames,</span><br><span class="line">               boolean[] isFeatureSplits, String[] usesSplitNames, String[] configForSplit,</span><br><span class="line">               String[] splitCodePaths, int[] splitRevisionCodes) &#123;</span><br><span class="line">           this.packageName = baseApk.packageName;</span><br><span class="line">           this.versionCode = baseApk.versionCode;</span><br><span class="line">           this.versionCodeMajor = baseApk.versionCodeMajor;</span><br><span class="line">           this.installLocation = baseApk.installLocation;</span><br><span class="line">           this.verifiers = baseApk.verifiers;</span><br><span class="line">           this.splitNames = splitNames;</span><br><span class="line">           this.isFeatureSplits = isFeatureSplits;</span><br><span class="line">           this.usesSplitNames = usesSplitNames;</span><br><span class="line">           this.configForSplit = configForSplit;</span><br><span class="line">           this.codePath = codePath;</span><br><span class="line">           this.baseCodePath = baseApk.codePath;</span><br><span class="line">           this.splitCodePaths = splitCodePaths;</span><br><span class="line">           this.baseRevisionCode = baseApk.revisionCode;</span><br><span class="line">           this.splitRevisionCodes = splitRevisionCodes;</span><br><span class="line">           this.coreApp = baseApk.coreApp;</span><br><span class="line">           this.debuggable = baseApk.debuggable;</span><br><span class="line">           this.multiArch = baseApk.multiArch;</span><br><span class="line">           this.use32bitAbi = baseApk.use32bitAbi;</span><br><span class="line">           this.extractNativeLibs = baseApk.extractNativeLibs;</span><br><span class="line">           this.isolatedSplits = baseApk.isolatedSplits;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-1-6-ApkLite"><a href="#3-1-6-ApkLite" class="headerlink" title="3.1.6  ApkLite"></a>3.1.6  ApkLite</h4><p>表示解析过程中的一个轻量级独立的apk</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * Lightweight parsed details about a single APK file.</span><br><span class="line">    */</span><br><span class="line">   public static class ApkLite &#123;</span><br><span class="line">       //表示代码的路径</span><br><span class="line">       public final String codePath;</span><br><span class="line">       //表示包名</span><br><span class="line">       public final String packageName;</span><br><span class="line">       //表示拆分的包名</span><br><span class="line">       public final String splitName;</span><br><span class="line">        //表示拆包是否有Feature</span><br><span class="line">       public boolean isFeatureSplit;</span><br><span class="line">        //表示拆包的配置</span><br><span class="line">       public final String configForSplit;</span><br><span class="line">        //表示拆包名字的uses</span><br><span class="line">       public final String usesSplitName;</span><br><span class="line">        //表示版本号</span><br><span class="line">       public final int versionCode;</span><br><span class="line">        //表示主版本号</span><br><span class="line">       public final int versionCodeMajor;</span><br><span class="line">       //表示调整的版本号</span><br><span class="line">       public final int revisionCode;</span><br><span class="line">       //表示安装位置的属性，可以有几个常量的选择，比如PackageInfo.INSTALL_LOACTION_AUTO</span><br><span class="line">       public final int installLocation;</span><br><span class="line">       //表示验证对象</span><br><span class="line">       public final VerifierInfo[] verifiers;</span><br><span class="line">       //表示签名对象</span><br><span class="line">       public final SigningDetails signingDetails;</span><br><span class="line">       //是不是核心app</span><br><span class="line">       public final boolean coreApp;</span><br><span class="line">        //是不是debug</span><br><span class="line">       public final boolean debuggable;</span><br><span class="line">        //是不是支持多平台，主要是指cpu平台</span><br><span class="line">       public final boolean multiArch;</span><br><span class="line">        //是不是用32位的so库</span><br><span class="line">       public final boolean use32bitAbi;</span><br><span class="line">        //是否需要提取so库</span><br><span class="line">       public final boolean extractNativeLibs;</span><br><span class="line">        //拆分包是否是独立</span><br><span class="line">       public final boolean isolatedSplits;</span><br><span class="line"></span><br><span class="line">       public ApkLite(String codePath, String packageName, String splitName,</span><br><span class="line">               boolean isFeatureSplit,</span><br><span class="line">               String configForSplit, String usesSplitName, int versionCode, int versionCodeMajor,</span><br><span class="line">               int revisionCode, int installLocation, List&lt;VerifierInfo&gt; verifiers,</span><br><span class="line">               SigningDetails signingDetails, boolean coreApp,</span><br><span class="line">               boolean debuggable, boolean multiArch, boolean use32bitAbi,</span><br><span class="line">               boolean extractNativeLibs, boolean isolatedSplits) &#123;</span><br><span class="line">           this.codePath = codePath;</span><br><span class="line">           this.packageName = packageName;</span><br><span class="line">           this.splitName = splitName;</span><br><span class="line">           this.isFeatureSplit = isFeatureSplit;</span><br><span class="line">           this.configForSplit = configForSplit;</span><br><span class="line">           this.usesSplitName = usesSplitName;</span><br><span class="line">           this.versionCode = versionCode;</span><br><span class="line">           this.versionCodeMajor = versionCodeMajor;</span><br><span class="line">           this.revisionCode = revisionCode;</span><br><span class="line">           this.installLocation = installLocation;</span><br><span class="line">           this.signingDetails = signingDetails;</span><br><span class="line">           this.verifiers = verifiers.toArray(new VerifierInfo[verifiers.size()]);</span><br><span class="line">           this.coreApp = coreApp;</span><br><span class="line">           this.debuggable = debuggable;</span><br><span class="line">           this.multiArch = multiArch;</span><br><span class="line">           this.use32bitAbi = use32bitAbi;</span><br><span class="line">           this.extractNativeLibs = extractNativeLibs;</span><br><span class="line">           this.isolatedSplits = isolatedSplits;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>备注</strong>：PackageLite和ApkLite代表不同的含义，前者是包，后者是指apk，一个包中可能包含多个apk</p>
+<h4 id="3-1-7-SplitNameComparator"><a href="#3-1-7-SplitNameComparator" class="headerlink" title="3.1.7  SplitNameComparator"></a>3.1.7  SplitNameComparator</h4><p>表示类比较器，在拆包中排序用到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * Used to sort a set of APKs based on their split names, always placing the</span><br><span class="line">    * base APK (with &#123;@code null&#125; split name) first.</span><br><span class="line">    */</span><br><span class="line">   private static class SplitNameComparator implements Comparator&lt;String&gt; &#123;</span><br><span class="line">       @Override</span><br><span class="line">       public int compare(String lhs, String rhs) &#123;</span><br><span class="line">           if (lhs == null) &#123;</span><br><span class="line">               return -1;</span><br><span class="line">           &#125; else if (rhs == null) &#123;</span><br><span class="line">               return 1;</span><br><span class="line">           &#125; else &#123;</span><br><span class="line">               return lhs.compareTo(rhs);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-1-8-Package"><a href="#3-1-8-Package" class="headerlink" title="3.1.8  Package"></a>3.1.8  Package</h4><p>表示从磁盘上的apk文件解析出来的完整包，一个包由一个基础的apk和多个拆分的apk构成。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br></pre></td><td class="code"><pre><span class="line">  /**</span><br><span class="line">     * Representation of a full package parsed from APK files on disk. A package</span><br><span class="line">     * consists of a single base APK, and zero or more split APKs.</span><br><span class="line">     */</span><br><span class="line">    public final static class Package implements Parcelable &#123;</span><br><span class="line">        //表示包名</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public String packageName;</span><br><span class="line">        //表示manifest中声明的包名</span><br><span class="line">        // The package name declared in the manifest as the package can be</span><br><span class="line">        // renamed, for example static shared libs use synthetic package names.</span><br><span class="line">        public String manifestPackageName;</span><br><span class="line">        //表示拆包的包名</span><br><span class="line">        /** Names of any split APKs, ordered by parsed splitName */</span><br><span class="line">        public String[] splitNames;</span><br><span class="line"></span><br><span class="line">        // TODO: work towards making these paths invariant</span><br><span class="line">        //对应一个volume的uid</span><br><span class="line">        public String volumeUuid;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * Path where this package was found on disk. For monolithic packages</span><br><span class="line">         * this is path to single base APK file; for cluster packages this is</span><br><span class="line">         * path to the cluster directory.</span><br><span class="line">         */</span><br><span class="line">         //表示代码路径</span><br><span class="line">        public String codePath;</span><br><span class="line"></span><br><span class="line">        /** Path of base APK */</span><br><span class="line">        //表示base APK路径</span><br><span class="line">        public String baseCodePath;</span><br><span class="line">        //表示拆分APK路径</span><br><span class="line">        /** Paths of any split APKs, ordered by parsed splitName */ </span><br><span class="line">        public String[] splitCodePaths;</span><br><span class="line">        //表示base APK调整版本号</span><br><span class="line">        /** Revision code of base APK */</span><br><span class="line">        public int baseRevisionCode;</span><br><span class="line">         //表示拆分APK调整版本号</span><br><span class="line">        /** Revision codes of any split APKs, ordered by parsed splitName */</span><br><span class="line">        public int[] splitRevisionCodes;</span><br><span class="line">        </span><br><span class="line">         //表示拆分APK的标注数组</span><br><span class="line">        /** Flags of any split APKs; ordered by parsed splitName */</span><br><span class="line">        public int[] splitFlags;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * Private flags of any split APKs; ordered by parsed splitName.</span><br><span class="line">         *</span><br><span class="line">         * &#123;@hide&#125;</span><br><span class="line">         */</span><br><span class="line">         //表示拆分APK的私有标注数组</span><br><span class="line">        public int[] splitPrivateFlags;</span><br><span class="line">        //表示是否支持硬件加速</span><br><span class="line">        public boolean baseHardwareAccelerated;</span><br><span class="line"></span><br><span class="line">        //对应application对象，对应AndroidManifest里面的&lt;Application&gt;</span><br><span class="line">        // For now we only support one application per package.</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public ApplicationInfo applicationInfo = new ApplicationInfo();</span><br><span class="line">        </span><br><span class="line">        //apk安装包中，对应AndroidManifest里面的&lt;Permission&gt;</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public final ArrayList&lt;Permission&gt; permissions = new ArrayList&lt;Permission&gt;(0);</span><br><span class="line">        //apk安装包中，对应AndroidManifest里面的&lt;PermissionGroup&gt;</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public final ArrayList&lt;PermissionGroup&gt; permissionGroups = new ArrayList&lt;PermissionGroup&gt;(0);</span><br><span class="line">        //apk安装包中，对应AndroidManifest里面的&lt;Activity&gt;</span><br><span class="line">        //不是通常说的Activity，而是PackageParse的内部类Activity</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public final ArrayList&lt;Activity&gt; activities = new ArrayList&lt;Activity&gt;(0);</span><br><span class="line">        </span><br><span class="line">        //apk安装包中，对应AndroidManifest里面的&lt;Receiver&gt;</span><br><span class="line">        //不是通常说的Activity，而是PackageParse的内部类Activity</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public final ArrayList&lt;Activity&gt; receivers = new ArrayList&lt;Activity&gt;(0);</span><br><span class="line">        </span><br><span class="line">        //apk安装包中，对应AndroidManifest里面的&lt;Provider&gt;</span><br><span class="line">        //不是通常说的Provider，而是PackageParse的内部类Provider</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public final ArrayList&lt;Provider&gt; providers = new ArrayList&lt;Provider&gt;(0);</span><br><span class="line">        </span><br><span class="line">        //apk安装包中，对应AndroidManifest里面的&lt;Service&gt;</span><br><span class="line">        //不是通常说的Service，而是PackageParse的内部类Service</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public final ArrayList&lt;Service&gt; services = new ArrayList&lt;Service&gt;(0);</span><br><span class="line">        </span><br><span class="line">        //apk安装包中，对应AndroidManifest里面的&lt;Instrumentation&gt;</span><br><span class="line">        //不是通常说的Instrumentation，而是内部类Instrumentation</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public final ArrayList&lt;Instrumentation&gt; instrumentation = new ArrayList&lt;Instrumentation&gt;(0);</span><br><span class="line">        //apk安装包中请求的权限</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public final ArrayList&lt;String&gt; requestedPermissions = new ArrayList&lt;String&gt;();</span><br><span class="line">        </span><br><span class="line">        //apk安装包中保内广播的action</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public ArrayList&lt;String&gt; protectedBroadcasts;</span><br><span class="line">        //父包</span><br><span class="line">        public Package parentPackage;</span><br><span class="line">        //子包</span><br><span class="line">        public ArrayList&lt;Package&gt; childPackages;</span><br><span class="line">        //共享库名称</span><br><span class="line">        public String staticSharedLibName = null;</span><br><span class="line">        //共享库版本</span><br><span class="line">        public long staticSharedLibVersion = 0;</span><br><span class="line">        //依赖库名称</span><br><span class="line">        public ArrayList&lt;String&gt; libraryNames = null;</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        //使用库名称</span><br><span class="line">        public ArrayList&lt;String&gt; usesLibraries = null;</span><br><span class="line">        //使用静态库名称</span><br><span class="line">        public ArrayList&lt;String&gt; usesStaticLibraries = null;</span><br><span class="line">        //使用静态库版本</span><br><span class="line">        public long[] usesStaticLibrariesVersions = null;</span><br><span class="line">        public String[][] usesStaticLibrariesCertDigests = null;</span><br><span class="line">         //使用其它的库</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public ArrayList&lt;String&gt; usesOptionalLibraries = null;</span><br><span class="line">         //使用静态库文件</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public String[] usesLibraryFiles = null;</span><br><span class="line">         //使用共享库信息</span><br><span class="line">        public ArrayList&lt;SharedLibraryInfo&gt; usesLibraryInfos = null;</span><br><span class="line">         //安装包中某个Activity信息的集合 在AndroidManifest里面对应&lt;preferred&gt;标签</span><br><span class="line">        public ArrayList&lt;ActivityIntentInfo&gt; preferredActivityFilters = null;</span><br><span class="line">         //安装包中 AndroidManifest中对应original-package的集合</span><br><span class="line">        public ArrayList&lt;String&gt; mOriginalPackages = null;</span><br><span class="line">         //真实包名，通常和mOriginalPackages一起使用</span><br><span class="line">        public String mRealPackage = null;</span><br><span class="line">        //APK安装包 AndroidManifest中对应adopt-permissions的集合</span><br><span class="line">        public ArrayList&lt;String&gt; mAdoptPermissions = null;</span><br><span class="line">       //独立的存储应用程序元数据，避免多个不需要的引用</span><br><span class="line">        // We store the application meta-data independently to avoid multiple unwanted references</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public Bundle mAppMetaData = null;</span><br><span class="line">        //版本号</span><br><span class="line">        // The version code declared for this package.</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public int mVersionCode;</span><br><span class="line">        //主版本号</span><br><span class="line">        // The major version code declared for this package.</span><br><span class="line">        public int mVersionCodeMajor;</span><br><span class="line">        //长版本号   </span><br><span class="line">        // Return long containing mVersionCode and mVersionCodeMajor.</span><br><span class="line">        public long getLongVersionCode() &#123;</span><br><span class="line">            return PackageInfo.composeLongVersionCode(mVersionCodeMajor, mVersionCode);</span><br><span class="line">        &#125;</span><br><span class="line">        //版本名</span><br><span class="line">        // The version name declared for this package.</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public String mVersionName;</span><br><span class="line">        //共享用户Id</span><br><span class="line">        // The shared user id that this package wants to use.</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public String mSharedUserId;</span><br><span class="line">        //共享用户标签</span><br><span class="line">        // The shared user label that this package wants to use.</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public int mSharedUserLabel;</span><br><span class="line">        //签名</span><br><span class="line">        // Signatures that were read from the package.</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        @NonNull public SigningDetails mSigningDetails = SigningDetails.UNKNOWN;</span><br><span class="line">        //dexopt的位置，以便pkms跟踪执行dexopt的位置</span><br><span class="line">        // For use by package manager service for quick lookup of</span><br><span class="line">        // preferred up order.</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public int mPreferredOrder = 0;</span><br><span class="line">        //最后一次使用package的时间</span><br><span class="line">        // For use by package manager to keep track of when a package was last used.</span><br><span class="line">        public long[] mLastPackageUsageTimeInMills =</span><br><span class="line">                new long[PackageManager.NOTIFY_PACKAGE_USE_REASONS_COUNT];</span><br><span class="line"></span><br><span class="line">        // // User set enabled state.</span><br><span class="line">        // public int mSetEnabled = PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;</span><br><span class="line">        //</span><br><span class="line">        // // Whether the package has been stopped.</span><br><span class="line">        // public boolean mSetStopped = false;</span><br><span class="line">        </span><br><span class="line">        //附加数据</span><br><span class="line">        // Additional data supplied by callers.</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public Object mExtras;</span><br><span class="line">         </span><br><span class="line">        //硬件配置信息，对应AndroidManifest里面的&lt;users-configuration&gt;标签</span><br><span class="line">        // Applications hardware preferences</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public ArrayList&lt;ConfigurationInfo&gt; configPreferences = null;</span><br><span class="line">        //特性组信息，对应AndroidManifest里面的&lt;uses-feature&gt;标签 </span><br><span class="line">        // Applications requested features</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public ArrayList&lt;FeatureInfo&gt; reqFeatures = null;</span><br><span class="line">         //特性组信息，对应AndroidManifest里面的&lt;feature-group&gt;标签 </span><br><span class="line">        // Applications requested feature groups</span><br><span class="line">        public ArrayList&lt;FeatureGroupInfo&gt; featureGroups = null;</span><br><span class="line">        </span><br><span class="line">        //安装的属性</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public int installLocation;</span><br><span class="line"></span><br><span class="line">        //是否是核心</span><br><span class="line">        public boolean coreApp;</span><br><span class="line">        </span><br><span class="line">        //是否是全局必要，所有用户都需要的应用程序，无法为用户卸载</span><br><span class="line">        /* An app that&apos;s required for all users and cannot be uninstalled for a user */</span><br><span class="line">        public boolean mRequiredForAllUsers;</span><br><span class="line">        </span><br><span class="line">        //受限账户的验证类型</span><br><span class="line">        /* The restricted account authenticator type that is used by this application */</span><br><span class="line">        public String mRestrictedAccountType;</span><br><span class="line">        //账户的类型</span><br><span class="line">        /* The required account type without which this application will not function */</span><br><span class="line">        public String mRequiredAccountType;</span><br><span class="line">        </span><br><span class="line">        //对应AndroidManifest里面的&lt;overlay&gt;标签 </span><br><span class="line">        public String mOverlayTarget;</span><br><span class="line">        //overlay类别</span><br><span class="line">        public String mOverlayCategory;</span><br><span class="line">        //overlay优先等级</span><br><span class="line">        public int mOverlayPriority;</span><br><span class="line">        //是否是静态overlay</span><br><span class="line">        public boolean mOverlayIsStatic;</span><br><span class="line">        //编译sdk版本</span><br><span class="line">        public int mCompileSdkVersion;</span><br><span class="line">         //编译sdk版本名称</span><br><span class="line">        public String mCompileSdkVersionCodename;</span><br><span class="line">        </span><br><span class="line">        //下面用来给KeySetManagerService的数据</span><br><span class="line">        /**</span><br><span class="line">         * Data used to feed the KeySetManagerService</span><br><span class="line">         */</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public ArraySet&lt;String&gt; mUpgradeKeySets; //升级</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public ArrayMap&lt;String, ArraySet&lt;PublicKey&gt;&gt; mKeySetMapping; //公钥</span><br><span class="line"></span><br><span class="line">        //有abi的话覆盖</span><br><span class="line">        /**</span><br><span class="line">         * The install time abi override for this package, if any.</span><br><span class="line">         *</span><br><span class="line">         * TODO: This seems like a horrible place to put the abiOverride because</span><br><span class="line">         * this isn&apos;t something the packageParser parsers. However, this fits in with</span><br><span class="line">         * the rest of the PackageManager where package scanning randomly pushes</span><br><span class="line">         * and prods fields out of &#123;@code this.applicationInfo&#125;.</span><br><span class="line">         */</span><br><span class="line">        public String cpuAbiOverride;</span><br><span class="line">        //是否用32位的abi</span><br><span class="line">        /**</span><br><span class="line">         * The install time abi override to choose 32bit abi&apos;s when multiple abi&apos;s</span><br><span class="line">         * are present. This is only meaningfull for multiarch applications.</span><br><span class="line">         * The use32bitAbi attribute is ignored if cpuAbiOverride is also set.</span><br><span class="line">         */</span><br><span class="line">        public boolean use32bitAbi;</span><br><span class="line">        //限制升级hash</span><br><span class="line">        public byte[] restrictUpdateHash;</span><br><span class="line">        //是否对InstantApps可见</span><br><span class="line">        /** Set if the app or any of its components are visible to instant applications. */</span><br><span class="line">        public boolean visibleToInstantApps;</span><br><span class="line">        //是否是备份</span><br><span class="line">        /** Whether or not the package is a stub and must be replaced by the full version. */</span><br><span class="line">        public boolean isStub;</span><br><span class="line"></span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public Package(String packageName) &#123;</span><br><span class="line">            this.packageName = packageName;</span><br><span class="line">            this.manifestPackageName = packageName;</span><br><span class="line">            applicationInfo.packageName = packageName;</span><br><span class="line">            applicationInfo.uid = -1;</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-1-9-Component"><a href="#3-1-9-Component" class="headerlink" title="3.1.9  Component"></a>3.1.9  Component</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">  public static abstract class IntentInfo extends IntentFilter &#123;</span><br><span class="line">        //是否有默认</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public boolean hasDefault;</span><br><span class="line">        //标签的资源id</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public int labelRes;</span><br><span class="line">         //本地化的标签</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public CharSequence nonLocalizedLabel;</span><br><span class="line">         //icon的资源id</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public int icon;</span><br><span class="line">         //logo的资源id</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public int logo;</span><br><span class="line">         //banner的资源id</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public int banner;</span><br><span class="line">         //preferred的资源id</span><br><span class="line">        public int preferred;</span><br><span class="line">        ...</span><br><span class="line">   &#125;</span><br><span class="line"> </span><br><span class="line"> public static abstract class Component&lt;II extends IntentInfo&gt; &#123;</span><br><span class="line">        //该组件所包含的IntentFilter</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public final ArrayList&lt;II&gt; intents; </span><br><span class="line">        //该组件的类名</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public final String className;</span><br><span class="line">         //该组件的元数据</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public Bundle metaData;</span><br><span class="line">         //该组件的类名</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        //包含该组件的包名</span><br><span class="line">        public Package owner;</span><br><span class="line">        /** The order of this component in relation to its peers */</span><br><span class="line">        public int order;</span><br><span class="line">        //该组件名</span><br><span class="line">        ComponentName componentName;</span><br><span class="line">         //组件短名</span><br><span class="line">        String componentShortName;</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-1-10-Permission"><a href="#3-1-10-Permission" class="headerlink" title="3.1.10  Permission"></a>3.1.10  Permission</h4><p>继承于Component，对应AndroidManifest里面的<permission>标签</permission></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public final static class Permission extends Component&lt;IntentInfo&gt; implements Parcelable &#123;</span><br><span class="line">        //权限信息</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public final PermissionInfo info;</span><br><span class="line">        //是否权限树</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public boolean tree;</span><br><span class="line">        //对应的权限组</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public PermissionGroup group;</span><br><span class="line"></span><br><span class="line">        public Permission(Package _owner) &#123;</span><br><span class="line">            super(_owner);</span><br><span class="line">            info = new PermissionInfo();</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>继承于Component，对应AndroidManifest里面的<activity>标签</activity></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public final static class Activity extends Component&lt;ActivityIntentInfo&gt; implements Parcelable &#123;</span><br><span class="line">        @UnsupportedAppUsage</span><br><span class="line">        public final ActivityInfo info;</span><br><span class="line">        private boolean mHasMaxAspectRatio;</span><br><span class="line"></span><br><span class="line">        private boolean hasMaxAspectRatio() &#123;</span><br><span class="line">            return mHasMaxAspectRatio;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public Activity(final ParseComponentArgs args, final ActivityInfo _info) &#123;</span><br><span class="line">            super(args, _info);</span><br><span class="line">            info = _info;</span><br><span class="line">            info.applicationInfo = args.owner.applicationInfo;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public void setPackageName(String packageName) &#123;</span><br><span class="line">            super.setPackageName(packageName);</span><br><span class="line">            info.packageName = packageName;</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一些其他的基本类似类在这里就不再详细的介绍，下面看下类里面的一些方法：</p>
+<h3 id="3-2-内部方法"><a href="#3-2-内部方法" class="headerlink" title="3.2 内部方法"></a>3.2 内部方法</h3><p>里面的方法基本上是和解析相关的方法，这里以parseActivity为例说明，其他的解析大同小异。</p>
+<h4 id="3-2-1-parsePackage"><a href="#3-2-1-parsePackage" class="headerlink" title="3.2.1 parsePackage"></a>3.2.1 parsePackage</h4><p>这个类是解析package最开始的方法，其他的解析方法都是从这个入口进入的，这里分为两种解析，一种是single APK ，另一种是cluster APKs。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * Parse the package at the given location. Automatically detects if the</span><br><span class="line">    * package is a monolithic style (single APK file) or cluster style</span><br><span class="line">    * (directory of APKs).</span><br><span class="line">    * &lt;p&gt;</span><br><span class="line">    * This performs sanity checking on cluster style packages, such as</span><br><span class="line">    * requiring identical package name and version codes, a single base APK,</span><br><span class="line">    * and unique split names.</span><br><span class="line">    * &lt;p&gt;</span><br><span class="line">    * Note that this &lt;em&gt;does not&lt;/em&gt; perform signature verification; that</span><br><span class="line">    * must be done separately in &#123;@link #collectCertificates(Package, int)&#125;.</span><br><span class="line">    *</span><br><span class="line">    * If &#123;@code useCaches&#125; is true, the package parser might return a cached</span><br><span class="line">    * result from a previous parse of the same &#123;@code packageFile&#125; with the same</span><br><span class="line">    * &#123;@code flags&#125;. Note that this method does not check whether &#123;@code packageFile&#125;</span><br><span class="line">    * has changed since the last parse, it&apos;s up to callers to do so.</span><br><span class="line">    *</span><br><span class="line">    * @see #parsePackageLite(File, int)</span><br><span class="line">    */</span><br><span class="line">   @UnsupportedAppUsage</span><br><span class="line">   public Package parsePackage(File packageFile, int flags, boolean useCaches)</span><br><span class="line">           throws PackageParserException &#123;</span><br><span class="line">       Package parsed = useCaches ? getCachedResult(packageFile, flags) : null;</span><br><span class="line">       if (parsed != null) &#123;</span><br><span class="line">           return parsed;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       long parseTime = LOG_PARSE_TIMINGS ? SystemClock.uptimeMillis() : 0;</span><br><span class="line">       //Cluster app</span><br><span class="line">       if (packageFile.isDirectory()) &#123;</span><br><span class="line">           parsed = parseClusterPackage(packageFile, flags);</span><br><span class="line">       &#125; else &#123;</span><br><span class="line">           parsed = parseMonolithicPackage(packageFile, flags);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       long cacheTime = LOG_PARSE_TIMINGS ? SystemClock.uptimeMillis() : 0;</span><br><span class="line">       cacheResult(packageFile, flags, parsed);</span><br><span class="line">       if (LOG_PARSE_TIMINGS) &#123;</span><br><span class="line">           parseTime = cacheTime - parseTime;</span><br><span class="line">           cacheTime = SystemClock.uptimeMillis() - cacheTime;</span><br><span class="line">           if (parseTime + cacheTime &gt; LOG_PARSE_TIMINGS_THRESHOLD_MS) &#123;</span><br><span class="line">               Slog.i(TAG, &quot;Parse times for &apos;&quot; + packageFile + &quot;&apos;: parse=&quot; + parseTime</span><br><span class="line">                       + &quot;ms, update_cache=&quot; + cacheTime + &quot; ms&quot;);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       return parsed;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-2-2-parseActivity"><a href="#3-2-2-parseActivity" class="headerlink" title="3.2.2 parseActivity"></a>3.2.2 parseActivity</h4><p>这个方法主要是解析AndroidManifest中activity标签的内容，并将其保存到PackageParser.Activity对象中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br></pre></td><td class="code"><pre><span class="line">private Activity parseActivity(Package owner, Resources res,</span><br><span class="line">            XmlResourceParser parser, int flags, String[] outError, CachedComponentArgs cachedArgs,</span><br><span class="line">            boolean receiver, boolean hardwareAccelerated)</span><br><span class="line">            throws XmlPullParserException, IOException &#123;</span><br><span class="line">        //获取资源数组</span><br><span class="line">        TypedArray sa = res.obtainAttributes(parser, R.styleable.AndroidManifestActivity);</span><br><span class="line">        //初始化解析Activity参数</span><br><span class="line">        if (cachedArgs.mActivityArgs == null) &#123;</span><br><span class="line">            cachedArgs.mActivityArgs = new ParseComponentArgs(owner, outError,</span><br><span class="line">                    R.styleable.AndroidManifestActivity_name,</span><br><span class="line">                    R.styleable.AndroidManifestActivity_label,</span><br><span class="line">                    R.styleable.AndroidManifestActivity_icon,</span><br><span class="line">                    R.styleable.AndroidManifestActivity_roundIcon,</span><br><span class="line">                    R.styleable.AndroidManifestActivity_logo,</span><br><span class="line">                    R.styleable.AndroidManifestActivity_banner,</span><br><span class="line">                    mSeparateProcesses,</span><br><span class="line">                    R.styleable.AndroidManifestActivity_process,</span><br><span class="line">                    R.styleable.AndroidManifestActivity_description,</span><br><span class="line">                    R.styleable.AndroidManifestActivity_enabled);</span><br><span class="line">        &#125;</span><br><span class="line">        //判断是receiver还是activity</span><br><span class="line">        cachedArgs.mActivityArgs.tag = receiver ? &quot;&lt;receiver&gt;&quot; : &quot;&lt;activity&gt;&quot;;</span><br><span class="line">        cachedArgs.mActivityArgs.sa = sa;</span><br><span class="line">        cachedArgs.mActivityArgs.flags = flags;</span><br><span class="line">        //创建Activity类，是ParserPackage内部类</span><br><span class="line">        Activity a = new Activity(cachedArgs.mActivityArgs, new ActivityInfo());</span><br><span class="line">        if (outError[0] != null) &#123;</span><br><span class="line">            sa.recycle();</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        //是否在AndroidManifest里面设置exported属性</span><br><span class="line">        boolean setExported = sa.hasValue(R.styleable.AndroidManifestActivity_exported);</span><br><span class="line">        if (setExported) &#123;</span><br><span class="line">            a.info.exported = sa.getBoolean(R.styleable.AndroidManifestActivity_exported, false);</span><br><span class="line">        &#125;</span><br><span class="line">         //获取AndroidManifest里面对应的theme的值</span><br><span class="line">        a.info.theme = sa.getResourceId(R.styleable.AndroidManifestActivity_theme, 0);</span><br><span class="line">        //获取AndroidManifest里面对应的uiOptions的值</span><br><span class="line">        a.info.uiOptions = sa.getInt(R.styleable.AndroidManifestActivity_uiOptions,</span><br><span class="line">                a.info.applicationInfo.uiOptions);</span><br><span class="line">         //获取AndroidManifest里面对应的parentActivityName的值</span><br><span class="line">        String parentName = sa.getNonConfigurationString(</span><br><span class="line">                R.styleable.AndroidManifestActivity_parentActivityName,</span><br><span class="line">                Configuration.NATIVE_CONFIG_VERSION);</span><br><span class="line">          //如果设置了</span><br><span class="line">        if (parentName != null) &#123;</span><br><span class="line">           //构建parent的标签</span><br><span class="line">            String parentClassName = buildClassName(a.info.packageName, parentName, outError);</span><br><span class="line">            if (outError[0] == null) &#123;</span><br><span class="line">                a.info.parentActivityName = parentClassName;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                Log.e(TAG, &quot;Activity &quot; + a.info.name + &quot; specified invalid parentActivityName &quot; +</span><br><span class="line">                        parentName);</span><br><span class="line">                outError[0] = null;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">         //获取权限permission</span><br><span class="line">        String str;</span><br><span class="line">        str = sa.getNonConfigurationString(R.styleable.AndroidManifestActivity_permission, 0);</span><br><span class="line">        if (str == null) &#123;</span><br><span class="line">            a.info.permission = owner.applicationInfo.permission;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            a.info.permission = str.length() &gt; 0 ? str.toString().intern() : null;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //获取AndroidManifest里面对应的taskAffinity的值</span><br><span class="line">        str = sa.getNonConfigurationString(</span><br><span class="line">                R.styleable.AndroidManifestActivity_taskAffinity,</span><br><span class="line">                Configuration.NATIVE_CONFIG_VERSION);</span><br><span class="line">        a.info.taskAffinity = buildTaskAffinityName(owner.applicationInfo.packageName,</span><br><span class="line">                owner.applicationInfo.taskAffinity, str, outError);</span><br><span class="line">        </span><br><span class="line">         //获取AndroidManifest里面对应的splitName的值</span><br><span class="line">        a.info.splitName =</span><br><span class="line">                sa.getNonConfigurationString(R.styleable.AndroidManifestActivity_splitName, 0);</span><br><span class="line"></span><br><span class="line">         //是否在AndroidManifest里面的Activity配置了multiprocesss属性</span><br><span class="line">        a.info.flags = 0;</span><br><span class="line">        if (sa.getBoolean(</span><br><span class="line">                R.styleable.AndroidManifestActivity_multiprocess, false)) &#123;</span><br><span class="line">            a.info.flags |= ActivityInfo.FLAG_MULTIPROCESS;</span><br><span class="line">        &#125;</span><br><span class="line">         //是否在AndroidManifest里面的Activity配置了finishOnTaskLaunch属性</span><br><span class="line">         //用来标示用户再次启动任务时，是否应该关闭现有的Activity</span><br><span class="line">        if (sa.getBoolean(R.styleable.AndroidManifestActivity_finishOnTaskLaunch, false)) &#123;</span><br><span class="line">            a.info.flags |= ActivityInfo.FLAG_FINISH_ON_TASK_LAUNCH;</span><br><span class="line">        &#125;</span><br><span class="line">        //是否在AndroidManifest里面的Activity配置了clearTaskOnLaunch属性</span><br><span class="line">        //用来标示当前应用从主屏幕重新启动时是否都从中移除根activity之外的其他activity</span><br><span class="line">        if (sa.getBoolean(R.styleable.AndroidManifestActivity_clearTaskOnLaunch, false)) &#123;</span><br><span class="line">            a.info.flags |= ActivityInfo.FLAG_CLEAR_TASK_ON_LAUNCH;</span><br><span class="line">        &#125;</span><br><span class="line">        //是否在AndroidManifest里面的Activity配置了noHistory属性</span><br><span class="line">        //用来标示当前用户离开activity时，是否从activity堆栈中移除</span><br><span class="line">        if (sa.getBoolean(R.styleable.AndroidManifestActivity_noHistory, false)) &#123;</span><br><span class="line">            a.info.flags |= ActivityInfo.FLAG_NO_HISTORY;</span><br><span class="line">        &#125;</span><br><span class="line">        //是否在AndroidManifest里面的Activity配置了alwaysRetainTaskState属性</span><br><span class="line">        //用来标示当是否保持activity所在的任务状态</span><br><span class="line">        if (sa.getBoolean(R.styleable.AndroidManifestActivity_alwaysRetainTaskState, false)) &#123;</span><br><span class="line">            a.info.flags |= ActivityInfo.FLAG_ALWAYS_RETAIN_TASK_STATE;</span><br><span class="line">        &#125;</span><br><span class="line">        //是否在AndroidManifest里面的Activity配置了stateNotNeeded属性</span><br><span class="line">        //用来标示是否不保存activity状态的情况下将其终止并成功重启</span><br><span class="line">        if (sa.getBoolean(R.styleable.AndroidManifestActivity_stateNotNeeded, false)) &#123;</span><br><span class="line">            a.info.flags |= ActivityInfo.FLAG_STATE_NOT_NEEDED;</span><br><span class="line">        &#125;</span><br><span class="line">        //是否在AndroidManifest里面的Activity配置了excludeFromRecents属性</span><br><span class="line">        //用来标示activity启动任务在最近使用的应用列表之外</span><br><span class="line">        if (sa.getBoolean(R.styleable.AndroidManifestActivity_excludeFromRecents, false)) &#123;</span><br><span class="line">            a.info.flags |= ActivityInfo.FLAG_EXCLUDE_FROM_RECENTS;</span><br><span class="line">        &#125;</span><br><span class="line">        //是否在AndroidManifest里面的Activity配置了allowTaskReparenting属性</span><br><span class="line">        //用来标示这个应用是否在reset task时，关联对应的taskAffinity</span><br><span class="line">        if (sa.getBoolean(R.styleable.AndroidManifestActivity_allowTaskReparenting,</span><br><span class="line">                (owner.applicationInfo.flags&amp;ApplicationInfo.FLAG_ALLOW_TASK_REPARENTING) != 0)) &#123;</span><br><span class="line">            a.info.flags |= ActivityInfo.FLAG_ALLOW_TASK_REPARENTING;</span><br><span class="line">        &#125;</span><br><span class="line">        //是否在AndroidManifest里面的Activity配置了finishOnCloseSystemDialogs属性</span><br><span class="line">        //用来标示在关闭系统窗口时，是否销毁activity</span><br><span class="line">        if (sa.getBoolean(R.styleable.AndroidManifestActivity_finishOnCloseSystemDialogs, false)) &#123;</span><br><span class="line">            a.info.flags |= ActivityInfo.FLAG_FINISH_ON_CLOSE_SYSTEM_DIALOGS;</span><br><span class="line">        &#125;</span><br><span class="line">        //是否在AndroidManifest里面的Activity配置了showForAllUsers属性</span><br><span class="line">        //用来指定该activity是否显示在解锁界面</span><br><span class="line">        if (sa.getBoolean(R.styleable.AndroidManifestActivity_showOnLockScreen, false)</span><br><span class="line">                || sa.getBoolean(R.styleable.AndroidManifestActivity_showForAllUsers, false)) &#123;</span><br><span class="line">            a.info.flags |= ActivityInfo.FLAG_SHOW_FOR_ALL_USERS;</span><br><span class="line">        &#125;</span><br><span class="line">        //是否在AndroidManifest里面的Activity配置了immersive属性</span><br><span class="line">        //是否设置沉浸式显示</span><br><span class="line">        if (sa.getBoolean(R.styleable.AndroidManifestActivity_immersive, false)) &#123;</span><br><span class="line">            a.info.flags |= ActivityInfo.FLAG_IMMERSIVE;</span><br><span class="line">        &#125;</span><br><span class="line">         //是否在AndroidManifest里面的Activity配置了systemUserOnly属性</span><br><span class="line">           //是否设置为系统组件</span><br><span class="line">        if (sa.getBoolean(R.styleable.AndroidManifestActivity_systemUserOnly, false)) &#123;</span><br><span class="line">            a.info.flags |= ActivityInfo.FLAG_SYSTEM_USER_ONLY;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //不是receiver标签</span><br><span class="line">        if (!receiver) &#123;</span><br><span class="line">            if (sa.getBoolean(R.styleable.AndroidManifestActivity_hardwareAccelerated,</span><br><span class="line">                    hardwareAccelerated)) &#123;</span><br><span class="line">                a.info.flags |= ActivityInfo.FLAG_HARDWARE_ACCELERATED;</span><br><span class="line">            &#125;</span><br><span class="line">            //设置对应的启动模式，对应的launchMode</span><br><span class="line">            a.info.launchMode = sa.getInt(</span><br><span class="line">                    R.styleable.AndroidManifestActivity_launchMode, ActivityInfo.LAUNCH_MULTIPLE);</span><br><span class="line">            //设置对应的启动模式，对应的documentLaunchMode</span><br><span class="line">            //一下也是获取一序列的属性，在此不再注解</span><br><span class="line">            a.info.documentLaunchMode = sa.getInt(</span><br><span class="line">                    R.styleable.AndroidManifestActivity_documentLaunchMode,</span><br><span class="line">                    ActivityInfo.DOCUMENT_LAUNCH_NONE);</span><br><span class="line">            a.info.maxRecents = sa.getInt(</span><br><span class="line">                    R.styleable.AndroidManifestActivity_maxRecents,</span><br><span class="line">                    ActivityManager.getDefaultAppRecentsLimitStatic());</span><br><span class="line">            a.info.configChanges = getActivityConfigChanges(</span><br><span class="line">                    sa.getInt(R.styleable.AndroidManifestActivity_configChanges, 0),</span><br><span class="line">                    sa.getInt(R.styleable.AndroidManifestActivity_recreateOnConfigChanges, 0));</span><br><span class="line">            a.info.softInputMode = sa.getInt(</span><br><span class="line">                    R.styleable.AndroidManifestActivity_windowSoftInputMode, 0);</span><br><span class="line"></span><br><span class="line">            a.info.persistableMode = sa.getInteger(</span><br><span class="line">                    R.styleable.AndroidManifestActivity_persistableMode,</span><br><span class="line">                    ActivityInfo.PERSIST_ROOT_ONLY);</span><br><span class="line"></span><br><span class="line">            if (sa.getBoolean(R.styleable.AndroidManifestActivity_allowEmbedded, false)) &#123;</span><br><span class="line">                a.info.flags |= ActivityInfo.FLAG_ALLOW_EMBEDDED;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (sa.getBoolean(R.styleable.AndroidManifestActivity_autoRemoveFromRecents, false)) &#123;</span><br><span class="line">                a.info.flags |= ActivityInfo.FLAG_AUTO_REMOVE_FROM_RECENTS;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (sa.getBoolean(R.styleable.AndroidManifestActivity_relinquishTaskIdentity, false)) &#123;</span><br><span class="line">                a.info.flags |= ActivityInfo.FLAG_RELINQUISH_TASK_IDENTITY;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (sa.getBoolean(R.styleable.AndroidManifestActivity_resumeWhilePausing, false)) &#123;</span><br><span class="line">                a.info.flags |= ActivityInfo.FLAG_RESUME_WHILE_PAUSING;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            a.info.screenOrientation = sa.getInt(</span><br><span class="line">                    R.styleable.AndroidManifestActivity_screenOrientation,</span><br><span class="line">                    SCREEN_ORIENTATION_UNSPECIFIED);</span><br><span class="line"></span><br><span class="line">            setActivityResizeMode(a.info, sa, owner);</span><br><span class="line"></span><br><span class="line">            if (sa.getBoolean(R.styleable.AndroidManifestActivity_supportsPictureInPicture,</span><br><span class="line">                    false)) &#123;</span><br><span class="line">                a.info.flags |= FLAG_SUPPORTS_PICTURE_IN_PICTURE;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (sa.getBoolean(R.styleable.AndroidManifestActivity_alwaysFocusable, false)) &#123;</span><br><span class="line">                a.info.flags |= FLAG_ALWAYS_FOCUSABLE;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (sa.hasValue(R.styleable.AndroidManifestActivity_maxAspectRatio)</span><br><span class="line">                    &amp;&amp; sa.getType(R.styleable.AndroidManifestActivity_maxAspectRatio)</span><br><span class="line">                    == TypedValue.TYPE_FLOAT) &#123;</span><br><span class="line">                a.setMaxAspectRatio(sa.getFloat(R.styleable.AndroidManifestActivity_maxAspectRatio,</span><br><span class="line">                        0 /*default*/));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            a.info.lockTaskLaunchMode =</span><br><span class="line">                    sa.getInt(R.styleable.AndroidManifestActivity_lockTaskMode, 0);</span><br><span class="line"></span><br><span class="line">            a.info.encryptionAware = a.info.directBootAware = sa.getBoolean(</span><br><span class="line">                    R.styleable.AndroidManifestActivity_directBootAware,</span><br><span class="line">                    false);</span><br><span class="line"></span><br><span class="line">            a.info.requestedVrComponent =</span><br><span class="line">                sa.getString(R.styleable.AndroidManifestActivity_enableVrMode);</span><br><span class="line"></span><br><span class="line">            a.info.rotationAnimation =</span><br><span class="line">                sa.getInt(R.styleable.AndroidManifestActivity_rotationAnimation, ROTATION_ANIMATION_UNSPECIFIED);</span><br><span class="line"></span><br><span class="line">            a.info.colorMode = sa.getInt(R.styleable.AndroidManifestActivity_colorMode,</span><br><span class="line">                    ActivityInfo.COLOR_MODE_DEFAULT);</span><br><span class="line"></span><br><span class="line">            if (sa.getBoolean(R.styleable.AndroidManifestActivity_showWhenLocked, false)) &#123;</span><br><span class="line">                a.info.flags |= ActivityInfo.FLAG_SHOW_WHEN_LOCKED;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (sa.getBoolean(R.styleable.AndroidManifestActivity_turnScreenOn, false)) &#123;</span><br><span class="line">                a.info.flags |= ActivityInfo.FLAG_TURN_SCREEN_ON;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125; else &#123;</span><br><span class="line">           //是receiver</span><br><span class="line">            a.info.launchMode = ActivityInfo.LAUNCH_MULTIPLE;</span><br><span class="line">            a.info.configChanges = 0;</span><br><span class="line"></span><br><span class="line">            if (sa.getBoolean(R.styleable.AndroidManifestActivity_singleUser, false)) &#123;</span><br><span class="line">                a.info.flags |= ActivityInfo.FLAG_SINGLE_USER;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            a.info.encryptionAware = a.info.directBootAware = sa.getBoolean(</span><br><span class="line">                    R.styleable.AndroidManifestActivity_directBootAware,</span><br><span class="line">                    false);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (a.info.directBootAware) &#123;</span><br><span class="line">            owner.applicationInfo.privateFlags |=</span><br><span class="line">                    ApplicationInfo.PRIVATE_FLAG_PARTIALLY_DIRECT_BOOT_AWARE;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // can&apos;t make this final; we may set it later via meta-data</span><br><span class="line">        boolean visibleToEphemeral =</span><br><span class="line">                sa.getBoolean(R.styleable.AndroidManifestActivity_visibleToInstantApps, false);</span><br><span class="line">        if (visibleToEphemeral) &#123;</span><br><span class="line">            a.info.flags |= ActivityInfo.FLAG_VISIBLE_TO_INSTANT_APP;</span><br><span class="line">            owner.visibleToInstantApps = true;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        sa.recycle();</span><br><span class="line"></span><br><span class="line">        if (receiver &amp;&amp; (owner.applicationInfo.privateFlags</span><br><span class="line">                &amp;ApplicationInfo.PRIVATE_FLAG_CANT_SAVE_STATE) != 0) &#123;</span><br><span class="line">            // A heavy-weight application can not have receives in its main process</span><br><span class="line">            // We can do direct compare because we intern all strings.</span><br><span class="line">            if (a.info.processName == owner.packageName) &#123;</span><br><span class="line">                outError[0] = &quot;Heavy-weight applications can not have receivers in main process&quot;;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (outError[0] != null) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        int outerDepth = parser.getDepth();</span><br><span class="line">        int type;</span><br><span class="line">        //开始解析&lt;activity&gt;内部标签</span><br><span class="line">        while ((type=parser.next()) != XmlPullParser.END_DOCUMENT</span><br><span class="line">               &amp;&amp; (type != XmlPullParser.END_TAG</span><br><span class="line">                       || parser.getDepth() &gt; outerDepth)) &#123;</span><br><span class="line">            if (type == XmlPullParser.END_TAG || type == XmlPullParser.TEXT) &#123;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">            //intent-filter标签</span><br><span class="line">            if (parser.getName().equals(&quot;intent-filter&quot;)) &#123;</span><br><span class="line">                ActivityIntentInfo intent = new ActivityIntentInfo(a);</span><br><span class="line">                if (!parseIntent(res, parser, true /*allowGlobs*/, true /*allowAutoVerify*/,</span><br><span class="line">                        intent, outError)) &#123;</span><br><span class="line">                    return null;</span><br><span class="line">                &#125;</span><br><span class="line">                if (intent.countActions() == 0) &#123;</span><br><span class="line">                    Slog.w(TAG, &quot;No actions in intent filter at &quot;</span><br><span class="line">                            + mArchiveSourcePath + &quot; &quot;</span><br><span class="line">                            + parser.getPositionDescription());</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    a.order = Math.max(intent.getOrder(), a.order);</span><br><span class="line">                    a.intents.add(intent);</span><br><span class="line">                &#125;</span><br><span class="line">                // adjust activity flags when we implicitly expose it via a browsable filter</span><br><span class="line">                final int visibility = visibleToEphemeral</span><br><span class="line">                        ? IntentFilter.VISIBILITY_EXPLICIT</span><br><span class="line">                        : !receiver &amp;&amp; isImplicitlyExposedIntent(intent)</span><br><span class="line">                                ? IntentFilter.VISIBILITY_IMPLICIT</span><br><span class="line">                                : IntentFilter.VISIBILITY_NONE;</span><br><span class="line">                intent.setVisibilityToInstantApp(visibility);</span><br><span class="line">                if (intent.isVisibleToInstantApp()) &#123;</span><br><span class="line">                    a.info.flags |= ActivityInfo.FLAG_VISIBLE_TO_INSTANT_APP;</span><br><span class="line">                &#125;</span><br><span class="line">                if (intent.isImplicitlyVisibleToInstantApp()) &#123;</span><br><span class="line">                    a.info.flags |= ActivityInfo.FLAG_IMPLICITLY_VISIBLE_TO_INSTANT_APP;</span><br><span class="line">                &#125;</span><br><span class="line">                if (LOG_UNSAFE_BROADCASTS &amp;&amp; receiver</span><br><span class="line">                        &amp;&amp; (owner.applicationInfo.targetSdkVersion &gt;= Build.VERSION_CODES.O)) &#123;</span><br><span class="line">                    for (int i = 0; i &lt; intent.countActions(); i++) &#123;</span><br><span class="line">                        final String action = intent.getAction(i);</span><br><span class="line">                        if (action == null || !action.startsWith(&quot;android.&quot;)) continue;</span><br><span class="line">                        if (!SAFE_BROADCASTS.contains(action)) &#123;</span><br><span class="line">                            Slog.w(TAG, &quot;Broadcast &quot; + action + &quot; may never be delivered to &quot;</span><br><span class="line">                                    + owner.packageName + &quot; as requested at: &quot;</span><br><span class="line">                                    + parser.getPositionDescription());</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else if (!receiver &amp;&amp; parser.getName().equals(&quot;preferred&quot;)) &#123;</span><br><span class="line">                ActivityIntentInfo intent = new ActivityIntentInfo(a);</span><br><span class="line">                if (!parseIntent(res, parser, false /*allowGlobs*/, false /*allowAutoVerify*/,</span><br><span class="line">                        intent, outError)) &#123;</span><br><span class="line">                    return null;</span><br><span class="line">                &#125;</span><br><span class="line">                if (intent.countActions() == 0) &#123;</span><br><span class="line">                    Slog.w(TAG, &quot;No actions in preferred at &quot;</span><br><span class="line">                            + mArchiveSourcePath + &quot; &quot;</span><br><span class="line">                            + parser.getPositionDescription());</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    if (owner.preferredActivityFilters == null) &#123;</span><br><span class="line">                        owner.preferredActivityFilters = new ArrayList&lt;ActivityIntentInfo&gt;();</span><br><span class="line">                    &#125;</span><br><span class="line">                    owner.preferredActivityFilters.add(intent);</span><br><span class="line">                &#125;</span><br><span class="line">                // adjust activity flags when we implicitly expose it via a browsable filter</span><br><span class="line">                final int visibility = visibleToEphemeral</span><br><span class="line">                        ? IntentFilter.VISIBILITY_EXPLICIT</span><br><span class="line">                        : !receiver &amp;&amp; isImplicitlyExposedIntent(intent)</span><br><span class="line">                                ? IntentFilter.VISIBILITY_IMPLICIT</span><br><span class="line">                                : IntentFilter.VISIBILITY_NONE;</span><br><span class="line">                intent.setVisibilityToInstantApp(visibility);</span><br><span class="line">                if (intent.isVisibleToInstantApp()) &#123;</span><br><span class="line">                    a.info.flags |= ActivityInfo.FLAG_VISIBLE_TO_INSTANT_APP;</span><br><span class="line">                &#125;</span><br><span class="line">                if (intent.isImplicitlyVisibleToInstantApp()) &#123;</span><br><span class="line">                    a.info.flags |= ActivityInfo.FLAG_IMPLICITLY_VISIBLE_TO_INSTANT_APP;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else if (parser.getName().equals(&quot;meta-data&quot;)) &#123;</span><br><span class="line">                if ((a.metaData = parseMetaData(res, parser, a.metaData,</span><br><span class="line">                        outError)) == null) &#123;</span><br><span class="line">                    return null;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else if (!receiver &amp;&amp; parser.getName().equals(&quot;layout&quot;)) &#123;</span><br><span class="line">                parseLayout(res, parser, a);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                if (!RIGID_PARSER) &#123;</span><br><span class="line">                    Slog.w(TAG, &quot;Problem in package &quot; + mArchiveSourcePath + &quot;:&quot;);</span><br><span class="line">                    if (receiver) &#123;</span><br><span class="line">                        Slog.w(TAG, &quot;Unknown element under &lt;receiver&gt;: &quot; + parser.getName()</span><br><span class="line">                                + &quot; at &quot; + mArchiveSourcePath + &quot; &quot;</span><br><span class="line">                                + parser.getPositionDescription());</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        Slog.w(TAG, &quot;Unknown element under &lt;activity&gt;: &quot; + parser.getName()</span><br><span class="line">                                + &quot; at &quot; + mArchiveSourcePath + &quot; &quot;</span><br><span class="line">                                + parser.getPositionDescription());</span><br><span class="line">                    &#125;</span><br><span class="line">                    XmlUtils.skipCurrentTag(parser);</span><br><span class="line">                    continue;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    if (receiver) &#123;</span><br><span class="line">                        outError[0] = &quot;Bad element under &lt;receiver&gt;: &quot; + parser.getName();</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        outError[0] = &quot;Bad element under &lt;activity&gt;: &quot; + parser.getName();</span><br><span class="line">                    &#125;</span><br><span class="line">                    return null;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (!setExported) &#123;</span><br><span class="line">            a.info.exported = a.intents.size() &gt; 0;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return a;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-3-PackageParser总结"><a href="#3-3-PackageParser总结" class="headerlink" title="3.3 PackageParser总结"></a>3.3 PackageParser总结</h3><p><img src="/2019/PKMS相关类分析/PackageParser.png" alt=""></p>
+<p>上图画出了PackageParser解析Apk文件，得到的主要的数据结构，实际的内容远多于这些，我们仅保留了四大组件和权限相关的内容。</p>
+<p>上面这些类，全部是定义于PackageParser中的内部类，这些内部类主要的作用就是保存AndroidManifest.xml解析出的对应信息。 以PackageParser.Activity为例，注意到该类持有ActivityInfo类，继承自 Component&lt; ActivityIntentInfo&gt;。其中，ActivityInfo用于保存Activity的信息；Component类是一个模板，对应元素类型是ActivityIntentInfo，顶层基类IntentFilter。四大组件中的其它成员，也有类似的继承结构。</p>
+<blockquote>
+<p>这种设计的原因是：Package除了保存信息外，还需要支持Intent匹配查询。例如，当收到某个Intent后，由于ActivityIntentInfo继承自IntentFilter，因此它能判断自己是否满足Intent的要求。如果满足，则返回对应的ActivityInfo。</p>
+</blockquote>
+<p>PackageParser整个扫描过程如下：</p>
+<ul>
+<li><p>PackageParser首先解析出ApkLite，得到每个Apk文件的简化信息；</p>
+</li>
+<li><p>利用所有的ApkLite以及Xml中其它信息，解析出PackageLite；</p>
+</li>
+</ul>
+<ul>
+<li>利用PackageLite中的信息及XML中的其它信息，解析出Package信息；</li>
+</ul>
+<p>​       Package中基本上涵盖了AndroidManifest中涉及的所有信息。</p>
+<p>注意：在上述的解析过程中，PackageParser利用AssetManager存储了Package中资源文件的地址。</p>
+<h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><p>源码路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/frameworks/base/services/core/java/com/android/server/pm/Settings.java</span><br><span class="line">/frameworks/base/core/java/com/android/server/SystemConfig.java</span><br><span class="line">/frameworks/base/core/java/android/content/pm/PackageParser.java</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PackageManagerService/" rel="tag">#PackageManagerService</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/installd守护进程/" rel="next" title="installd守护进程">
+                <i class="fa fa-chevron-left"></i> installd守护进程
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/PackageManagerService启动流程分析/" rel="prev" title="PackageManagerService启动流程分析">
+                PackageManagerService启动流程分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="skytoby">
+          <p class="site-author-name" itemprop="name">skytoby</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳、毕业于电子科技大学 Android、程序员 <br><br>座右铭:今天不想跑，所以才去跑。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/caoxiaoliang" target="_blank" title="GitHub">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://me.csdn.net/cao861544325" target="_blank" title="CSDN">
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Settings类"><span class="nav-text">1.Settings类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Setting构造函数"><span class="nav-text">1.1 Setting构造函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-addSharedUserLPw方法"><span class="nav-text">1.2 addSharedUserLPw方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-PID、UID、GID的区别"><span class="nav-text">1.3 PID、UID、GID的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-SystemConfig类"><span class="nav-text">2.SystemConfig类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-SystemConfig构造函数"><span class="nav-text">2.1 SystemConfig构造函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-PackageParser"><span class="nav-text">3. PackageParser</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-内部类"><span class="nav-text">3.1 内部类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-1-NewPermissionInfo"><span class="nav-text">3.1.1 NewPermissionInfo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-2-SplitPermissionInfo"><span class="nav-text">3.1.2  SplitPermissionInfo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-3-ParsePackageItemArgs"><span class="nav-text">3.1.3  ParsePackageItemArgs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-4-ParseComponentArgs"><span class="nav-text">3.1.4  ParseComponentArgs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-5-PackageLite"><span class="nav-text">3.1.5  PackageLite</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-6-ApkLite"><span class="nav-text">3.1.6  ApkLite</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-7-SplitNameComparator"><span class="nav-text">3.1.7  SplitNameComparator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-8-Package"><span class="nav-text">3.1.8  Package</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-9-Component"><span class="nav-text">3.1.9  Component</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-10-Permission"><span class="nav-text">3.1.10  Permission</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-内部方法"><span class="nav-text">3.2 内部方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-1-parsePackage"><span class="nav-text">3.2.1 parsePackage</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-2-parseActivity"><span class="nav-text">3.2.2 parseActivity</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-PackageParser总结"><span class="nav-text">3.3 PackageParser总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#附录"><span class="nav-text">附录</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skytoby</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme Next
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'https-zproo-github-io';
+      var disqus_identifier = '2019/PKMS相关类分析/';
+      var disqus_title = "PKMS相关类分析";
+      var disqus_url = 'http://zproo.github.io/2019/PKMS相关类分析/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("GHEN8u6QufHhkX6hJMzNpKeN-gzGzoHsz", "Gq4sJwz8T6cywiaHlBGFDbE4");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+</html>

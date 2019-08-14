@@ -1,0 +1,817 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="fstrim,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="fstrim提升磁盘性能，缓解Android卡顿 Android手机刚购买时非常流畅，但是使用不到一年之后都会“卡顿”。那么是什么原因造成的呢？ 长期使用Android手机将产生大量的磁盘碎片，而磁盘碎片将会降低磁盘的读写性能，从而影响系统流畅度。 1. Android磁盘的读写机制Android手机大多数采用NAND flash架构的闪存卡来存储内容，NAND Flash的内部存储单位从小到大依">
+<meta name="keywords" content="fstrim">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fstrim解析">
+<meta property="og:url" content="http://zproo.github.io/2019/fstrim/index.html">
+<meta property="og:site_name" content="skytoby">
+<meta property="og:description" content="fstrim提升磁盘性能，缓解Android卡顿 Android手机刚购买时非常流畅，但是使用不到一年之后都会“卡顿”。那么是什么原因造成的呢？ 长期使用Android手机将产生大量的磁盘碎片，而磁盘碎片将会降低磁盘的读写性能，从而影响系统流畅度。 1. Android磁盘的读写机制Android手机大多数采用NAND flash架构的闪存卡来存储内容，NAND Flash的内部存储单位从小到大依">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://zproo.github.io/2019/fstrim/nand.jpg">
+<meta property="og:updated_time" content="2019-08-14T09:08:07.190Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="fstrim解析">
+<meta name="twitter:description" content="fstrim提升磁盘性能，缓解Android卡顿 Android手机刚购买时非常流畅，但是使用不到一年之后都会“卡顿”。那么是什么原因造成的呢？ 长期使用Android手机将产生大量的磁盘碎片，而磁盘碎片将会降低磁盘的读写性能，从而影响系统流畅度。 1. Android磁盘的读写机制Android手机大多数采用NAND flash架构的闪存卡来存储内容，NAND Flash的内部存储单位从小到大依">
+<meta name="twitter:image" content="http://zproo.github.io/2019/fstrim/nand.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zproo.github.io/2019/fstrim/">
+
+  <title> fstrim解析 | skytoby </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+    
+    <header id="header_post" class="header" itemscope="" itemtype="http://schema.org/WPHeader" style="background-image: url('http://ortur5wom.bkt.clouddn.com/home_bg.jpg');">
+      <div class="header-inner-post"><a class="site-home" href="/">skytoby</a>
+
+<div class="site-meta custom-logo">
+  
+  
+  
+    <div class="site-meta-headline">
+      <a>
+        <img class="custom-logo-image" src="/images/logo.png" style="width: 50px" alt="skytoby">
+      </a>
+    </div>
+  
+
+  
+  
+  
+  
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+           <li class="menu-item menu-item-关于">
+             <a href="/about" rel="section">
+               
+               
+               关于
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-目录">
+             <a href="/archives" rel="section">
+               
+               
+               目录
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-首页">
+             <a href="/" rel="section">
+               
+               
+               首页
+             </a>
+           </li>
+        
+      
+
+      
+    </ul>
+  
+
+  
+</nav> </div>
+      <div class="header-post"> 
+  <div class="post-header">
+      <div class="tags">
+      
+        <a href="/tags/fstrim/" rel="tag" title="fstrim">fstrim</a>
+      
+      </div>
+      <h1>fstrim解析</h1>
+      <h2 class="subtitle"></h2>
+      <div class="post-time">
+        <span class="post-meta-item-text">Posted on </span>
+        <time itemprop="dateCreated" datetime="2019-05-26T21:18:23+08:00" content="2019-05-26" title="2019-05-26 21:18:23">
+          2019-05-26
+        </time>
+      </div>
+  </div>
+ </div>
+    </header>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                fstrim解析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2019-05-26T21:18:23+08:00" content="2019-05-26">
+              2019-05-26
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2019/fstrim/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/fstrim/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+             <span id="/2019/fstrim/" class="leancloud_visitors" data-flag-title="fstrim解析">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>fstrim提升磁盘性能，缓解Android卡顿</p>
+<p>Android手机刚购买时非常流畅，但是使用不到一年之后都会“卡顿”。那么是什么原因造成的呢？</p>
+<p>长期使用Android手机将产生大量的磁盘碎片，而磁盘碎片将会降低磁盘的读写性能，从而影响系统流畅度。</p>
+<h4 id="1-Android磁盘的读写机制"><a href="#1-Android磁盘的读写机制" class="headerlink" title="1. Android磁盘的读写机制"></a>1. Android磁盘的读写机制</h4><p>Android手机大多数采用NAND flash架构的闪存卡来存储内容，NAND Flash的内部存储单位从小到大依次为：Page、Block、Device，下面是一个NAND Flash组成结构的示意图。</p>
+<p><img src="/2019/fstrim/nand.jpg" alt=""></p>
+<p>虽然NAND Flash的优点很多，但是为了延长驱动器的寿命，它的读写操作是以Page为单位进行的，但擦除操作确实按照Block为单位进行的。</p>
+<p>由于有大量的读写操作，于是NAND Flash制定了如下读写规则：</p>
+<p>1.删除数据时，芯片将标记这些Page为闲置状态，但并不会立马执行擦除操作</p>
+<p>2.写入数据时，如果目前磁盘剩余充足，则由芯片指定Block后直接按Page为单位进行写入操作。</p>
+<p>3.写入数据时，如果目前磁盘剩余空间不足，为了获得足够的空间，磁盘先将某块Block的内容读直缓存，然后再在该Block上进行擦除操作，最后将新内容与原先内容一起写入至该Block。</p>
+<p>其实想存储的就是1个Page的图片内容，但是实际上确造成了整个Block的内容都被重新写入，同时原本简单一步搞定的事情被还被分成了前后四步执行（闪存读取、缓存改、闪存擦除、闪存写入）造成延迟大大增加，速度变慢。这就是传说中的“写入放大”（Write Amplification）问题。而“写入放大”也说明了磁盘在长期使用的过程中，其读写速度（尤其是写入速度）会存在降低的现象。</p>
+<h4 id="2-解决“写入放大”问题的技术——TRIM"><a href="#2-解决“写入放大”问题的技术——TRIM" class="headerlink" title="2. 解决“写入放大”问题的技术——TRIM"></a><strong>2. 解决“写入放大”问题的技术——TRIM</strong></h4><p>Google的解决方案TRIM技术。</p>
+<p>TRIM是一条ATA指令，由操作系统发送给闪存主控制器，告诉它哪些数据占的地址是“无效”的。在TRIM的帮助下，闪存主控制器就可以提前知道哪些Page是“无效”的，便可以在适当的时机做出优化，从而改善性能。这里要强调下，TRIM只是条指令，让操作系统告诉闪存主控制器这个Page已经“无效”就算完了，并没有任何其它多余的操作。TRIM的触发需要操作系统、驱动程序以及闪存主控三者都支持才能真正意义上实现。例如：</p>
+<p>操作系统不支持的情况：Android 4.3以下均不支持<br>闪存主控不支持的情况：Samsung Galaxy Nexus（I9250）所选用的闪存不支持<br>基于TRIM技术，目前常见有两种方案可以解决“写入放大”的问题：</p>
+<p><strong>discard选项</strong>。该方案将在挂载 ext4 分区时加上 discard 选项，此后操作系统在执行每一个磁盘操作时同时都会执行 TRIM 指令。该方案的优点是总体耗时短，但会影响到删除文件时的性能。<br><strong>fstrim命令</strong>。该方案将选择合适的时机对整个分区执行TRIM操作。相对于方案一，该方案总体耗时较长，但不会影响正常操作时的磁盘性能。</p>
+<p>从用户的角度出发，还是FSTRIM的方法更靠谱一些。</p>
+<h4 id="3-TRIM在Android上实现"><a href="#3-TRIM在Android上实现" class="headerlink" title="3. TRIM在Android上实现"></a>3. TRIM在Android上实现</h4><p>在PackageManagerServic中有performFstrimIfNeeded方法，最后执行的是StorageManagerService.fstrim</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">   public void fstrim(int flags, IVoldTaskListener listener) &#123;</span><br><span class="line">       enforcePermission(android.Manifest.permission.MOUNT_FORMAT_FILESYSTEMS);</span><br><span class="line"></span><br><span class="line">       try &#123;</span><br><span class="line">           mVold.fstrim(flags, new IVoldTaskListener.Stub() &#123;</span><br><span class="line">               @Override</span><br><span class="line">               public void onStatus(int status, PersistableBundle extras) &#123;</span><br><span class="line">                   dispatchOnStatus(listener, status, extras);</span><br><span class="line"></span><br><span class="line">                   // Ignore trim failures</span><br><span class="line">                   if (status != 0) return;</span><br><span class="line"></span><br><span class="line">                   final String path = extras.getString(&quot;path&quot;);</span><br><span class="line">                   final long bytes = extras.getLong(&quot;bytes&quot;);</span><br><span class="line">                   final long time = extras.getLong(&quot;time&quot;);</span><br><span class="line"></span><br><span class="line">                   final DropBoxManager dropBox = mContext.getSystemService(DropBoxManager.class);</span><br><span class="line">                   dropBox.addText(TAG_STORAGE_TRIM, scrubPath(path) + &quot; &quot; + bytes + &quot; &quot; + time);</span><br><span class="line"></span><br><span class="line">                   synchronized (mLock) &#123;</span><br><span class="line">                       final VolumeRecord rec = findRecordForPath(path);</span><br><span class="line">                       if (rec != null) &#123;</span><br><span class="line">                           rec.lastTrimMillis = System.currentTimeMillis();</span><br><span class="line">                           writeSettingsLocked();</span><br><span class="line">                       &#125;</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line"></span><br><span class="line">               @Override</span><br><span class="line">               public void onFinished(int status, PersistableBundle extras) &#123;</span><br><span class="line">                   dispatchOnFinished(listener, status, extras);</span><br><span class="line"></span><br><span class="line">                   // TODO: benchmark when desired</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br><span class="line">       &#125; catch (RemoteException e) &#123;</span><br><span class="line">           throw e.rethrowAsRuntimeException();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>到这来，调用的是mVold，而mVold初始化如下，那么mVold的服务端在哪呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">binder = ServiceManager.getService(&quot;vold&quot;);</span><br><span class="line">        if (binder != null) &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                binder.linkToDeath(new DeathRecipient() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public void binderDied() &#123;</span><br><span class="line">                        Slog.w(TAG, &quot;vold died; reconnecting&quot;);</span><br><span class="line">                        mVold = null;</span><br><span class="line">                        connect();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;, 0);</span><br><span class="line">            &#125; catch (RemoteException e) &#123;</span><br><span class="line">                binder = null;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (binder != null) &#123;</span><br><span class="line">            mVold = IVold.Stub.asInterface(binder);</span><br><span class="line">            try &#123;</span><br><span class="line">                mVold.setListener(mListener);</span><br><span class="line">            &#125; catch (RemoteException e) &#123;</span><br><span class="line">                mVold = null;</span><br><span class="line">                Slog.w(TAG, &quot;vold listener rejected; trying again&quot;, e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            Slog.w(TAG, &quot;vold not found; trying again&quot;);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-Vold守护进程启动"><a href="#4-Vold守护进程启动" class="headerlink" title="4. Vold守护进程启动"></a>4. Vold守护进程启动</h4><p>Vold负责挂载SD卡，vold的全称是volume daemon，实际上负责完成系统的CDROM</p>
+<p>USB大容量存储，MMC卡等拓展存储的挂载任务自动完成的守护进程。它提供的主要特点是支持这些存储设备外设的热插拔。</p>
+<p>Vold相关的代码在/system/vold目录中</p>
+<p>对应的启动在vold.rc中，其内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">service vold /system/bin/vold \</span><br><span class="line">        --blkid_context=u:r:blkid:s0 --blkid_untrusted_context=u:r:blkid_untrusted:s0 \</span><br><span class="line">        --fsck_context=u:r:fsck:s0 --fsck_untrusted_context=u:r:fsck_untrusted:s0</span><br><span class="line">    class core</span><br><span class="line">    ioprio be 2</span><br><span class="line">    writepid /dev/cpuset/foreground/tasks</span><br><span class="line">    shutdown critical</span><br><span class="line">    group reserved_disk</span><br></pre></td></tr></table></figure>
+<p>上面定义了一个vold的service，去执行vold程序，对应的入口在vold目录下的main.cpp中。</p>
+<p>main.cpp中主要是创建了VolumeManager、NetlinkManager的实例，并且启动了VoldNativeService服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, char** argv) &#123;</span><br><span class="line">    atrace_set_tracing_enabled(false);</span><br><span class="line">    setenv(&quot;ANDROID_LOG_TAGS&quot;, &quot;*:v&quot;, 1);</span><br><span class="line">    android::base::InitLogging(argv, android::base::LogdLogger(android::base::SYSTEM));</span><br><span class="line"></span><br><span class="line">    LOG(INFO) &lt;&lt; &quot;Vold 3.0 (the awakening) firing up&quot;;</span><br><span class="line"></span><br><span class="line">    ATRACE_BEGIN(&quot;main&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    LOG(VERBOSE) &lt;&lt; &quot;Detected support for:&quot;</span><br><span class="line">            &lt;&lt; (android::vold::IsFilesystemSupported(&quot;ext4&quot;) ? &quot; ext4&quot; : &quot;&quot;)</span><br><span class="line">            &lt;&lt; (android::vold::IsFilesystemSupported(&quot;f2fs&quot;) ? &quot; f2fs&quot; : &quot;&quot;)</span><br><span class="line">            &lt;&lt; (android::vold::IsFilesystemSupported(&quot;vfat&quot;) ? &quot; vfat&quot; : &quot;&quot;);</span><br><span class="line"></span><br><span class="line">    VolumeManager *vm;</span><br><span class="line">    NetlinkManager *nm;</span><br><span class="line"></span><br><span class="line">    parse_args(argc, argv);</span><br><span class="line"></span><br><span class="line">    sehandle = selinux_android_file_context_handle();</span><br><span class="line">    if (sehandle) &#123;</span><br><span class="line">        selinux_android_set_sehandle(sehandle);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mkdir(&quot;/dev/block/vold&quot;, 0755);</span><br><span class="line"></span><br><span class="line">    /* For when cryptfs checks and mounts an encrypted filesystem */</span><br><span class="line">    klog_set_level(6);</span><br><span class="line"></span><br><span class="line">    /* Create our singleton managers */</span><br><span class="line">    if (!(vm = VolumeManager::Instance())) &#123;</span><br><span class="line">        LOG(ERROR) &lt;&lt; &quot;Unable to create VolumeManager&quot;;</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (!(nm = NetlinkManager::Instance())) &#123;</span><br><span class="line">        LOG(ERROR) &lt;&lt; &quot;Unable to create NetlinkManager&quot;;</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (android::base::GetBoolProperty(&quot;vold.debug&quot;, false)) &#123;</span><br><span class="line">        vm-&gt;setDebug(true);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (vm-&gt;start()) &#123;</span><br><span class="line">        PLOG(ERROR) &lt;&lt; &quot;Unable to start VolumeManager&quot;;</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    bool has_adoptable;</span><br><span class="line">    bool has_quota;</span><br><span class="line">    bool has_reserved;</span><br><span class="line"></span><br><span class="line">    if (process_config(vm, &amp;has_adoptable, &amp;has_quota, &amp;has_reserved)) &#123;</span><br><span class="line">        PLOG(ERROR) &lt;&lt; &quot;Error reading configuration... continuing anyways&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ATRACE_BEGIN(&quot;VoldNativeService::start&quot;);</span><br><span class="line">    if (android::vold::VoldNativeService::start() != android::OK) &#123;</span><br><span class="line">        LOG(ERROR) &lt;&lt; &quot;Unable to start VoldNativeService&quot;;</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line">    ATRACE_END();</span><br><span class="line"></span><br><span class="line">    LOG(DEBUG) &lt;&lt; &quot;VoldNativeService::start() completed OK&quot;;</span><br><span class="line"></span><br><span class="line">    ATRACE_BEGIN(&quot;NetlinkManager::start&quot;);</span><br><span class="line">    if (nm-&gt;start()) &#123;</span><br><span class="line">        PLOG(ERROR) &lt;&lt; &quot;Unable to start NetlinkManager&quot;;</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line">    ATRACE_END();</span><br><span class="line"></span><br><span class="line">    // This call should go after listeners are started to avoid</span><br><span class="line">    // a deadlock between vold and init (see b/34278978 for details)</span><br><span class="line">    android::base::SetProperty(&quot;vold.has_adoptable&quot;, has_adoptable ? &quot;1&quot; : &quot;0&quot;);</span><br><span class="line">    android::base::SetProperty(&quot;vold.has_quota&quot;, has_quota ? &quot;1&quot; : &quot;0&quot;);</span><br><span class="line">    android::base::SetProperty(&quot;vold.has_reserved&quot;, has_reserved ? &quot;1&quot; : &quot;0&quot;);</span><br><span class="line"></span><br><span class="line">    // Do coldboot here so it won&apos;t block booting,</span><br><span class="line">    // also the cold boot is needed in case we have flash drive</span><br><span class="line">    // connected before Vold launched</span><br><span class="line">    coldboot(&quot;/sys/block&quot;);</span><br><span class="line"></span><br><span class="line">    ATRACE_END();</span><br><span class="line"></span><br><span class="line">    android::IPCThreadState::self()-&gt;joinThreadPool();</span><br><span class="line">    LOG(INFO) &lt;&lt; &quot;vold shutting down&quot;;</span><br><span class="line"></span><br><span class="line">    exit(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面mVold.fstrim方法是通过binder远程调用了VoldNativeService::fstrim方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">binder::Status VoldNativeService::fstrim(int32_t fstrimFlags,</span><br><span class="line">        const android::sp&lt;android::os::IVoldTaskListener&gt;&amp; listener) &#123;</span><br><span class="line">    ENFORCE_UID(AID_SYSTEM);</span><br><span class="line">    ACQUIRE_LOCK;</span><br><span class="line"></span><br><span class="line">    std::thread([=]() &#123;</span><br><span class="line">        android::vold::Trim(listener);</span><br><span class="line">    &#125;).detach();</span><br><span class="line">    return ok();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> android::vold::Trim方法在IdleMaint.cpp中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">void Trim(const android::sp&lt;android::os::IVoldTaskListener&gt;&amp; listener) &#123;</span><br><span class="line">    acquire_wake_lock(PARTIAL_WAKE_LOCK, kWakeLock);</span><br><span class="line"></span><br><span class="line">    // Collect both fstab and vold volumes</span><br><span class="line">    std::list&lt;std::string&gt; paths;</span><br><span class="line">    addFromFstab(&amp;paths, PathTypes::kMountPoint);</span><br><span class="line">    addFromVolumeManager(&amp;paths, PathTypes::kMountPoint);</span><br><span class="line"></span><br><span class="line">    for (const auto&amp; path : paths) &#123;</span><br><span class="line">        LOG(DEBUG) &lt;&lt; &quot;Starting trim of &quot; &lt;&lt; path;</span><br><span class="line"></span><br><span class="line">        android::os::PersistableBundle extras;</span><br><span class="line">        extras.putString(String16(&quot;path&quot;), String16(path.c_str()));</span><br><span class="line"></span><br><span class="line">        int fd = open(path.c_str(), O_RDONLY | O_DIRECTORY | O_CLOEXEC | O_NOFOLLOW);</span><br><span class="line">        if (fd &lt; 0) &#123;</span><br><span class="line">            PLOG(WARNING) &lt;&lt; &quot;Failed to open &quot; &lt;&lt; path;</span><br><span class="line">            if (listener) &#123;</span><br><span class="line">                listener-&gt;onStatus(-1, extras);</span><br><span class="line">            &#125;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        struct fstrim_range range;</span><br><span class="line">        memset(&amp;range, 0, sizeof(range));</span><br><span class="line">        range.len = ULLONG_MAX;</span><br><span class="line"></span><br><span class="line">        nsecs_t start = systemTime(SYSTEM_TIME_BOOTTIME);</span><br><span class="line">        if (ioctl(fd, FITRIM, &amp;range)) &#123;</span><br><span class="line">            PLOG(WARNING) &lt;&lt; &quot;Trim failed on &quot; &lt;&lt; path;</span><br><span class="line">            if (listener) &#123;</span><br><span class="line">                listener-&gt;onStatus(-1, extras);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            nsecs_t time = systemTime(SYSTEM_TIME_BOOTTIME) - start;</span><br><span class="line">            LOG(INFO) &lt;&lt; &quot;Trimmed &quot; &lt;&lt; range.len &lt;&lt; &quot; bytes on &quot; &lt;&lt; path</span><br><span class="line">                    &lt;&lt; &quot; in &quot; &lt;&lt; nanoseconds_to_milliseconds(time) &lt;&lt; &quot;ms&quot;;</span><br><span class="line">            extras.putLong(String16(&quot;bytes&quot;), range.len);</span><br><span class="line">            extras.putLong(String16(&quot;time&quot;), time);</span><br><span class="line">            if (listener) &#123;</span><br><span class="line">                listener-&gt;onStatus(0, extras);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        close(fd);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (listener) &#123;</span><br><span class="line">        android::os::PersistableBundle extras;</span><br><span class="line">        listener-&gt;onFinished(0, extras);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    release_wake_lock(kWakeLock);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/fstrim/" rel="tag">#fstrim</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/Android dex，odex，oat，vdex，art文件结构/" rel="next" title="Android dex，odex，oat，vdex，art文件结构">
+                <i class="fa fa-chevron-left"></i> Android dex，odex，oat，vdex，art文件结构
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/installd守护进程/" rel="prev" title="installd守护进程">
+                installd守护进程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="skytoby">
+          <p class="site-author-name" itemprop="name">skytoby</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳、毕业于电子科技大学 Android、程序员 <br><br>座右铭:今天不想跑，所以才去跑。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/caoxiaoliang" target="_blank" title="GitHub">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://me.csdn.net/cao861544325" target="_blank" title="CSDN">
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Android磁盘的读写机制"><span class="nav-text">1. Android磁盘的读写机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-解决“写入放大”问题的技术——TRIM"><span class="nav-text">2. 解决“写入放大”问题的技术——TRIM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-TRIM在Android上实现"><span class="nav-text">3. TRIM在Android上实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Vold守护进程启动"><span class="nav-text">4. Vold守护进程启动</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skytoby</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme Next
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'https-zproo-github-io';
+      var disqus_identifier = '2019/fstrim/';
+      var disqus_title = "fstrim解析";
+      var disqus_url = 'http://zproo.github.io/2019/fstrim/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("GHEN8u6QufHhkX6hJMzNpKeN-gzGzoHsz", "Gq4sJwz8T6cywiaHlBGFDbE4");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+</html>

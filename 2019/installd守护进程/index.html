@@ -1,0 +1,996 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="installd,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="PackageManagerService真正干活的是installd，通过Native Binder调用。 为什么需要installd守护进程？因为权限问题，PKMS只有system权限，installd却具有root权限。 在SystemServer中installd服务启动 1、客服端实现12345//启动installer服务，PKMS相关任务的执行者// Wait for install">
+<meta name="keywords" content="installd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="installd守护进程">
+<meta property="og:url" content="http://zproo.github.io/2019/installd守护进程/index.html">
+<meta property="og:site_name" content="skytoby">
+<meta property="og:description" content="PackageManagerService真正干活的是installd，通过Native Binder调用。 为什么需要installd守护进程？因为权限问题，PKMS只有system权限，installd却具有root权限。 在SystemServer中installd服务启动 1、客服端实现12345//启动installer服务，PKMS相关任务的执行者// Wait for install">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://zproo.github.io/2019/installd守护进程/dexopt.png">
+<meta property="og:updated_time" content="2019-08-14T08:57:13.534Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="installd守护进程">
+<meta name="twitter:description" content="PackageManagerService真正干活的是installd，通过Native Binder调用。 为什么需要installd守护进程？因为权限问题，PKMS只有system权限，installd却具有root权限。 在SystemServer中installd服务启动 1、客服端实现12345//启动installer服务，PKMS相关任务的执行者// Wait for install">
+<meta name="twitter:image" content="http://zproo.github.io/2019/installd守护进程/dexopt.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zproo.github.io/2019/installd守护进程/">
+
+  <title> installd守护进程 | skytoby </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+    
+    <header id="header_post" class="header" itemscope="" itemtype="http://schema.org/WPHeader" style="background-image: url('http://ortur5wom.bkt.clouddn.com/home_bg.jpg');">
+      <div class="header-inner-post"><a class="site-home" href="/">skytoby</a>
+
+<div class="site-meta custom-logo">
+  
+  
+  
+    <div class="site-meta-headline">
+      <a>
+        <img class="custom-logo-image" src="/images/logo.png" style="width: 50px" alt="skytoby">
+      </a>
+    </div>
+  
+
+  
+  
+  
+  
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+           <li class="menu-item menu-item-关于">
+             <a href="/about" rel="section">
+               
+               
+               关于
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-目录">
+             <a href="/archives" rel="section">
+               
+               
+               目录
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-首页">
+             <a href="/" rel="section">
+               
+               
+               首页
+             </a>
+           </li>
+        
+      
+
+      
+    </ul>
+  
+
+  
+</nav> </div>
+      <div class="header-post"> 
+  <div class="post-header">
+      <div class="tags">
+      
+        <a href="/tags/installd/" rel="tag" title="installd">installd</a>
+      
+      </div>
+      <h1>installd守护进程</h1>
+      <h2 class="subtitle"></h2>
+      <div class="post-time">
+        <span class="post-meta-item-text">Posted on </span>
+        <time itemprop="dateCreated" datetime="2019-06-02T21:18:23+08:00" content="2019-06-02" title="2019-06-02 21:18:23">
+          2019-06-02
+        </time>
+      </div>
+  </div>
+ </div>
+    </header>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                installd守护进程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2019-06-02T21:18:23+08:00" content="2019-06-02">
+              2019-06-02
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2019/installd守护进程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/installd守护进程/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+             <span id="/2019/installd守护进程/" class="leancloud_visitors" data-flag-title="installd守护进程">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>PackageManagerService真正干活的是installd，通过Native Binder调用。</p>
+<p>为什么需要installd守护进程？因为权限问题，PKMS只有system权限，installd却具有root权限。</p>
+<p>在SystemServer中installd服务启动</p>
+<h4 id="1、客服端实现"><a href="#1、客服端实现" class="headerlink" title="1、客服端实现"></a>1、客服端实现</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//启动installer服务，PKMS相关任务的执行者</span><br><span class="line">// Wait for installd to finish starting up so that it has a chance to</span><br><span class="line">// create critical directories such as /data/user with the appropriate</span><br><span class="line">// permissions.  We need this to complete before we initialize other services.</span><br><span class="line">Installer installer = mSystemServiceManager.startService(Installer.class);</span><br></pre></td></tr></table></figure>
+<p>Installer代码比较简洁，主要为一些创建、删除文件等操作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line"> public void onStart() &#123;</span><br><span class="line">     if (mIsolated) &#123;</span><br><span class="line">         mInstalld = null;</span><br><span class="line">     &#125; else &#123;</span><br><span class="line">         connect();</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> private void connect() &#123;</span><br><span class="line">     IBinder binder = ServiceManager.getService(&quot;installd&quot;);</span><br><span class="line">     if (binder != null) &#123;</span><br><span class="line">         try &#123;</span><br><span class="line">             //断开连接则重新连接</span><br><span class="line">             binder.linkToDeath(new DeathRecipient() &#123;</span><br><span class="line">                 @Override</span><br><span class="line">                 public void binderDied() &#123;</span><br><span class="line">                     Slog.w(TAG, &quot;installd died; reconnecting&quot;);</span><br><span class="line">                     connect();</span><br><span class="line">                 &#125;</span><br><span class="line">             &#125;, 0);</span><br><span class="line">         &#125; catch (RemoteException e) &#123;</span><br><span class="line">             binder = null;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     if (binder != null) &#123;</span><br><span class="line">         mInstalld = IInstalld.Stub.asInterface(binder);</span><br><span class="line">         try &#123;</span><br><span class="line">             invalidateMounts();</span><br><span class="line">         &#125; catch (InstallerException ignored) &#123;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125; else &#123;</span><br><span class="line">         Slog.w(TAG, &quot;installd not found; trying again&quot;);</span><br><span class="line">         BackgroundThread.getHandler().postDelayed(() -&gt; &#123;</span><br><span class="line">             connect();</span><br><span class="line">         &#125;, DateUtils.SECOND_IN_MILLIS);</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2、服务端实现"><a href="#2、服务端实现" class="headerlink" title="2、服务端实现"></a>2、服务端实现</h4><p>Android7.0后单一的init.rc文件被拆分，放在对应分区的etc/init目录中，每个服务一个rc文件，与该服务相关的触发器，操作等也定义在同一rc文件中。</p>
+<p>frameworks/native/cmds/installd/Android.bp编译文件中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cc_binary &#123;</span><br><span class="line">    name: &quot;installd&quot;,</span><br><span class="line">    defaults: [&quot;installd_defaults&quot;],</span><br><span class="line">    srcs: [&quot;installd.cpp&quot;],</span><br><span class="line"></span><br><span class="line">    static_libs: [&quot;libdiskusage&quot;],</span><br><span class="line"></span><br><span class="line">    init_rc: [&quot;installd.rc&quot;],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>frameworks/native/cmds/installd/installd.rc中启动installd进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">service installd /system/bin/installd</span><br><span class="line">    class main</span><br></pre></td></tr></table></figure>
+<p>installd.cpp主函数如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">static int installd_main(const int argc ATTRIBUTE_UNUSED, char *argv[]) &#123;</span><br><span class="line">    int ret;</span><br><span class="line">    int selinux_enabled = (is_selinux_enabled() &gt; 0);</span><br><span class="line"></span><br><span class="line">    setenv(&quot;ANDROID_LOG_TAGS&quot;, &quot;*:v&quot;, 1);</span><br><span class="line">    android::base::InitLogging(argv);</span><br><span class="line"></span><br><span class="line">    SLOGI(&quot;installd firing up&quot;);</span><br><span class="line"></span><br><span class="line">    union selinux_callback cb;</span><br><span class="line">    cb.func_log = log_callback;</span><br><span class="line">    selinux_set_callback(SELINUX_CB_LOG, cb);</span><br><span class="line"></span><br><span class="line">    if (!initialize_globals()) &#123;</span><br><span class="line">        SLOGE(&quot;Could not initialize globals; exiting./n&quot;);</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (initialize_directories() &lt; 0) &#123;</span><br><span class="line">        SLOGE(&quot;Could not create directories; exiting./n&quot;);</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (selinux_enabled &amp;&amp; selinux_status_open(true) &lt; 0) &#123;</span><br><span class="line">        SLOGE(&quot;Could not open selinux status; exiting./n&quot;);</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if ((ret = InstalldNativeService::start()) != android::OK) &#123;</span><br><span class="line">        SLOGE(&quot;Unable to start InstalldNativeService: %d&quot;, ret);</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    IPCThreadState::self()-&gt;joinThreadPool();</span><br><span class="line"></span><br><span class="line">    LOG(INFO) &lt;&lt; &quot;installd shutting down&quot;;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>InstalldNativeService::start()将该服务发布到native层的servicemanager中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">status_t InstalldNativeService::start() &#123;</span><br><span class="line">    IPCThreadState::self()-&gt;disableBackgroundScheduling(true);</span><br><span class="line">    status_t ret = BinderService&lt;InstalldNativeService&gt;::publish();</span><br><span class="line">    if (ret != android::OK) &#123;</span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line">    sp&lt;ProcessState&gt; ps(ProcessState::self());</span><br><span class="line">    ps-&gt;startThreadPool();</span><br><span class="line">    ps-&gt;giveThreadPoolName();</span><br><span class="line">    return android::OK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>BinderService<installdnativeservice>::publish()将服务添加到ServiceManager中</installdnativeservice></p>
+<p>/framework/native/libs/binder/include/binder/BinderService.h</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">static status_t publish(bool allowIsolated = false) &#123;</span><br><span class="line">        sp&lt;IServiceManager&gt; sm(defaultServiceManager());</span><br><span class="line">        将服务加入到ServiceManager中</span><br><span class="line">        return sm-&gt;addService(</span><br><span class="line">                String16(SERVICE::getServiceName()),</span><br><span class="line">                new SERVICE(), allowIsolated);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>所有的install.java中定义的功能都是通过binder调用native层的InstalldNativeService来实现</p>
+<p>install.java中dexopt方法，最后是执行Native层的dexopt方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">binder::Status InstalldNativeService::dexopt(const std::string&amp; apkPath, int32_t uid,</span><br><span class="line">        const std::unique_ptr&lt;std::string&gt;&amp; packageName, const std::string&amp; instructionSet,</span><br><span class="line">        int32_t dexoptNeeded, const std::unique_ptr&lt;std::string&gt;&amp; outputPath, int32_t dexFlags,</span><br><span class="line">        const std::string&amp; compilerFilter, const std::unique_ptr&lt;std::string&gt;&amp; uuid,</span><br><span class="line">        const std::unique_ptr&lt;std::string&gt;&amp; classLoaderContext,</span><br><span class="line">        const std::unique_ptr&lt;std::string&gt;&amp; seInfo, bool downgrade, int32_t targetSdkVersion,</span><br><span class="line">        const std::unique_ptr&lt;std::string&gt;&amp; profileName,</span><br><span class="line">        const std::unique_ptr&lt;std::string&gt;&amp; dexMetadataPath,</span><br><span class="line">        const std::unique_ptr&lt;std::string&gt;&amp; compilationReason) &#123;</span><br><span class="line">    ENFORCE_UID(AID_SYSTEM);</span><br><span class="line">    CHECK_ARGUMENT_UUID(uuid);</span><br><span class="line">    CHECK_ARGUMENT_PATH(apkPath);</span><br><span class="line">    if (packageName &amp;&amp; *packageName != &quot;*&quot;) &#123;</span><br><span class="line">        CHECK_ARGUMENT_PACKAGE_NAME(*packageName);</span><br><span class="line">    &#125;</span><br><span class="line">    CHECK_ARGUMENT_PATH(outputPath);</span><br><span class="line">    CHECK_ARGUMENT_PATH(dexMetadataPath);</span><br><span class="line">    std::lock_guard&lt;std::recursive_mutex&gt; lock(mLock);</span><br><span class="line"></span><br><span class="line">    const char* apk_path = apkPath.c_str();</span><br><span class="line">    const char* pkgname = getCStr(packageName, &quot;*&quot;);</span><br><span class="line">    const char* instruction_set = instructionSet.c_str();</span><br><span class="line">    const char* oat_dir = getCStr(outputPath);</span><br><span class="line">    const char* compiler_filter = compilerFilter.c_str();</span><br><span class="line">    const char* volume_uuid = getCStr(uuid);</span><br><span class="line">    const char* class_loader_context = getCStr(classLoaderContext);</span><br><span class="line">    const char* se_info = getCStr(seInfo);</span><br><span class="line">    const char* profile_name = getCStr(profileName);</span><br><span class="line">    const char* dm_path = getCStr(dexMetadataPath);</span><br><span class="line">    const char* compilation_reason = getCStr(compilationReason);</span><br><span class="line">    std::string error_msg;</span><br><span class="line">    int res = android::installd::dexopt(apk_path, uid, pkgname, instruction_set, dexoptNeeded,</span><br><span class="line">            oat_dir, dexFlags, compiler_filter, volume_uuid, class_loader_context, se_info,</span><br><span class="line">            downgrade, targetSdkVersion, profile_name, dm_path, compilation_reason, &amp;error_msg);</span><br><span class="line">    return res ? error(res, error_msg) : ok();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>android::installd::dexopt操作在dexopt.cpp文件中</p>
+<pre><code>int dexopt(const char* dex_path, uid_t uid, const char* pkgname, const char* instruction_set,
+        int dexopt_needed, const char* oat_dir, int dexopt_flags, const char* compiler_filter,
+        const char* volume_uuid, const char* class_loader_context, const char* se_info,
+        bool downgrade, int target_sdk_version, const char* profile_name,
+        const char* dex_metadata_path, const char* compilation_reason, std::string* error_msg) {
+    CHECK(pkgname != nullptr);
+    CHECK(pkgname[0] != 0);
+    CHECK(error_msg != nullptr);
+    CHECK_EQ(dexopt_flags &amp; ~DEXOPT_MASK, 0)
+        &lt;&lt; &quot;dexopt flags contains unknown fields: &quot; &lt;&lt; dexopt_flags;
+if (!validate_dex_path_size(dex_path)) {
+    *error_msg = StringPrintf(&quot;Failed to validate %s&quot;, dex_path);
+    return -1;
+}
+
+if (class_loader_context != nullptr &amp;&amp; strlen(class_loader_context) &gt; PKG_PATH_MAX) {
+    *error_msg = StringPrintf(&quot;Class loader context exceeds the allowed size: %s&quot;,
+                              class_loader_context);
+    LOG(ERROR) &lt;&lt; *error_msg;
+    return -1;
+}
+
+bool is_public = (dexopt_flags &amp; DEXOPT_PUBLIC) != 0;
+bool debuggable = (dexopt_flags &amp; DEXOPT_DEBUGGABLE) != 0;
+bool boot_complete = (dexopt_flags &amp; DEXOPT_BOOTCOMPLETE) != 0;
+bool profile_guided = (dexopt_flags &amp; DEXOPT_PROFILE_GUIDED) != 0;
+bool is_secondary_dex = (dexopt_flags &amp; DEXOPT_SECONDARY_DEX) != 0;
+bool background_job_compile = (dexopt_flags &amp; DEXOPT_IDLE_BACKGROUND_JOB) != 0;
+bool enable_hidden_api_checks = (dexopt_flags &amp; DEXOPT_ENABLE_HIDDEN_API_CHECKS) != 0;
+bool generate_compact_dex = (dexopt_flags &amp; DEXOPT_GENERATE_COMPACT_DEX) != 0;
+bool generate_app_image = (dexopt_flags &amp; DEXOPT_GENERATE_APP_IMAGE) != 0;
+
+// Check if we&apos;re dealing with a secondary dex file and if we need to compile it.
+std::string oat_dir_str;
+if (is_secondary_dex) {
+    if (process_secondary_dex_dexopt(dex_path, pkgname, dexopt_flags, volume_uuid, uid,
+            instruction_set, compiler_filter, &amp;is_public, &amp;dexopt_needed, &amp;oat_dir_str,
+            downgrade, class_loader_context, error_msg)) {
+        oat_dir = oat_dir_str.c_str();
+        if (dexopt_needed == NO_DEXOPT_NEEDED) {
+            return 0;  // Nothing to do, report success.
+        }
+    } else {
+        if (error_msg-&gt;empty()) {  // TODO: Make this a CHECK.
+            *error_msg = &quot;Failed processing secondary.&quot;;
+        }
+        return -1;  // We had an error, logged in the process method.
+    }
+} else {
+    // Currently these flags are only use for secondary dex files.
+    // Verify that they are not set for primary apks.
+    CHECK((dexopt_flags &amp; DEXOPT_STORAGE_CE) == 0);
+    CHECK((dexopt_flags &amp; DEXOPT_STORAGE_DE) == 0);
+}
+
+// Open the input file.
+unique_fd input_fd(open(dex_path, O_RDONLY, 0));
+if (input_fd.get() &lt; 0) {
+    *error_msg = StringPrintf(&quot;installd cannot open &apos;%s&apos; for input during dexopt&quot;, dex_path);
+    LOG(ERROR) &lt;&lt; *error_msg;
+    return -1;
+}
+
+// Create the output OAT file.
+char out_oat_path[PKG_PATH_MAX];
+Dex2oatFileWrapper out_oat_fd = open_oat_out_file(dex_path, oat_dir, is_public, uid,
+        instruction_set, is_secondary_dex, out_oat_path);
+if (out_oat_fd.get() &lt; 0) {
+    *error_msg = &quot;Could not open out oat file.&quot;;
+    return -1;
+}
+
+// Open vdex files.
+Dex2oatFileWrapper in_vdex_fd;
+Dex2oatFileWrapper out_vdex_fd;
+if (!open_vdex_files_for_dex2oat(dex_path, out_oat_path, dexopt_needed, instruction_set,
+        is_public, uid, is_secondary_dex, profile_guided, &amp;in_vdex_fd, &amp;out_vdex_fd)) {
+    *error_msg = &quot;Could not open vdex files.&quot;;
+    return -1;
+}
+
+// Ensure that the oat dir and the compiler artifacts of secondary dex files have the correct
+// selinux context (we generate them on the fly during the dexopt invocation and they don&apos;t
+// fully inherit their parent context).
+// Note that for primary apk the oat files are created before, in a separate installd
+// call which also does the restorecon. TODO(calin): unify the paths.
+if (is_secondary_dex) {
+    if (selinux_android_restorecon_pkgdir(oat_dir, se_info, uid,
+            SELINUX_ANDROID_RESTORECON_RECURSE)) {
+        *error_msg = std::string(&quot;Failed to restorecon &quot;).append(oat_dir);
+        LOG(ERROR) &lt;&lt; *error_msg;
+        return -1;
+    }
+}
+
+// Create a swap file if necessary.
+unique_fd swap_fd = maybe_open_dexopt_swap_file(out_oat_path);
+
+// Create the app image file if needed.
+Dex2oatFileWrapper image_fd = maybe_open_app_image(
+        out_oat_path, generate_app_image, is_public, uid, is_secondary_dex);
+
+// Open the reference profile if needed.
+Dex2oatFileWrapper reference_profile_fd = maybe_open_reference_profile(
+        pkgname, dex_path, profile_name, profile_guided, is_public, uid, is_secondary_dex);
+
+unique_fd dex_metadata_fd;
+if (dex_metadata_path != nullptr) {
+    dex_metadata_fd.reset(TEMP_FAILURE_RETRY(open(dex_metadata_path, O_RDONLY | O_NOFOLLOW)));
+    if (dex_metadata_fd.get() &lt; 0) {
+        PLOG(ERROR) &lt;&lt; &quot;Failed to open dex metadata file &quot; &lt;&lt; dex_metadata_path;
+    }
+}
+
+LOG(VERBOSE) &lt;&lt; &quot;DexInv: --- BEGIN &apos;&quot; &lt;&lt; dex_path &lt;&lt; &quot;&apos; ---&quot;;
+
+pid_t pid = fork();
+if (pid == 0) {
+    /* child -- drop privileges before continuing */
+    drop_capabilities(uid);
+
+    SetDex2OatScheduling(boot_complete);
+    if (flock(out_oat_fd.get(), LOCK_EX | LOCK_NB) != 0) {
+        PLOG(ERROR) &lt;&lt; &quot;flock(&quot; &lt;&lt; out_oat_path &lt;&lt; &quot;) failed&quot;;
+        _exit(DexoptReturnCodes::kFlock);
+    }
+
+    run_dex2oat(input_fd.get(),
+                out_oat_fd.get(),
+                in_vdex_fd.get(),
+                out_vdex_fd.get(),
+                image_fd.get(),
+                dex_path,
+                out_oat_path,
+                swap_fd.get(),
+                instruction_set,
+                compiler_filter,
+                debuggable,
+                boot_complete,
+                background_job_compile,
+                reference_profile_fd.get(),
+                class_loader_context,
+                target_sdk_version,
+                enable_hidden_api_checks,
+                generate_compact_dex,
+                dex_metadata_fd.get(),
+                compilation_reason);
+} else {
+    int res = wait_child(pid);
+    if (res == 0) {
+        LOG(VERBOSE) &lt;&lt; &quot;DexInv: --- END &apos;&quot; &lt;&lt; dex_path &lt;&lt; &quot;&apos; (success) ---&quot;;
+    } else {
+        LOG(VERBOSE) &lt;&lt; &quot;DexInv: --- END &apos;&quot; &lt;&lt; dex_path &lt;&lt; &quot;&apos; --- status=0x&quot;
+                     &lt;&lt; std::hex &lt;&lt; std::setw(4) &lt;&lt; res &lt;&lt; &quot;, process failed&quot;;
+        *error_msg = format_dexopt_error(res, dex_path);
+        return res;
+    }
+}
+
+update_out_oat_access_times(dex_path, out_oat_path);
+
+// We&apos;ve been successful, don&apos;t delete output.
+out_oat_fd.SetCleanup(false);
+out_vdex_fd.SetCleanup(false);
+image_fd.SetCleanup(false);
+reference_profile_fd.SetCleanup(false);
+
+return 0;
+}
+</code></pre><h3 id="dexopt"><a href="#dexopt" class="headerlink" title="dexopt"></a>dexopt</h3><p><img src="/2019/installd守护进程/dexopt.png" alt=""></p>
+<p>dexopt 针对 Dalvik 虚拟机，dex2oat 后者针对 Art 虚拟机(Android4.4)。</p>
+<ul>
+<li>dexopt 是对 dex 文件 进行 verification 和 optimization 的操作，其对 dex 文件的优化结果变成了 odex 文件，这个文件和 dex 文件很像，只是使用了一些优化操作码（譬如优化调用虚拟指令等）。</li>
+<li>dex2oat 是对 dex 文件的 AOT 提前编译操作，其需要一个 dex 文件，然后对其进行编译，结果是一个本地可执行的 ELF 文件，可以直接被本地处理器执行。</li>
+</ul>
+<p>除此之外在上图还可以看到 Dalvik 虚拟机中有使用 JIT 编译器，也就是说其也能将程序运行的热点 java 字节码编译成本地 code 执行，所以其与 Art 虚拟机还是有区别的。Art 虚拟机的 dex2oat 是提前编译所有 dex 字节码，而 Dalvik 虚拟机只编译使用启发式检测中最频繁执行的热点字节码。</p>
+<p>在系统首次启动的场景中，系统会对/system/app、/system/priv-app、/data/app目录下的所有APK进行dex字节码到本地机器码的翻译，同样也会对/system/framework目录下的APK或者JAR文件，以及这些APK所引用的外部JAR，进行dex字节码到本地机器码的翻译。这样可以保证除了应用之外，系统中使用java来开发的系统服务，也会统一地从dex字节码翻译成本地机器码。详细内容请移步老罗的博客<a href="https://blog.csdn.net/luoshengyang/article/details/18006645" target="_blank" rel="noopener">Android ART运行时无缝替换Dalvik虚拟机的过程分析</a>。</p>
+<h4 id="1、JVM、DVM、ART虚拟机了解"><a href="#1、JVM、DVM、ART虚拟机了解" class="headerlink" title="1、JVM、DVM、ART虚拟机了解"></a>1、JVM、DVM、ART虚拟机了解</h4><p>JVM虚拟机运行的是java字节码： java-&gt;java bytecode（class）-&gt;java bytecode（jar） 注！java虚拟机基于栈，基于栈的机器必须使用指令来载入和操作栈上的数据，所需指令相对来说比较多。</p>
+<p>Dalvik虚拟机解释执行的dex字节码： java-&gt;java bytecode（class）-&gt;dalvik bytecode（dex） 注：相对JVM，Dalvik基于寄存器，且经过优化并允许有限的内存中同时运行多个虚拟机实例，每个Dalvik应用作为一个独立的Linxu进程执行。</p>
+<p>如果一个应用中有很多类，编译后会相应生成很多class文件，class文件之间也会有不少冗余信息，dex格式文件把所有classs文件内容整合到一个文件，这样可以减少整体文件占用，IO操作，同时也提高了类的查找速度。此外，dex格式文件增加了新的操作码支持，文件结构也相对简洁，使用等长的指令来提高解析速度。而且dex文件会尽量扩大只读结构的大小，来提高进程间数据共享的速度。</p>
+<p>ART虚拟机执行的本地机器码： java-&gt;java bytecode（class）-&gt;dalvik bytecode（dex）-&gt;optimized android runtime machine code（oat） 注：ART所使用的AOT（Ahead-Of-Time）编译，在应用首次安装时，字节码预编译成机器码存储在本地，也就是说在程序运行前编译。而Dalvik是典型的JIT（Just_In_Time），此模式下，应用<strong>每次</strong>运行的时候，字节码都需要即时编译器转换为机器码再执行，也就是在程序运行时编译。因此在App运行时，ART模式相对于Dalvik省去了解释字节码的过程，占用内存也相应减少，进而提高App的运行效率。</p>
+<h4 id="2、Odex"><a href="#2、Odex" class="headerlink" title="2、Odex"></a>2、Odex</h4><p>从上面一节中我们知道，在编译打包APK时，Java类会被编译成一个或者多个字节码文件（.class），通过dx工具CLASS文件转换成一个DEX（Dalvik Executable）文件。 通常情况下，我们看到的Android应用程序实际上是一个以.apk为后缀名的压缩文件。我们可以通过压缩工具对apk进行解压，解压出来的内容中有一个名为classes.dex的文件。那么我们首次开机的时候系统需要将其从apk中解压出来保存在data/app目录中。 </p>
+<p>如果当前运行在Dalvik虚拟机下，Dalvik会对classes.dex进行一次“翻译”，“翻译”的过程也就是守护进程installd的函数dexopt来对dex字节码进行优化，实际上也就是由dex文件生成odex文件，最终odex文件被保存在手机的VM缓存目录data/dalvik-cache下（注意！这里所生成的odex文件依旧是以dex为后缀名，格式如：system@priv-app@<a href="mailto:Settings@Settings.apk" target="_blank" rel="noopener">Settings@Settings.apk</a>@classes.dex）。 </p>
+<p>如果当前运行于Art模式下， Art同样会在首次进入系统的时候调用/system/bin/dexopt工具来将dex字节码翻译成本地机器码，保存在data/dalvik-cache下。 那么这里需要注意的是，无论是对dex字节码进行优化，还是将dex字节码翻译成本地机器码，最终得到的结果都是保存在相同名称的一个odex文件里面的，但是前者对应的是一个dey文件（表示这是一个优化过的dex），后者对应的是一个oat文件（实际上是一个自定义的elf文件，里面包含的都是本地机器指令）。通过这种方式，原来任何通过绝对路径引用了该odex文件的代码就都不需要修改了。</p>
+<p>由于在系统首次启动时会对应用进行安装，那么在预置APK比较多的情况下，将会大大增加系统首次启动的时间。从前面的描述可知，既然无论是DVM还是ART，对DEX的优化结果都是保存在一个相同名称的odex文件，那么如果我们把这两个过程在ROM编译的时候预处理提取Odex文件将会大大优化系统首次启动的时间。</p>
+<h4 id="3、预编译提取Odex"><a href="#3、预编译提取Odex" class="headerlink" title="3、预编译提取Odex"></a>3、预编译提取Odex</h4><p>在目录/build/core/dex_preopt_odex_install.mk中的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ifeq ($(LOCAL_MODULE),helloworld)</span><br><span class="line">LOCAL_DEX_PREOPT:=</span><br><span class="line">endif</span><br><span class="line">build_odex:=</span><br><span class="line">installed_odex:=</span><br></pre></td></tr></table></figure>
+<p>helloworld可替换为需要跳过提取odex的apk的LOCAL_MODULE名字，如Settings等。</p>
+
+      
+    </div>
+
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/installd/" rel="tag">#installd</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/fstrim/" rel="next" title="fstrim解析">
+                <i class="fa fa-chevron-left"></i> fstrim解析
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/PKMS相关类分析/" rel="prev" title="PKMS相关类分析">
+                PKMS相关类分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="skytoby">
+          <p class="site-author-name" itemprop="name">skytoby</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳、毕业于电子科技大学 Android、程序员 <br><br>座右铭:今天不想跑，所以才去跑。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/caoxiaoliang" target="_blank" title="GitHub">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://me.csdn.net/cao861544325" target="_blank" title="CSDN">
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、客服端实现"><span class="nav-text">1、客服端实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、服务端实现"><span class="nav-text">2、服务端实现</span></a></li></ol><li class="nav-item nav-level-3"><a class="nav-link" href="#dexopt"><span class="nav-text">dexopt</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、JVM、DVM、ART虚拟机了解"><span class="nav-text">1、JVM、DVM、ART虚拟机了解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、Odex"><span class="nav-text">2、Odex</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、预编译提取Odex"><span class="nav-text">3、预编译提取Odex</span></a></li></ol></li></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">skytoby</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme Next
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'https-zproo-github-io';
+      var disqus_identifier = '2019/installd守护进程/';
+      var disqus_title = "installd守护进程";
+      var disqus_url = 'http://zproo.github.io/2019/installd守护进程/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("GHEN8u6QufHhkX6hJMzNpKeN-gzGzoHsz", "Gq4sJwz8T6cywiaHlBGFDbE4");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+</html>

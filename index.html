@@ -256,6 +256,724 @@
             
               
                 
+                <a class="post-title-link" href="/2019/PackageManagerService启动流程分析/" itemprop="url">
+                  PackageManagerService启动流程分析
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2019-06-30T21:18:23+08:00" content="2019-06-30">
+              2019-06-30
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2019/PackageManagerService启动流程分析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/PackageManagerService启动流程分析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+             <span id="/2019/PackageManagerService启动流程分析/" class="leancloud_visitors" data-flag-title="PackageManagerService启动流程分析">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          
+基于Android10.0，分析PackageManagerService启动
+
+一、PakageManagerService概述1.1  作用PakageManagerService(简称PKMS)，是Android核心服务之一，管理着所有package相关的工作。
+如：安装、卸载应用
+​   
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/PackageManagerService启动流程分析/" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2019/PKMS相关类分析/" itemprop="url">
+                  PKMS相关类分析
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2019-06-10T21:18:23+08:00" content="2019-06-10">
+              2019-06-10
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2019/PKMS相关类分析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/PKMS相关类分析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+             <span id="/2019/PKMS相关类分析/" class="leancloud_visitors" data-flag-title="PKMS相关类分析">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          1.Settings类1234567891011121314151617181920// Settins文件 data/system/packages.xmlprivate final File mSettingsFilename;//这个文件不一定存在，是备份文件，如果存在则说明更新package
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/PKMS相关类分析/" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2019/installd守护进程/" itemprop="url">
+                  installd守护进程
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2019-06-02T21:18:23+08:00" content="2019-06-02">
+              2019-06-02
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2019/installd守护进程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/installd守护进程/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+             <span id="/2019/installd守护进程/" class="leancloud_visitors" data-flag-title="installd守护进程">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          PackageManagerService真正干活的是installd，通过Native Binder调用。
+为什么需要installd守护进程？因为权限问题，PKMS只有system权限，installd却具有root权限。
+在SystemServer中installd服务启动
+1、客服端实现12
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/installd守护进程/" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2019/fstrim/" itemprop="url">
+                  fstrim解析
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2019-05-26T21:18:23+08:00" content="2019-05-26">
+              2019-05-26
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2019/fstrim/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/fstrim/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+             <span id="/2019/fstrim/" class="leancloud_visitors" data-flag-title="fstrim解析">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          fstrim提升磁盘性能，缓解Android卡顿
+Android手机刚购买时非常流畅，但是使用不到一年之后都会“卡顿”。那么是什么原因造成的呢？
+长期使用Android手机将产生大量的磁盘碎片，而磁盘碎片将会降低磁盘的读写性能，从而影响系统流畅度。
+1. Android磁盘的读写机制Android手
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/fstrim/" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2019/Android dex，odex，oat，vdex，art文件结构/" itemprop="url">
+                  Android dex，odex，oat，vdex，art文件结构
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2019-05-20T21:18:23+08:00" content="2019-05-20">
+              2019-05-20
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2019/Android dex，odex，oat，vdex，art文件结构/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/Android dex，odex，oat，vdex，art文件结构/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+             <span id="/2019/Android dex，odex，oat，vdex，art文件结构/" class="leancloud_visitors" data-flag-title="Android dex，odex，oat，vdex，art文件结构">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          在installd守护进程中有提到dexopt的操作，最后执行的操作是 run_dex2oat。本文将对dex和oat文件格式进行介绍分析。
+1234567891011121314151617181920run_dex2oat(input_fd.get(),                 out_
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/Android dex，odex，oat，vdex，art文件结构/" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2019/Android系统SystemServer启动（下）/" itemprop="url">
+                  Android系统SystemServer启动（下）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2019-05-18T21:18:23+08:00" content="2019-05-18">
+              2019-05-18
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2019/Android系统SystemServer启动（下）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/Android系统SystemServer启动（下）/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+             <span id="/2019/Android系统SystemServer启动（下）/" class="leancloud_visitors" data-flag-title="Android系统SystemServer启动（下）">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          
+基于Android10.0，分析SystemServer启动
+
+一、SystemServer启动上一节中讲到了从开机到SystemServer中main方法的启动过程，下面将介绍下SystemServer中的main方法，该方法主要执行的主要流程如下：
+1234567SystemServer.ma
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2019/Android系统SystemServer启动（下）/" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2019/Android系统SystemServer启动（上）/" itemprop="url">
                   Android系统SystemServer启动（上）
                 </a>
@@ -316,7 +1034,9 @@
       
         
           
-          12345678/kernel/msm-3.18/arch/arm64/kernel/head.S/kernel/msm-3.18/init/main.c/kernel/msm-3.18/kernel/kthread.c/system/core/init/init.cpp/system/core/r
+          1.0  前言当按下终端的电源键到看到Home界面，这个过程需要经过Android系统体系结构中的内核层、运行层、框架层、应用层。本文只介绍到SystemServer启动（代码基于android 8.1），引用gityuan的一张整体框架图。
+
+1.1 内核启动前准备当电源键按下之后，引导芯片的代码
           ...
           <!--noindex-->
           <div class="post-more-link text-center">
@@ -628,7 +1348,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -638,7 +1358,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">tags</span>
               
             </div>
