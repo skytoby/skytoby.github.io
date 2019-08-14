@@ -100,7 +100,7 @@
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://zproo.github.io/2019/PackageManagerService启动流程分析/pkms.jpg">
 <meta property="og:image" content="http://zproo.github.io/2019/PackageManagerService启动流程分析/scanDir.png">
-<meta property="og:updated_time" content="2019-08-14T08:50:42.654Z">
+<meta property="og:updated_time" content="2019-08-14T09:26:02.376Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PackageManagerService启动流程分析">
 <meta name="twitter:description" content="基于Android10.0，分析PackageManagerService启动  一、PakageManagerService概述1.1  作用PakageManagerService(简称PKMS)，是Android核心服务之一，管理着所有package相关的工作。 如：安装、卸载应用 ​       查询、增加、删除permission相关信息 ​       查询Application相关">
@@ -463,6 +463,10 @@
 <p>第一阶段：主要是扫描解析XML文件，并将其中的信息保存到特定的数据结构中，为下一阶段工作提供重要的参考信息；第二阶段：扫描各个目录下的APK，可以看到手机上apk，扫描的工作量就越大，系统启动速度也就越慢；                            第三阶段：主要是更新相关信息并启动PackageInstallerService服务。</p>
 <p>PKMS构造函数工作任务非常繁重，特别是在扫描apk的时候。如果需要优化该流程以加快启动速度，则这个是一个好的方向。如延时扫描不重要的apk，或者保存Package信息到文件，然后启动时从文件中恢复这些信息以减少APK文件读取并解析xml的工作量。但是一直没有比较满意的方案，原因很多，比如apk之间有着比较多微妙的关系，因此到底延时扫描哪些apk，尚不能确定。还有一种方案是，PKMS可以启动多个线程扫描不同的目录，在android10.0中可以看到在扫描的时候已经启动多线程来扫描。对于PKMS的优化，Google基本上能想到基本上已经优化了，我们也可以思考。</p>
 <h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>对于这些流程中有一些操作并没有详细的描述，由于篇幅有限将单独介绍。</p>
+<p><a href="https://skytoby.github.io/2019/PKMS%E7%9B%B8%E5%85%B3%E7%B1%BB%E5%88%86%E6%9E%90/" target="_blank" rel="noopener">PKMS相关类分析</a></p>
+<p><a href="https://skytoby.github.io/2019/installd%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/" target="_blank" rel="noopener">installd守护进程</a></p>
+<p><a href="https://skytoby.github.io/2019/fstrim/" target="_blank" rel="noopener">fstrim解析</a></p>
+<p><a href="https://skytoby.github.io/2019/Android%20dex%EF%BC%8Codex%EF%BC%8Coat%EF%BC%8Cvdex%EF%BC%8Cart%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/" target="_blank" rel="noopener">Android dex，odex，oat，vdex，art文件结构</a></p>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://blog.csdn.net/thh159/article/details/88289642" target="_blank" rel="noopener">https://blog.csdn.net/thh159/article/details/88289642</a></p>
 <p><a href="https://www.jianshu.com/p/cbf8e73f41ed" target="_blank" rel="noopener">https://www.jianshu.com/p/cbf8e73f41ed</a></p>
 <p><a href="https://blog.csdn.net/innost/article/details/47253179" target="_blank" rel="noopener">https://blog.csdn.net/innost/article/details/47253179</a></p>

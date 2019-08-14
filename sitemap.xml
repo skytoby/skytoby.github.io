@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://zproo.github.io/2019/PackageManagerService%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    
+    <lastmod>2019-08-14T09:26:02.376Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://zproo.github.io/2019/Android%20dex%EF%BC%8Codex%EF%BC%8Coat%EF%BC%8Cvdex%EF%BC%8Cart%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</loc>
     
     <lastmod>2019-08-14T09:08:44.002Z</lastmod>
@@ -26,13 +33,6 @@
     <loc>http://zproo.github.io/2019/PKMS%E7%9B%B8%E5%85%B3%E7%B1%BB%E5%88%86%E6%9E%90/</loc>
     
     <lastmod>2019-08-14T08:55:32.795Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zproo.github.io/2019/PackageManagerService%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    
-    <lastmod>2019-08-14T08:50:42.654Z</lastmod>
     
   </url>
   
