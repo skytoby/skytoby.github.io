@@ -1,0 +1,698 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="SystemProperties,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="SystemProperties.set方法可以设置系统属性，通过设置系统属性可以启动一些服务和操作，如关机，重启、uncrypt服务等。下面将分析为什么设置系统属性，可以做到即时生效某些操作。 下面将以SystemProperties.set(“ctl.start”, “uncrypt”);为例说明整个流程。 一、属性服务客户端1.1 SystemProperties.set[-&amp;gt;Syst">
+<meta name="keywords" content="SystemProperties">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android SystemProperties系统属性分析">
+<meta property="og:url" content="http://zproo.github.io/2019/Android SystemProperties系统属性分析/index.html">
+<meta property="og:site_name" content="Skytoby">
+<meta property="og:description" content="SystemProperties.set方法可以设置系统属性，通过设置系统属性可以启动一些服务和操作，如关机，重启、uncrypt服务等。下面将分析为什么设置系统属性，可以做到即时生效某些操作。 下面将以SystemProperties.set(“ctl.start”, “uncrypt”);为例说明整个流程。 一、属性服务客户端1.1 SystemProperties.set[-&amp;gt;Syst">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-12-28T06:43:27.648Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android SystemProperties系统属性分析">
+<meta name="twitter:description" content="SystemProperties.set方法可以设置系统属性，通过设置系统属性可以启动一些服务和操作，如关机，重启、uncrypt服务等。下面将分析为什么设置系统属性，可以做到即时生效某些操作。 下面将以SystemProperties.set(“ctl.start”, “uncrypt”);为例说明整个流程。 一、属性服务客户端1.1 SystemProperties.set[-&amp;gt;Syst">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zproo.github.io/2019/Android SystemProperties系统属性分析/">
+
+  <title> Android SystemProperties系统属性分析 | Skytoby </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+    
+    <header id="header_post" class="header" itemscope="" itemtype="http://schema.org/WPHeader" style="background-image: url('http://ortur5wom.bkt.clouddn.com/home_bg.jpg');">
+      <div class="header-inner-post"><a class="site-home" href="/">Skytoby</a>
+
+<div class="site-meta ">
+  
+  
+  
+    <div class="site-meta-headline">
+      <a>
+        <img class="custom-logo-image" src="/images/logo.png" style="width: 50px" alt="Skytoby">
+      </a>
+    </div>
+  
+
+  
+  
+  
+  
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+           <li class="menu-item menu-item-关于">
+             <a href="/about" rel="section">
+               
+               
+               关于
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-目录">
+             <a href="/archives" rel="section">
+               
+               
+               目录
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-首页">
+             <a href="/" rel="section">
+               
+               
+               首页
+             </a>
+           </li>
+        
+      
+
+      
+    </ul>
+  
+
+  
+</nav> </div>
+      <div class="header-post"> 
+  <div class="post-header">
+      <div class="tags">
+      
+        <a href="/tags/SystemProperties/" rel="tag" title="SystemProperties">SystemProperties</a>
+      
+      </div>
+      <h1>Android SystemProperties系统属性分析</h1>
+      <h2 class="subtitle"></h2>
+      <div class="post-time">
+        <span class="post-meta-item-text">Posted on </span>
+        <time itemprop="dateCreated" datetime="2019-11-20T22:40:23+08:00" content="2019-11-20" title="2019-11-20 22:40:23">
+          2019-11-20
+        </time>
+      </div>
+  </div>
+ </div>
+    </header>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Android SystemProperties系统属性分析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2019-11-20T22:40:23+08:00" content="2019-11-20">
+              2019-11-20
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2019/Android SystemProperties系统属性分析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/Android SystemProperties系统属性分析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>SystemProperties.set方法可以设置系统属性，通过设置系统属性可以启动一些服务和操作，如关机，重启、uncrypt服务等。下面将分析为什么设置系统属性，可以做到即时生效某些操作。</p>
+<p>下面将以SystemProperties.set(“ctl.start”, “uncrypt”);为例说明整个流程。</p>
+<h2 id="一、属性服务客户端"><a href="#一、属性服务客户端" class="headerlink" title="一、属性服务客户端"></a>一、属性服务客户端</h2><h3 id="1-1-SystemProperties-set"><a href="#1-1-SystemProperties-set" class="headerlink" title="1.1 SystemProperties.set"></a>1.1 SystemProperties.set</h3><p>[-&gt;SystemProperties.java]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Set the value for the given &#123;@code key&#125; to &#123;@code val&#125;.</span><br><span class="line"> *</span><br><span class="line"> * @throws IllegalArgumentException if the &#123;@code val&#125; exceeds 91 characters</span><br><span class="line"> * @hide</span><br><span class="line"> */</span><br><span class="line">@UnsupportedAppUsage</span><br><span class="line">public static void set(@NonNull String key, @Nullable String val) &#123;</span><br><span class="line">    if (val != null &amp;&amp; !val.startsWith(&quot;ro.&quot;) &amp;&amp; val.length() &gt; PROP_VALUE_MAX) &#123;</span><br><span class="line">        throw new IllegalArgumentException(&quot;value of system property &apos;&quot; + key</span><br><span class="line">                + &quot;&apos; is longer than &quot; + PROP_VALUE_MAX + &quot; characters: &quot; + val);</span><br><span class="line">    &#125;</span><br><span class="line">    if (TRACK_KEY_ACCESS) onKeyAccess(key);</span><br><span class="line">    //调用native方法</span><br><span class="line">    native_set(key, val);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="1-2-SystemProperties-set"><a href="#1-2-SystemProperties-set" class="headerlink" title="1.2 SystemProperties_set"></a>1.2 SystemProperties_set</h3><p>[-&gt;android_os_SystemProperties.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">void SystemProperties_set(JNIEnv *env, jobject clazz, jstring keyJ,</span><br><span class="line">                          jstring valJ)</span><br><span class="line">&#123;</span><br><span class="line">    auto handler = [&amp;](const std::string&amp; key, bool) &#123;</span><br><span class="line">        std::string val;</span><br><span class="line">        if (valJ != nullptr) &#123;</span><br><span class="line">            ScopedUtfChars key_utf(env, valJ);</span><br><span class="line">            val = key_utf.c_str();</span><br><span class="line">        &#125;</span><br><span class="line">        return android::base::SetProperty(key, val);</span><br><span class="line">    &#125;;</span><br><span class="line">    if (!ConvertKeyAndForward(env, keyJ, true, handler)) &#123;</span><br><span class="line">        // Must have been a failure in SetProperty.</span><br><span class="line">        jniThrowException(env, &quot;java/lang/RuntimeException&quot;,</span><br><span class="line">                          &quot;failed to set system property&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="1-3-SetProperty"><a href="#1-3-SetProperty" class="headerlink" title="1.3 SetProperty"></a>1.3 SetProperty</h3><p>[-&gt;properties.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bool SetProperty(const std::string&amp; key, const std::string&amp; value) &#123;</span><br><span class="line">  return (__system_property_set(key.c_str(), value.c_str()) == 0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="1-4-system-property-set"><a href="#1-4-system-property-set" class="headerlink" title="1.4 system_property_set"></a>1.4 system_property_set</h3><p>[-&gt;system_property_set.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">int __system_property_set(const char* key, const char* value) &#123;</span><br><span class="line">  if (key == nullptr) return -1;</span><br><span class="line">  if (value == nullptr) value = &quot;&quot;;</span><br><span class="line"></span><br><span class="line">  if (g_propservice_protocol_version == 0) &#123;</span><br><span class="line">    detect_protocol_version();</span><br><span class="line">  &#125;</span><br><span class="line">  //检查协议</span><br><span class="line">  if (g_propservice_protocol_version == kProtocolVersion1) &#123;</span><br><span class="line">    // Old protocol does not support long names or values</span><br><span class="line">    if (strlen(key) &gt;= PROP_NAME_MAX) return -1;</span><br><span class="line">    if (strlen(value) &gt;= PROP_VALUE_MAX) return -1;</span><br><span class="line"></span><br><span class="line">    prop_msg msg;</span><br><span class="line">    memset(&amp;msg, 0, sizeof msg);</span><br><span class="line">    msg.cmd = PROP_MSG_SETPROP;</span><br><span class="line">    strlcpy(msg.name, key, sizeof msg.name);</span><br><span class="line">    strlcpy(msg.value, value, sizeof msg.value);</span><br><span class="line">    //发送消息，消息中包括key和value</span><br><span class="line">    return send_prop_msg(&amp;msg);</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    // New protocol only allows long values for ro. properties only.</span><br><span class="line">    if (strlen(value) &gt;= PROP_VALUE_MAX &amp;&amp; strncmp(key, &quot;ro.&quot;, 3) != 0) return -1;</span><br><span class="line">    // Use proper protocol</span><br><span class="line">    PropertyServiceConnection connection;</span><br><span class="line">    if (!connection.IsValid()) &#123;</span><br><span class="line">      errno = connection.GetLastError();</span><br><span class="line">      async_safe_format_log(</span><br><span class="line">          ANDROID_LOG_WARN, &quot;libc&quot;,</span><br><span class="line">          &quot;Unable to set property /&quot;%s/&quot; to /&quot;%s/&quot;: connection failed; errno=%d (%s)&quot;, key, value,</span><br><span class="line">          errno, strerror(errno));</span><br><span class="line">      return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    SocketWriter writer(&amp;connection);</span><br><span class="line">    if (!writer.WriteUint32(PROP_MSG_SETPROP2).WriteString(key).WriteString(value).Send()) &#123;</span><br><span class="line">      errno = connection.GetLastError();</span><br><span class="line">      async_safe_format_log(ANDROID_LOG_WARN, &quot;libc&quot;,</span><br><span class="line">                            &quot;Unable to set property /&quot;%s/&quot; to /&quot;%s/&quot;: write failed; errno=%d (%s)&quot;,</span><br><span class="line">                            key, value, errno, strerror(errno));</span><br><span class="line">      return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int result = -1;</span><br><span class="line">    if (!connection.RecvInt32(&amp;result)) &#123;</span><br><span class="line">      errno = connection.GetLastError();</span><br><span class="line">      async_safe_format_log(ANDROID_LOG_WARN, &quot;libc&quot;,</span><br><span class="line">                            &quot;Unable to set property /&quot;%s/&quot; to /&quot;%s/&quot;: recv failed; errno=%d (%s)&quot;,</span><br><span class="line">                            key, value, errno, strerror(errno));</span><br><span class="line">      return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (result != PROP_SUCCESS) &#123;</span><br><span class="line">      async_safe_format_log(ANDROID_LOG_WARN, &quot;libc&quot;,</span><br><span class="line">                            &quot;Unable to set property /&quot;%s/&quot; to /&quot;%s/&quot;: error code: 0x%x&quot;, key, value,</span><br><span class="line">                            result);</span><br><span class="line">      return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="1-5-send-prop-msg"><a href="#1-5-send-prop-msg" class="headerlink" title="1.5 send_prop_msg"></a>1.5 send_prop_msg</h3><p>[-&gt;system_property_set.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">static int send_prop_msg(const prop_msg* msg) &#123;</span><br><span class="line">  PropertyServiceConnection connection;</span><br><span class="line">  if (!connection.IsValid()) &#123;</span><br><span class="line">    return connection.GetLastError();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  int result = -1;</span><br><span class="line">  //连接PROP_SERVICE的socket</span><br><span class="line">  int s = connection.socket();</span><br><span class="line"> </span><br><span class="line">  //通过socket发送消息</span><br><span class="line">  const int num_bytes = TEMP_FAILURE_RETRY(send(s, msg, sizeof(prop_msg), 0));</span><br><span class="line">  if (num_bytes == sizeof(prop_msg)) &#123;</span><br><span class="line">    // We successfully wrote to the property server but now we</span><br><span class="line">    // wait for the property server to finish its work.  It</span><br><span class="line">    // acknowledges its completion by closing the socket so we</span><br><span class="line">    // poll here (on nothing), waiting for the socket to close.</span><br><span class="line">    // If you &apos;adb shell setprop foo bar&apos; you&apos;ll see the POLLHUP</span><br><span class="line">    // once the socket closes.  Out of paranoia we cap our poll</span><br><span class="line">    // at 250 ms.</span><br><span class="line">    pollfd pollfds[1];</span><br><span class="line">    pollfds[0].fd = s;</span><br><span class="line">    pollfds[0].events = 0;</span><br><span class="line">    const int poll_result = TEMP_FAILURE_RETRY(poll(pollfds, 1, 250 /* ms */));</span><br><span class="line">    if (poll_result == 1 &amp;&amp; (pollfds[0].revents &amp; POLLHUP) != 0) &#123;</span><br><span class="line">      result = 0;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      // Ignore the timeout and treat it like a success anyway.</span><br><span class="line">      // The init process is single-threaded and its property</span><br><span class="line">      // service is sometimes slow to respond (perhaps it&apos;s off</span><br><span class="line">      // starting a child process or something) and thus this</span><br><span class="line">      // times out and the caller thinks it failed, even though</span><br><span class="line">      // it&apos;s still getting around to it.  So we fake it here,</span><br><span class="line">      // mostly for ctl.* properties, but we do try and wait 250</span><br><span class="line">      // ms so callers who do read-after-write can reliably see</span><br><span class="line">      // what they&apos;ve written.  Most of the time.</span><br><span class="line">      // TODO: fix the system properties design.</span><br><span class="line">      async_safe_format_log(ANDROID_LOG_WARN, &quot;libc&quot;,</span><br><span class="line">                            &quot;Property service has timed out while trying to set /&quot;%s/&quot; to /&quot;%s/&quot;&quot;,</span><br><span class="line">                            msg-&gt;name, msg-&gt;value);</span><br><span class="line">      result = 0;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>static const char property_service_socket[] = “/dev/socket/“ PROP_SERVICE_NAME;</p>
+<p>这里通过property_service建立socket的连接，将key,value发送到property_service。</p>
+<p>那么property_service是在什么时候启动的，是在开机的时候通过init进程启动的服务，开启property_service后，一直在监听property_service_socket，等待客户端的连接。</p>
+<h2 id="二、属性服务服务端"><a href="#二、属性服务服务端" class="headerlink" title="二、属性服务服务端"></a>二、属性服务服务端</h2><h3 id="2-1-init-main"><a href="#2-1-init-main" class="headerlink" title="2.1 init.main"></a>2.1 init.main</h3><p>[-&gt;init.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, char** argv) &#123;</span><br><span class="line">  </span><br><span class="line">    ..... </span><br><span class="line">    //property初始化，见2.2节</span><br><span class="line">    property_init();</span><br><span class="line"></span><br><span class="line">    // If arguments are passed both on the command line and in DT,</span><br><span class="line">    // properties set in DT always have priority over the command-line ones.</span><br><span class="line">    process_kernel_dt();</span><br><span class="line">    process_kernel_cmdline();</span><br><span class="line"></span><br><span class="line">    // Propagate the kernel variables to internal variables</span><br><span class="line">    // used by init as well as the current required properties.</span><br><span class="line">    export_kernel_boot_props();</span><br><span class="line"></span><br><span class="line">    // Make the time that init started available for bootstat to log.</span><br><span class="line">    property_set(&quot;ro.boottime.init&quot;, getenv(&quot;INIT_STARTED_AT&quot;));</span><br><span class="line">    property_set(&quot;ro.boottime.init.selinux&quot;, getenv(&quot;INIT_SELINUX_TOOK&quot;));</span><br><span class="line"></span><br><span class="line">    ....</span><br><span class="line">    property_load_boot_defaults();</span><br><span class="line">    export_oem_lock_status();</span><br><span class="line">    //property服务启动，见2.3节</span><br><span class="line">    start_property_service();</span><br><span class="line">    set_usb_controller();</span><br><span class="line">    ...</span><br><span class="line">    //初始化ActionManager</span><br><span class="line">    ActionManager&amp; am = ActionManager::GetInstance();</span><br><span class="line">    ServiceList&amp; sm = ServiceList::GetInstance();</span><br><span class="line"></span><br><span class="line">    LoadBootScripts(am, sm);</span><br><span class="line"></span><br><span class="line">    // Turning this on and letting the INFO logging be discarded adds 0.2s to</span><br><span class="line">    // Nexus 9 boot time, so it&apos;s disabled by default.</span><br><span class="line">    if (false) DumpState();</span><br><span class="line"></span><br><span class="line">    am.QueueEventTrigger(&quot;early-init&quot;);</span><br><span class="line"></span><br><span class="line">    // Queue an action that waits for coldboot done so we know ueventd has set up all of /dev...</span><br><span class="line">    am.QueueBuiltinAction(wait_for_coldboot_done_action, &quot;wait_for_coldboot_done&quot;);</span><br><span class="line">    // ... so that we can start queuing up actions that require stuff from /dev.</span><br><span class="line">    am.QueueBuiltinAction(MixHwrngIntoLinuxRngAction, &quot;MixHwrngIntoLinuxRng&quot;);</span><br><span class="line">    am.QueueBuiltinAction(SetMmapRndBitsAction, &quot;SetMmapRndBits&quot;);</span><br><span class="line">    am.QueueBuiltinAction(SetKptrRestrictAction, &quot;SetKptrRestrict&quot;);</span><br><span class="line">    am.QueueBuiltinAction(keychord_init_action, &quot;keychord_init&quot;);</span><br><span class="line">    am.QueueBuiltinAction(console_init_action, &quot;console_init&quot;);</span><br><span class="line"></span><br><span class="line">    // Trigger all the boot actions to get us started.</span><br><span class="line">    am.QueueEventTrigger(&quot;init&quot;);</span><br><span class="line"></span><br><span class="line">    // Starting the BoringSSL self test, for NIAP certification compliance.</span><br><span class="line">    am.QueueBuiltinAction(StartBoringSslSelfTest, &quot;StartBoringSslSelfTest&quot;);</span><br><span class="line"></span><br><span class="line">    // Repeat mix_hwrng_into_linux_rng in case /dev/hw_random or /dev/random</span><br><span class="line">    // wasn&apos;t ready immediately after wait_for_coldboot_done</span><br><span class="line">    am.QueueBuiltinAction(MixHwrngIntoLinuxRngAction, &quot;MixHwrngIntoLinuxRng&quot;);</span><br><span class="line"></span><br><span class="line">    // Don&apos;t mount filesystems or start core system services in charger mode.</span><br><span class="line">    std::string bootmode = GetProperty(&quot;ro.bootmode&quot;, &quot;&quot;);</span><br><span class="line">    if (bootmode == &quot;charger&quot;) &#123;</span><br><span class="line">        am.QueueEventTrigger(&quot;charger&quot;);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        am.QueueEventTrigger(&quot;late-init&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Run all property triggers based on current state of the properties.</span><br><span class="line">    am.QueueBuiltinAction(queue_property_triggers_action, &quot;queue_property_triggers&quot;);</span><br><span class="line">    //循环查询action</span><br><span class="line">    while (true) &#123;</span><br><span class="line">        // By default, sleep until something happens.</span><br><span class="line">        int epoll_timeout_ms = -1;</span><br><span class="line"></span><br><span class="line">        if (do_shutdown &amp;&amp; !shutting_down) &#123;</span><br><span class="line">            do_shutdown = false;</span><br><span class="line">            if (HandlePowerctlMessage(shutdown_command)) &#123;</span><br><span class="line">                shutting_down = true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //是否有事件需要处理</span><br><span class="line">        if (!(waiting_for_prop || Service::is_exec_service_running())) &#123;</span><br><span class="line">            //依次执行每个action中携带command对应的执行函数</span><br><span class="line">            am.ExecuteOneCommand();</span><br><span class="line">        &#125;</span><br><span class="line">        if (!(waiting_for_prop || Service::is_exec_service_running())) &#123;</span><br><span class="line">            if (!shutting_down) &#123;</span><br><span class="line">                auto next_process_restart_time = RestartProcesses();</span><br><span class="line"></span><br><span class="line">                // If there&apos;s a process that needs restarting, wake up in time for that.</span><br><span class="line">                if (next_process_restart_time) &#123;</span><br><span class="line">                    epoll_timeout_ms = std::chrono::ceil&lt;std::chrono::milliseconds&gt;(</span><br><span class="line">                                           *next_process_restart_time - boot_clock::now())</span><br><span class="line">                                           .count();</span><br><span class="line">                    if (epoll_timeout_ms &lt; 0) epoll_timeout_ms = 0;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            // 有action待处理，不等待</span><br><span class="line">            // If there&apos;s more work to do, wake up again immediately.</span><br><span class="line">            if (am.HasMoreCommands()) epoll_timeout_ms = 0;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        //等待子线程终止信号的处理</span><br><span class="line">        epoll_event ev;</span><br><span class="line">        int nr = TEMP_FAILURE_RETRY(epoll_wait(epoll_fd, &amp;ev, 1, epoll_timeout_ms));</span><br><span class="line">        if (nr == -1) &#123;</span><br><span class="line">            PLOG(ERROR) &lt;&lt; &quot;epoll_wait failed&quot;;</span><br><span class="line">        &#125; else if (nr == 1) &#123;</span><br><span class="line">            ((void (*)()) ev.data.ptr)();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-2-property-init"><a href="#2-2-property-init" class="headerlink" title="2.2 property_init"></a>2.2 property_init</h3><p>[-&gt;property_service.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">void property_init() &#123;</span><br><span class="line">    mkdir(&quot;/dev/__properties__&quot;, S_IRWXU | S_IXGRP | S_IXOTH);</span><br><span class="line">    CreateSerializedPropertyInfo();</span><br><span class="line">    if (__system_property_area_init()) &#123;</span><br><span class="line">        LOG(FATAL) &lt;&lt; &quot;Failed to initialize property area&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    if (!property_info_area.LoadDefaultPath()) &#123;</span><br><span class="line">        LOG(FATAL) &lt;&lt; &quot;Failed to load serialized property info file&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-3-start-property-service"><a href="#2-3-start-property-service" class="headerlink" title="2.3 start_property_service"></a>2.3 start_property_service</h3><p>[-&gt;property_service.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">void start_property_service() &#123;</span><br><span class="line">    selinux_callback cb;</span><br><span class="line">    cb.func_audit = SelinuxAuditCallback;</span><br><span class="line">    selinux_set_callback(SELINUX_CB_AUDIT, cb);</span><br><span class="line"></span><br><span class="line">    property_set(&quot;ro.property_service.version&quot;, &quot;2&quot;);</span><br><span class="line">    </span><br><span class="line">    //创建端口</span><br><span class="line">    property_set_fd = CreateSocket(PROP_SERVICE_NAME, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK,</span><br><span class="line">                                   false, 0666, 0, 0, nullptr);</span><br><span class="line">    if (property_set_fd == -1) &#123;</span><br><span class="line">        PLOG(FATAL) &lt;&lt; &quot;start_property_service socket creation failed&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    listen(property_set_fd, 8);</span><br><span class="line">    </span><br><span class="line">    //注册epoll handler，处理消息</span><br><span class="line">    register_epoll_handler(property_set_fd, handle_property_set_fd);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-4-handle-property-set-fd"><a href="#2-4-handle-property-set-fd" class="headerlink" title="2.4 handle_property_set_fd"></a>2.4 handle_property_set_fd</h3><p>[-&gt;property_service.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">static void handle_property_set_fd() &#123;</span><br><span class="line">    static constexpr uint32_t kDefaultSocketTimeout = 2000; /* ms */</span><br><span class="line"></span><br><span class="line">    int s = accept4(property_set_fd, nullptr, nullptr, SOCK_CLOEXEC);</span><br><span class="line">    if (s == -1) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ucred cr;</span><br><span class="line">    socklen_t cr_size = sizeof(cr);</span><br><span class="line">    if (getsockopt(s, SOL_SOCKET, SO_PEERCRED, &amp;cr, &amp;cr_size) &lt; 0) &#123;</span><br><span class="line">        close(s);</span><br><span class="line">        PLOG(ERROR) &lt;&lt; &quot;sys_prop: unable to get SO_PEERCRED&quot;;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    SocketConnection socket(s, cr);</span><br><span class="line">    uint32_t timeout_ms = kDefaultSocketTimeout;</span><br><span class="line"></span><br><span class="line">    uint32_t cmd = 0;</span><br><span class="line">    if (!socket.RecvUint32(&amp;cmd, &amp;timeout_ms)) &#123;</span><br><span class="line">        PLOG(ERROR) &lt;&lt; &quot;sys_prop: error while reading command from the socket&quot;;</span><br><span class="line">        socket.SendUint32(PROP_ERROR_READ_CMD);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    switch (cmd) &#123;</span><br><span class="line">    //处理消息cmd</span><br><span class="line">    case PROP_MSG_SETPROP: &#123;</span><br><span class="line">        char prop_name[PROP_NAME_MAX];</span><br><span class="line">        char prop_value[PROP_VALUE_MAX];</span><br><span class="line"></span><br><span class="line">        if (!socket.RecvChars(prop_name, PROP_NAME_MAX, &amp;timeout_ms) ||</span><br><span class="line">            !socket.RecvChars(prop_value, PROP_VALUE_MAX, &amp;timeout_ms)) &#123;</span><br><span class="line">          PLOG(ERROR) &lt;&lt; &quot;sys_prop(PROP_MSG_SETPROP): error while reading name/value from the socket&quot;;</span><br><span class="line">          return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        prop_name[PROP_NAME_MAX-1] = 0;</span><br><span class="line">        prop_value[PROP_VALUE_MAX-1] = 0;</span><br><span class="line"></span><br><span class="line">        const auto&amp; cr = socket.cred();</span><br><span class="line">        std::string error;</span><br><span class="line">        uint32_t result =</span><br><span class="line">            //见2.5节</span><br><span class="line">            HandlePropertySet(prop_name, prop_value, socket.source_context(), cr, &amp;error);</span><br><span class="line">        if (result != PROP_SUCCESS) &#123;</span><br><span class="line">            LOG(ERROR) &lt;&lt; &quot;Unable to set property &apos;&quot; &lt;&lt; prop_name &lt;&lt; &quot;&apos; to &apos;&quot; &lt;&lt; prop_value</span><br><span class="line">                       &lt;&lt; &quot;&apos; from uid:&quot; &lt;&lt; cr.uid &lt;&lt; &quot; gid:&quot; &lt;&lt; cr.gid &lt;&lt; &quot; pid:&quot; &lt;&lt; cr.pid &lt;&lt; &quot;: &quot;</span><br><span class="line">                       &lt;&lt; error;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        break;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    case PROP_MSG_SETPROP2: &#123;</span><br><span class="line">        std::string name;</span><br><span class="line">        std::string value;</span><br><span class="line">        if (!socket.RecvString(&amp;name, &amp;timeout_ms) ||</span><br><span class="line">            !socket.RecvString(&amp;value, &amp;timeout_ms)) &#123;</span><br><span class="line">          PLOG(ERROR) &lt;&lt; &quot;sys_prop(PROP_MSG_SETPROP2): error while reading name/value from the socket&quot;;</span><br><span class="line">          socket.SendUint32(PROP_ERROR_READ_DATA);</span><br><span class="line">          return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        const auto&amp; cr = socket.cred();</span><br><span class="line">        std::string error;</span><br><span class="line">        uint32_t result = HandlePropertySet(name, value, socket.source_context(), cr, &amp;error);</span><br><span class="line">        if (result != PROP_SUCCESS) &#123;</span><br><span class="line">            LOG(ERROR) &lt;&lt; &quot;Unable to set property &apos;&quot; &lt;&lt; name &lt;&lt; &quot;&apos; to &apos;&quot; &lt;&lt; value</span><br><span class="line">                       &lt;&lt; &quot;&apos; from uid:&quot; &lt;&lt; cr.uid &lt;&lt; &quot; gid:&quot; &lt;&lt; cr.gid &lt;&lt; &quot; pid:&quot; &lt;&lt; cr.pid &lt;&lt; &quot;: &quot;</span><br><span class="line">                       &lt;&lt; error;</span><br><span class="line">        &#125;</span><br><span class="line">        socket.SendUint32(result);</span><br><span class="line">        break;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    default:</span><br><span class="line">        LOG(ERROR) &lt;&lt; &quot;sys_prop: invalid command &quot; &lt;&lt; cmd;</span><br><span class="line">        socket.SendUint32(PROP_ERROR_INVALID_CMD);</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-5-HandlePropertySet"><a href="#2-5-HandlePropertySet" class="headerlink" title="2.5  HandlePropertySet"></a>2.5  HandlePropertySet</h3><p>[-&gt;property_service.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">// This returns one of the enum of PROP_SUCCESS or PROP_ERROR*.</span><br><span class="line">uint32_t HandlePropertySet(const std::string&amp; name, const std::string&amp; value,</span><br><span class="line">                           const std::string&amp; source_context, const ucred&amp; cr, std::string* error) &#123;</span><br><span class="line">    if (!IsLegalPropertyName(name)) &#123;</span><br><span class="line">        *error = &quot;Illegal property name&quot;;</span><br><span class="line">        return PROP_ERROR_INVALID_NAME;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (StartsWith(name, &quot;ctl.&quot;)) &#123;</span><br><span class="line">         //检查权限</span><br><span class="line">        if (!CheckControlPropertyPerms(name, value, source_context, cr)) &#123;</span><br><span class="line">            *error = StringPrintf(&quot;Invalid permissions to perform &apos;%s&apos; on &apos;%s&apos;&quot;, name.c_str() + 4,</span><br><span class="line">                                  value.c_str());</span><br><span class="line">            return PROP_ERROR_HANDLE_CONTROL_MESSAGE;</span><br><span class="line">        &#125;</span><br><span class="line">        //见2.6节</span><br><span class="line">        HandleControlMessage(name.c_str() + 4, value, cr.pid);</span><br><span class="line">        return PROP_SUCCESS;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    const char* target_context = nullptr;</span><br><span class="line">    const char* type = nullptr;</span><br><span class="line">    property_info_area-&gt;GetPropertyInfo(name.c_str(), &amp;target_context, &amp;type);</span><br><span class="line"></span><br><span class="line">    if (!CheckMacPerms(name, target_context, source_context.c_str(), cr)) &#123;</span><br><span class="line">        *error = &quot;SELinux permission check failed&quot;;</span><br><span class="line">        return PROP_ERROR_PERMISSION_DENIED;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (type == nullptr || !CheckType(type, value)) &#123;</span><br><span class="line">        *error = StringPrintf(&quot;Property type check failed, value doesn&apos;t match expected type &apos;%s&apos;&quot;,</span><br><span class="line">                              (type ?: &quot;(null)&quot;));</span><br><span class="line">        return PROP_ERROR_INVALID_VALUE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // sys.powerctl is a special property that is used to make the device reboot.  We want to log</span><br><span class="line">    // any process that sets this property to be able to accurately blame the cause of a shutdown.</span><br><span class="line">    // 开关机</span><br><span class="line">   if (name == &quot;sys.powerctl&quot;) &#123;</span><br><span class="line">        std::string cmdline_path = StringPrintf(&quot;proc/%d/cmdline&quot;, cr.pid);</span><br><span class="line">        std::string process_cmdline;</span><br><span class="line">        std::string process_log_string;</span><br><span class="line">        if (ReadFileToString(cmdline_path, &amp;process_cmdline)) &#123;</span><br><span class="line">            // Since cmdline is null deliminated, .c_str() conveniently gives us just the process</span><br><span class="line">            // path.</span><br><span class="line">            process_log_string = StringPrintf(&quot; (%s)&quot;, process_cmdline.c_str());</span><br><span class="line">        &#125;</span><br><span class="line">        LOG(INFO) &lt;&lt; &quot;Received sys.powerctl=&apos;&quot; &lt;&lt; value &lt;&lt; &quot;&apos; from pid: &quot; &lt;&lt; cr.pid</span><br><span class="line">                  &lt;&lt; process_log_string;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (name == &quot;selinux.restorecon_recursive&quot;) &#123;</span><br><span class="line">        return PropertySetAsync(name, value, RestoreconRecursiveAsync, error);</span><br><span class="line">    &#125;</span><br><span class="line">    //设置属性</span><br><span class="line">    return PropertySet(name, value, error);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据不同的key字段的不同进行处理，在进行处理之前需要是否有相应的权限。</p>
+<h3 id="2-6-HandleControlMessage"><a href="#2-6-HandleControlMessage" class="headerlink" title="2.6 HandleControlMessage"></a>2.6 HandleControlMessage</h3><p>[-&gt;init.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">void HandleControlMessage(const std::string&amp; msg, const std::string&amp; name, pid_t pid) &#123;</span><br><span class="line">    const auto&amp; map = get_control_message_map();</span><br><span class="line">    const auto it = map.find(msg);</span><br><span class="line"></span><br><span class="line">    if (it == map.end()) &#123;</span><br><span class="line">        LOG(ERROR) &lt;&lt; &quot;Unknown control msg &apos;&quot; &lt;&lt; msg &lt;&lt; &quot;&apos;&quot;;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    std::string cmdline_path = StringPrintf(&quot;proc/%d/cmdline&quot;, pid);</span><br><span class="line">    std::string process_cmdline;</span><br><span class="line">    if (ReadFileToString(cmdline_path, &amp;process_cmdline)) &#123;</span><br><span class="line">        std::replace(process_cmdline.begin(), process_cmdline.end(), &apos;/0&apos;, &apos; &apos;);</span><br><span class="line">        process_cmdline = Trim(process_cmdline);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        process_cmdline = &quot;unknown process&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    LOG(INFO) &lt;&lt; &quot;Received control message &apos;&quot; &lt;&lt; msg &lt;&lt; &quot;&apos; for &apos;&quot; &lt;&lt; name &lt;&lt; &quot;&apos; from pid: &quot; &lt;&lt; pid</span><br><span class="line">              &lt;&lt; &quot; (&quot; &lt;&lt; process_cmdline &lt;&lt; &quot;)&quot;;</span><br><span class="line"></span><br><span class="line">    const ControlMessageFunction&amp; function = it-&gt;second;</span><br><span class="line"></span><br><span class="line">    //服务</span><br><span class="line">    if (function.target == ControlTarget::SERVICE) &#123;</span><br><span class="line">        //通过服务名字获取avc</span><br><span class="line">        Service* svc = ServiceList::GetInstance().FindService(name);</span><br><span class="line">        if (svc == nullptr) &#123;</span><br><span class="line">            LOG(ERROR) &lt;&lt; &quot;No such service &apos;&quot; &lt;&lt; name &lt;&lt; &quot;&apos; for ctl.&quot; &lt;&lt; msg;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        //触发启动服务</span><br><span class="line">        if (auto result = function.action(svc); !result) &#123;</span><br><span class="line">            LOG(ERROR) &lt;&lt; &quot;Could not ctl.&quot; &lt;&lt; msg &lt;&lt; &quot; for service &quot; &lt;&lt; name &lt;&lt; &quot;: &quot;</span><br><span class="line">                       &lt;&lt; result.error();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (function.target == ControlTarget::INTERFACE) &#123;</span><br><span class="line">        for (const auto&amp; svc : ServiceList::GetInstance()) &#123;</span><br><span class="line">            if (svc-&gt;interfaces().count(name) == 0) &#123;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (auto result = function.action(svc.get()); !result) &#123;</span><br><span class="line">                LOG(ERROR) &lt;&lt; &quot;Could not handle ctl.&quot; &lt;&lt; msg &lt;&lt; &quot; for service &quot; &lt;&lt; svc-&gt;name()</span><br><span class="line">                           &lt;&lt; &quot; with interface &quot; &lt;&lt; name &lt;&lt; &quot;: &quot; &lt;&lt; result.error();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        LOG(ERROR) &lt;&lt; &quot;Could not find service hosting interface &quot; &lt;&lt; name;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    LOG(ERROR) &lt;&lt; &quot;Invalid function target from static map key &apos;&quot; &lt;&lt; msg</span><br><span class="line">               &lt;&lt; &quot;&apos;: &quot; &lt;&lt; static_cast&lt;std::underlying_type&lt;ControlTarget&gt;::type&gt;(function.target);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里最终通过function.action来启动uncrypt服务。</p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><p>源码路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/os/SystemProperties.java</span><br><span class="line">frameworks/base/core/jni/android_os_SystemProperties.cpp</span><br><span class="line">system/core/base/properties.cpp</span><br><span class="line">bionic/libc/bionic/system_property_set.cpp</span><br><span class="line">system/core/init/property_service.cpp</span><br><span class="line">system/core/init/init.cpp</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SystemProperties/" rel="tag">#SystemProperties</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/selinux修改/" rel="next" title="SELinux权限修改">
+                <i class="fa fa-chevron-left"></i> SELinux权限修改
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/Android OTA升级流程分析/" rel="prev" title="Android OTA升级流程分析">
+                Android OTA升级流程分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Skytoby">
+          <p class="site-author-name" itemprop="name">Skytoby</p>
+          <p class="site-description motion-element" itemprop="description"><br>现居深圳、毕业于电子科技大学 <br> 技术领域：Android、AI <br><br>座右铭：想法+行动+坚持</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/caoxiaoliang" target="_blank" title="GitHub">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://me.csdn.net/cao861544325" target="_blank" title="CSDN">
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、属性服务客户端"><span class="nav-text">一、属性服务客户端</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-SystemProperties-set"><span class="nav-text">1.1 SystemProperties.set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-SystemProperties-set"><span class="nav-text">1.2 SystemProperties_set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-SetProperty"><span class="nav-text">1.3 SetProperty</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-system-property-set"><span class="nav-text">1.4 system_property_set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-send-prop-msg"><span class="nav-text">1.5 send_prop_msg</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、属性服务服务端"><span class="nav-text">二、属性服务服务端</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-init-main"><span class="nav-text">2.1 init.main</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-property-init"><span class="nav-text">2.2 property_init</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-start-property-service"><span class="nav-text">2.3 start_property_service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-handle-property-set-fd"><span class="nav-text">2.4 handle_property_set_fd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-HandlePropertySet"><span class="nav-text">2.5  HandlePropertySet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-HandleControlMessage"><span class="nav-text">2.6 HandleControlMessage</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-text">附录</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Skytoby</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme Next
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'https-zproo-github-io';
+      var disqus_identifier = '2019/Android SystemProperties系统属性分析/';
+      var disqus_title = "Android SystemProperties系统属性分析";
+      var disqus_url = 'http://zproo.github.io/2019/Android SystemProperties系统属性分析/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+</html>

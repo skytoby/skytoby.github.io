@@ -3,9 +3,231 @@
 
 
     
+    
+  <url>
+    <loc>http://zproo.github.io/2019/Android%20OTA%E5%8D%87%E7%BA%A7%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2019-12-28T06:47:00.917Z</lastmod>
+    <data>
+        <display>
+        <title>Android OTA升级流程分析</title>
+        <pubTime>2019-12-10T14:18:28.000Z</pubTime>
+        
+        <tag>OTA升级</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/Android%20SystemProperties%E7%B3%BB%E7%BB%9F%E5%B1%9E%E6%80%A7%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2019-12-28T06:43:27.648Z</lastmod>
+    <data>
+        <display>
+        <title>Android SystemProperties系统属性分析</title>
+        <pubTime>2019-11-20T14:40:23.000Z</pubTime>
+        
+        <tag>SystemProperties</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/Android%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2019-12-28T06:41:00.555Z</lastmod>
+    <data>
+        <display>
+        <title>Android进程创建流程分析</title>
+        <pubTime>2019-10-20T13:50:23.000Z</pubTime>
+        
+        <tag>Android进程</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/selinux%E4%BF%AE%E6%94%B9/</loc>
+    <lastmod>2019-12-28T06:38:37.150Z</lastmod>
+    <data>
+        <display>
+        <title>SELinux权限修改</title>
+        <pubTime>2019-11-02T14:18:23.000Z</pubTime>
+        
+        <tag>SELinux</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/Android%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E9%97%B4%E5%85%B3%E7%B3%BB/</loc>
+    <lastmod>2019-12-28T06:36:22.788Z</lastmod>
+    <data>
+        <display>
+        <title>Android四大组件与进程启动间关系</title>
+        <pubTime>2019-10-31T13:45:23.000Z</pubTime>
+        
+        <tag>四大组件与进程关系</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/%E5%BC%80%E6%9C%BA%E5%B9%BF%E6%92%ADBOOT_COMPLETED%E5%8F%91%E9%80%81%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2019-12-28T06:30:47.037Z</lastmod>
+    <data>
+        <display>
+        <title>开机广播BOOT_COMPLETED发送流程分析</title>
+        <pubTime>2019-10-05T13:32:23.000Z</pubTime>
+        
+        <tag>BOOT_COMPLETED</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/ContentProvider%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2019-12-28T06:30:13.606Z</lastmod>
+    <data>
+        <display>
+        <title>ContentProvider原理分析</title>
+        <pubTime>2019-09-10T13:25:23.000Z</pubTime>
+        
+        <tag>ContentProvider</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/BroadcastCast%E5%B9%BF%E6%92%AD%E6%9C%BA%E5%88%B6%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2019-12-28T06:26:27.158Z</lastmod>
+    <data>
+        <display>
+        <title>BroadcastCast广播机制原理</title>
+        <pubTime>2019-09-22T13:40:23.000Z</pubTime>
+        
+        <tag>BroadcastCast</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/startService%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/</loc>
+    <lastmod>2019-12-28T06:15:49.789Z</lastmod>
+    <data>
+        <display>
+        <title>startServie启动过程</title>
+        <pubTime>2019-08-30T16:18:29.000Z</pubTime>
+        
+        <tag>Service</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/startActivity%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/</loc>
+    <lastmod>2019-12-28T06:15:23.400Z</lastmod>
+    <data>
+        <display>
+        <title>startActivity启动过程</title>
+        <pubTime>2019-08-15T14:18:23.000Z</pubTime>
+        
+        <tag>Activity</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/AMS%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2019-12-28T05:02:52.144Z</lastmod>
+    <data>
+        <display>
+        <title>AMS启动流程分析</title>
+        <pubTime>2019-08-07T14:18:29.000Z</pubTime>
+        
+        <tag>ActivityManagerService</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/WMS%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2019-12-28T04:59:24.509Z</lastmod>
+    <data>
+        <display>
+        <title>WMS启动流程分析</title>
+        <pubTime>2019-07-20T13:38:24.000Z</pubTime>
+        
+        <tag>WindowManagerService</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/android%E7%B3%BB%E7%BB%9F%E7%BC%96%E8%AF%91/</loc>
+    <lastmod>2019-12-28T04:52:23.075Z</lastmod>
+    <data>
+        <display>
+        <title>android系统编译方法</title>
+        <pubTime>2019-07-11T14:18:23.000Z</pubTime>
+        
+        <tag>Android系统编译</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
   <url>
     <loc>http://zproo.github.io/2019/PackageManagerService%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2019-08-14T09:26:02.376Z</lastmod>
+    <lastmod>2019-08-21T04:27:37.279Z</lastmod>
     <data>
         <display>
         <title>PackageManagerService启动流程分析</title>
@@ -22,7 +244,7 @@
     
   <url>
     <loc>http://zproo.github.io/2019/Android%20dex%EF%BC%8Codex%EF%BC%8Coat%EF%BC%8Cvdex%EF%BC%8Cart%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</loc>
-    <lastmod>2019-08-14T09:08:44.002Z</lastmod>
+    <lastmod>2019-08-14T09:09:57.985Z</lastmod>
     <data>
         <display>
         <title>Android dex，odex，oat，vdex，art文件结构</title>
@@ -89,13 +311,15 @@
 
     
   <url>
-    <loc>http://zproo.github.io/2019/Android%E7%B3%BB%E7%BB%9FSystemServer%E5%90%AF%E5%8A%A8%EF%BC%88%E4%B8%8B%EF%BC%89/</loc>
-    <lastmod>2019-08-14T01:16:05.203Z</lastmod>
+    <loc>http://zproo.github.io/2019/Android%E7%B3%BB%E7%BB%9FSystemServer%E5%90%AF%E5%8A%A8%EF%BC%88%E4%B8%8A%EF%BC%89/</loc>
+    <lastmod>2019-08-14T08:23:22.443Z</lastmod>
     <data>
         <display>
-        <title>Android系统SystemServer启动（下）</title>
-        <pubTime>2019-05-18T13:18:23.000Z</pubTime>
+        <title>Android系统SystemServer启动（上）</title>
+        <pubTime>2019-05-16T13:18:23.000Z</pubTime>
         
+        <tag>zygote</tag>
+         
         <tag>systemserver</tag>
          
          
@@ -106,15 +330,13 @@
 
     
   <url>
-    <loc>http://zproo.github.io/2019/Android%E7%B3%BB%E7%BB%9FSystemServer%E5%90%AF%E5%8A%A8%EF%BC%88%E4%B8%8A%EF%BC%89/</loc>
-    <lastmod>2019-08-10T14:27:49.997Z</lastmod>
+    <loc>http://zproo.github.io/2019/Android%E7%B3%BB%E7%BB%9FSystemServer%E5%90%AF%E5%8A%A8%EF%BC%88%E4%B8%8B%EF%BC%89/</loc>
+    <lastmod>2019-08-14T01:16:05.203Z</lastmod>
     <data>
         <display>
-        <title>Android系统SystemServer启动（上）</title>
-        <pubTime>2019-05-16T13:18:23.000Z</pubTime>
+        <title>Android系统SystemServer启动（下）</title>
+        <pubTime>2019-05-18T13:18:23.000Z</pubTime>
         
-        <tag>zygote</tag>
-         
         <tag>systemserver</tag>
          
          
@@ -157,7 +379,6 @@
     </data>
     </url>
 
-    
     
     
     

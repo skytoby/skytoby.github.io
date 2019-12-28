@@ -95,7 +95,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android系统SystemServer启动（下）">
 <meta property="og:url" content="http://zproo.github.io/2019/Android系统SystemServer启动（下）/index.html">
-<meta property="og:site_name" content="skytoby">
+<meta property="og:site_name" content="Skytoby">
 <meta property="og:description" content="基于Android10.0，分析SystemServer启动  一、SystemServer启动上一节中讲到了从开机到SystemServer中main方法的启动过程，下面将介绍下SystemServer中的main方法，该方法主要执行的主要流程如下： 1234567SystemServer.main   SystemServer.run       performPendingShutdown">
 <meta property="og:locale" content="en">
 <meta property="og:updated_time" content="2019-08-14T01:16:05.203Z">
@@ -124,7 +124,7 @@
 
   <link rel="canonical" href="http://zproo.github.io/2019/Android系统SystemServer启动（下）/">
 
-  <title> Android系统SystemServer启动（下） | skytoby </title>
+  <title> Android系统SystemServer启动（下） | Skytoby </title>
 </head>
 
 <body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
@@ -149,15 +149,15 @@
     <div class="headband"></div>
     
     <header id="header_post" class="header" itemscope="" itemtype="http://schema.org/WPHeader" style="background-image: url('http://ortur5wom.bkt.clouddn.com/home_bg.jpg');">
-      <div class="header-inner-post"><a class="site-home" href="/">skytoby</a>
+      <div class="header-inner-post"><a class="site-home" href="/">Skytoby</a>
 
-<div class="site-meta custom-logo">
+<div class="site-meta ">
   
   
   
     <div class="site-meta-headline">
       <a>
-        <img class="custom-logo-image" src="/images/logo.png" style="width: 50px" alt="skytoby">
+        <img class="custom-logo-image" src="/images/logo.png" style="width: 50px" alt="Skytoby">
       </a>
     </div>
   
@@ -305,15 +305,6 @@
           
 
           
-          
-             <span id="/2019/Android系统SystemServer启动（下）/" class="leancloud_visitors" data-flag-title="Android系统SystemServer启动（下）">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">visitors </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
           
 
           
@@ -674,14 +665,14 @@
 
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="skytoby">
-          <p class="site-author-name" itemprop="name">skytoby</p>
-          <p class="site-description motion-element" itemprop="description">现居深圳、毕业于电子科技大学 Android、程序员 <br><br>座右铭:今天不想跑，所以才去跑。</p>
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Skytoby">
+          <p class="site-author-name" itemprop="name">Skytoby</p>
+          <p class="site-description motion-element" itemprop="description"><br>现居深圳、毕业于电子科技大学 <br> 技术领域：Android、AI <br><br>座右铭：想法+行动+坚持</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">22</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -691,7 +682,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">tags</span>
               
             </div>
@@ -765,7 +756,7 @@
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">skytoby</span>
+  <span class="author" itemprop="copyrightHolder">Skytoby</span>
 </div>
 
 <div class="powered-by">
@@ -907,113 +898,6 @@
   
 
   
-
-  
-  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
-  <script>AV.initialize("GHEN8u6QufHhkX6hJMzNpKeN-gzGzoHsz", "Gq4sJwz8T6cywiaHlBGFDbE4");</script>
-  <script>
-    function showTime(Counter) {
-      var query = new AV.Query(Counter);
-      var entries = [];
-      var $visitors = $(".leancloud_visitors");
-
-      $visitors.each(function () {
-        entries.push( $(this).attr("id").trim() );
-      });
-
-      query.containedIn('url', entries);
-      query.find()
-        .done(function (results) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
-
-          if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
-            return;
-          }
-
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.get('url');
-            var time = item.get('time');
-            var element = document.getElementById(url);
-
-            $(element).find(COUNT_CONTAINER_REF).text(time);
-          }
-          for(var i = 0; i < entries.length; i++) {
-            var url = entries[i];
-            var element = document.getElementById(url);
-            var countSpan = $(element).find(COUNT_CONTAINER_REF);
-            if( countSpan.text() == '') {
-              countSpan.text(0);
-            }
-          }
-        })
-        .fail(function (object, error) {
-          console.log("Error: " + error.code + " " + error.message);
-        });
-    }
-
-    function addCount(Counter) {
-      var $visitors = $(".leancloud_visitors");
-      var url = $visitors.attr('id').trim();
-      var title = $visitors.attr('data-flag-title').trim();
-      var query = new AV.Query(Counter);
-
-      query.equalTo("url", url);
-      query.find({
-        success: function(results) {
-          if (results.length > 0) {
-            var counter = results[0];
-            counter.fetchWhenSave(true);
-            counter.increment("time");
-            counter.save(null, {
-              success: function(counter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(counter.get('time'));
-              },
-              error: function(counter, error) {
-                console.log('Failed to save Visitor num, with error message: ' + error.message);
-              }
-            });
-          } else {
-            var newcounter = new Counter();
-            /* Set ACL */
-            var acl = new AV.ACL();
-            acl.setPublicReadAccess(true);
-            acl.setPublicWriteAccess(true);
-            newcounter.setACL(acl);
-            /* End Set ACL */
-            newcounter.set("title", title);
-            newcounter.set("url", url);
-            newcounter.set("time", 1);
-            newcounter.save(null, {
-              success: function(newcounter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-              },
-              error: function(newcounter, error) {
-                console.log('Failed to create');
-              }
-            });
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
-
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
-
-
 
   
 <script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
