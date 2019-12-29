@@ -99,7 +99,7 @@
 <meta property="og:description" content="基于Android10.0，分析BOOT_COMPLETED的发送流程  一、概述开机广播在很多应用中都会用到，用来启动应用程序，下面将介绍开机广播的广播过程。这个过程比较复杂，需要和AcitvityManagerService、WindowManagerService、PackageManagerService等交互，其具体的时序图如下。  二、开机广播启动过程在AMS启动那篇文章中已经讲到桌">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://zproo.github.io/2019/开机广播BOOT_COMPLETED发送流程分析/bootcompleted.jpg">
-<meta property="og:updated_time" content="2019-12-28T06:30:47.037Z">
+<meta property="og:updated_time" content="2019-12-29T14:06:04.576Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="开机广播BOOT_COMPLETED发送流程分析">
 <meta name="twitter:description" content="基于Android10.0，分析BOOT_COMPLETED的发送流程  一、概述开机广播在很多应用中都会用到，用来启动应用程序，下面将介绍开机广播的广播过程。这个过程比较复杂，需要和AcitvityManagerService、WindowManagerService、PackageManagerService等交互，其具体的时序图如下。  二、开机广播启动过程在AMS启动那篇文章中已经讲到桌">
@@ -326,7 +326,7 @@
 </blockquote>
 <h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>开机广播在很多应用中都会用到，用来启动应用程序，下面将介绍开机广播的广播过程。这个过程比较复杂，需要和AcitvityManagerService、WindowManagerService、PackageManagerService等交互，其具体的时序图如下。</p>
 <p><img src="/2019/开机广播BOOT_COMPLETED发送流程分析/bootcompleted.jpg" alt="bootcompleted"></p>
-<h2 id="二、开机广播启动过程"><a href="#二、开机广播启动过程" class="headerlink" title="二、开机广播启动过程"></a>二、开机广播启动过程</h2><p>在AMS启动那篇文章中已经讲到桌面如何的启动，在桌面启动完成后即桌面Activity onResume之后，就会发送开机广播。桌面Activity onResume阶段，执行了handleResumeActivity方法，见Activity启动过程。handleResumeActivity中加载完window之后将自己实现的IdleHandler添加到自己的消息队列中。</p>
+<h2 id="二、开机广播启动过程"><a href="#二、开机广播启动过程" class="headerlink" title="二、开机广播启动过程"></a>二、开机广播启动过程</h2><p>在AMS启动<a href="https://skytoby.github.io/2019/AMS%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/" target="_blank" rel="noopener">那篇文章</a>中已经讲到桌面如何的启动，在桌面启动完成后即桌面Activity onResume之后，就会发送开机广播。桌面Activity onResume阶段，执行了handleResumeActivity方法，见<a href="https://skytoby.github.io/2019/startActivity%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" target="_blank" rel="noopener">Activity启动过程</a>。handleResumeActivity中加载完window之后将自己实现的IdleHandler添加到自己的消息队列中。</p>
 <h3 id="1-1-AT-handleResumeActivity"><a href="#1-1-AT-handleResumeActivity" class="headerlink" title="1.1  AT.handleResumeActivity"></a>1.1  AT.handleResumeActivity</h3><p>[-&gt;ActivityThread.java]</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">   public void handleResumeActivity(IBinder token, boolean finalStateRequest, boolean isForward,</span><br><span class="line">           String reason) &#123;</span><br><span class="line">       ...</span><br><span class="line">       //执行onResume方法</span><br><span class="line">       final ActivityClientRecord r = performResumeActivity(token, finalStateRequest, reason);</span><br><span class="line">       ...</span><br><span class="line">       r.nextIdle = mNewActivities;</span><br><span class="line">       mNewActivities = r;</span><br><span class="line">       if (localLOGV) Slog.v(TAG, &quot;Scheduling idle handler for &quot; + r);</span><br><span class="line">       //见1.2节</span><br><span class="line">       Looper.myQueue().addIdleHandler(new Idler());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 <h3 id="1-2-MQ-addIdleHandler"><a href="#1-2-MQ-addIdleHandler" class="headerlink" title="1.2 MQ.addIdleHandler"></a>1.2 MQ.addIdleHandler</h3><p>[-&gt;MessageQueue.java]</p>
@@ -540,7 +540,7 @@
         <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Skytoby">
           <p class="site-author-name" itemprop="name">Skytoby</p>
-          <p class="site-description motion-element" itemprop="description"><br>现居深圳、毕业于电子科技大学 <br> 技术领域：Android、AI <br><br>座右铭：想法+行动+坚持</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br> 技术领域：Android、AI <br><br>座右铭：想法+行动+坚持</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">

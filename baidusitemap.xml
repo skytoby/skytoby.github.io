@@ -3,10 +3,9 @@
 
 
     
-    
   <url>
     <loc>http://zproo.github.io/2019/Android%20OTA%E5%8D%87%E7%BA%A7%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2019-12-28T06:47:00.917Z</lastmod>
+    <lastmod>2019-12-29T14:15:54.872Z</lastmod>
     <data>
         <display>
         <title>Android OTA升级流程分析</title>
@@ -20,6 +19,92 @@
     </data>
     </url>
 
+    
+  <url>
+    <loc>http://zproo.github.io/2019/PackageManagerService%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2019-12-29T14:12:12.747Z</lastmod>
+    <data>
+        <display>
+        <title>PackageManagerService启动流程分析</title>
+        <pubTime>2019-06-30T13:18:23.000Z</pubTime>
+        
+        <tag>PackageManagerService</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/WMS%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2019-12-29T14:10:13.871Z</lastmod>
+    <data>
+        <display>
+        <title>WMS启动流程分析</title>
+        <pubTime>2019-07-20T13:38:24.000Z</pubTime>
+        
+        <tag>WindowManagerService</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/AMS%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2019-12-29T14:09:04.414Z</lastmod>
+    <data>
+        <display>
+        <title>AMS启动流程分析</title>
+        <pubTime>2019-08-07T14:18:29.000Z</pubTime>
+        
+        <tag>ActivityManagerService</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/%E5%BC%80%E6%9C%BA%E5%B9%BF%E6%92%ADBOOT_COMPLETED%E5%8F%91%E9%80%81%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2019-12-29T14:06:04.576Z</lastmod>
+    <data>
+        <display>
+        <title>开机广播BOOT_COMPLETED发送流程分析</title>
+        <pubTime>2019-10-05T13:32:23.000Z</pubTime>
+        
+        <tag>BOOT_COMPLETED</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/Android%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E9%97%B4%E5%85%B3%E7%B3%BB/</loc>
+    <lastmod>2019-12-29T14:03:21.658Z</lastmod>
+    <data>
+        <display>
+        <title>Android四大组件与进程启动间关系</title>
+        <pubTime>2019-10-31T13:45:23.000Z</pubTime>
+        
+        <tag>四大组件与进程关系</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
     
   <url>
     <loc>http://zproo.github.io/2019/Android%20SystemProperties%E7%B3%BB%E7%BB%9F%E5%B1%9E%E6%80%A7%E5%88%86%E6%9E%90/</loc>
@@ -64,40 +149,6 @@
         <pubTime>2019-11-02T14:18:23.000Z</pubTime>
         
         <tag>SELinux</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://zproo.github.io/2019/Android%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E9%97%B4%E5%85%B3%E7%B3%BB/</loc>
-    <lastmod>2019-12-28T06:36:22.788Z</lastmod>
-    <data>
-        <display>
-        <title>Android四大组件与进程启动间关系</title>
-        <pubTime>2019-10-31T13:45:23.000Z</pubTime>
-        
-        <tag>四大组件与进程关系</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://zproo.github.io/2019/%E5%BC%80%E6%9C%BA%E5%B9%BF%E6%92%ADBOOT_COMPLETED%E5%8F%91%E9%80%81%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2019-12-28T06:30:47.037Z</lastmod>
-    <data>
-        <display>
-        <title>开机广播BOOT_COMPLETED发送流程分析</title>
-        <pubTime>2019-10-05T13:32:23.000Z</pubTime>
-        
-        <tag>BOOT_COMPLETED</tag>
          
          
            
@@ -175,40 +226,6 @@
 
     
   <url>
-    <loc>http://zproo.github.io/2019/AMS%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2019-12-28T05:02:52.144Z</lastmod>
-    <data>
-        <display>
-        <title>AMS启动流程分析</title>
-        <pubTime>2019-08-07T14:18:29.000Z</pubTime>
-        
-        <tag>ActivityManagerService</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://zproo.github.io/2019/WMS%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2019-12-28T04:59:24.509Z</lastmod>
-    <data>
-        <display>
-        <title>WMS启动流程分析</title>
-        <pubTime>2019-07-20T13:38:24.000Z</pubTime>
-        
-        <tag>WindowManagerService</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://zproo.github.io/2019/android%E7%B3%BB%E7%BB%9F%E7%BC%96%E8%AF%91/</loc>
     <lastmod>2019-12-28T04:52:23.075Z</lastmod>
     <data>
@@ -217,23 +234,6 @@
         <pubTime>2019-07-11T14:18:23.000Z</pubTime>
         
         <tag>Android系统编译</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://zproo.github.io/2019/PackageManagerService%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2019-08-21T04:27:37.279Z</lastmod>
-    <data>
-        <display>
-        <title>PackageManagerService启动流程分析</title>
-        <pubTime>2019-06-30T13:18:23.000Z</pubTime>
-        
-        <tag>PackageManagerService</tag>
          
          
            

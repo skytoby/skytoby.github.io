@@ -99,7 +99,7 @@
 <meta property="og:description" content="基于Android10.0，分析AMS的启动过程  一、概述ActivityManagerService(简称AMS),是Android系统中核心服务之一，负责管理四大组件和应用进程的工作，如四大组件的启动、切换、调度，应用进程的调度等。AMS类图如下：  ActivityManager通过ActivityManagerNative的getDefault方法得到IActivityManager，">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://zproo.github.io/2019/AMS启动流程分析/AMS.jpg">
-<meta property="og:updated_time" content="2019-12-28T05:02:52.144Z">
+<meta property="og:updated_time" content="2019-12-29T14:09:04.414Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AMS启动流程分析">
 <meta name="twitter:description" content="基于Android10.0，分析AMS的启动过程  一、概述ActivityManagerService(简称AMS),是Android系统中核心服务之一，负责管理四大组件和应用进程的工作，如四大组件的启动、切换、调度，应用进程的调度等。AMS类图如下：  ActivityManager通过ActivityManagerNative的getDefault方法得到IActivityManager，">
@@ -326,7 +326,7 @@
 </blockquote>
 <h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>ActivityManagerService(简称AMS),是Android系统中核心服务之一，负责管理四大组件和应用进程的工作，如四大组件的启动、切换、调度，应用进程的调度等。AMS类图如下：</p>
 <p><img src="/2019/AMS启动流程分析/AMS.jpg" alt="AMS"></p>
-<p>ActivityManager通过ActivityManagerNative的getDefault方法得到IActivityManager，通过它可以和AMS进行通信。在之前讲过SystemServer启动过程，本文将从SystemServer启动过程中分析AMS的启动过程。</p>
+<p>ActivityManager通过ActivityManagerNative的getDefault方法得到IActivityManager，通过它可以和AMS进行通信。在之前讲过<a href="https://skytoby.github.io/2019/Android%E7%B3%BB%E7%BB%9FSystemServer%E5%90%AF%E5%8A%A8%EF%BC%88%E4%B8%8B%EF%BC%89/" target="_blank" rel="noopener">SystemServer启动过程</a>，本文将从SystemServer启动过程中分析AMS的启动过程。</p>
 <h2 id="二、启动分析"><a href="#二、启动分析" class="headerlink" title="二、启动分析"></a>二、启动分析</h2><p>SystemServer中主要的三个方法， startBootstrapServices()、startCoreServices()、startOtherServices()，在这三个方法中和AMS相关的如下：</p>
 <h3 id="2-1-startBootstrapServices"><a href="#2-1-startBootstrapServices" class="headerlink" title="2.1  startBootstrapServices"></a>2.1  startBootstrapServices</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">private void startBootstrapServices() &#123;</span><br><span class="line">       ...</span><br><span class="line">       //启动AMS</span><br><span class="line">       // Activity manager runs the show.</span><br><span class="line">       mActivityManagerService = mSystemServiceManager.startService(</span><br><span class="line">               ActivityManagerService.Lifecycle.class).getService();</span><br><span class="line">       //设置AMS的系统管理器</span><br><span class="line">       mActivityManagerService.setSystemServiceManager(mSystemServiceManager);</span><br><span class="line">       //设置AMS的Installer，和PKMS类似，负责执行AMS相关的任务</span><br><span class="line">       mActivityManagerService.setInstaller(installer);</span><br><span class="line">       ...</span><br><span class="line">       //初始化AMS相关的PMS</span><br><span class="line">       // Now that the power manager has been started, let the activity manager</span><br><span class="line">       // initialize power management features.</span><br><span class="line">       mActivityManagerService.initPowerManagement();</span><br><span class="line">       ...</span><br><span class="line">       //设置systemserver</span><br><span class="line">       // Set up the Application instance for the system process and get started.</span><br><span class="line">       mActivityManagerService.setSystemProcess();    </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
 <h3 id="2-2-启动AMS服务"><a href="#2-2-启动AMS服务" class="headerlink" title="2.2 启动AMS服务"></a>2.2 启动AMS服务</h3><p>mSystemServiceManager.startService主要功能如下：</p>
@@ -559,7 +559,7 @@
         <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Skytoby">
           <p class="site-author-name" itemprop="name">Skytoby</p>
-          <p class="site-description motion-element" itemprop="description"><br>现居深圳、毕业于电子科技大学 <br> 技术领域：Android、AI <br><br>座右铭：想法+行动+坚持</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br> 技术领域：Android、AI <br><br>座右铭：想法+行动+坚持</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
