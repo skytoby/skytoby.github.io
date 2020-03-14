@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://zproo.github.io/about/index.html</loc>
+    
+    <lastmod>2020-03-14T13:35:31.840Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://zproo.github.io/2019/Android%20OTA%E5%8D%87%E7%BA%A7%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
     
     <lastmod>2019-12-29T14:15:54.872Z</lastmod>
@@ -30,6 +37,13 @@
   </url>
   
   <url>
+    <loc>http://zproo.github.io/2019/startActivity%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/</loc>
+    
+    <lastmod>2019-12-29T14:07:24.298Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://zproo.github.io/2019/%E5%BC%80%E6%9C%BA%E5%B9%BF%E6%92%ADBOOT_COMPLETED%E5%8F%91%E9%80%81%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
     
     <lastmod>2019-12-29T14:06:04.576Z</lastmod>
@@ -40,13 +54,6 @@
     <loc>http://zproo.github.io/2019/Android%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E9%97%B4%E5%85%B3%E7%B3%BB/</loc>
     
     <lastmod>2019-12-29T14:03:21.658Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zproo.github.io/about/index.html</loc>
-    
-    <lastmod>2019-12-29T13:24:57.315Z</lastmod>
     
   </url>
   
@@ -89,13 +96,6 @@
     <loc>http://zproo.github.io/2019/startService%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/</loc>
     
     <lastmod>2019-12-28T06:15:49.789Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zproo.github.io/2019/startActivity%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/</loc>
-    
-    <lastmod>2019-12-28T06:15:23.400Z</lastmod>
     
   </url>
   
@@ -163,14 +163,7 @@
   </url>
   
   <url>
-    <loc>http://zproo.github.io/project/canvas-ribbon/index.html</loc>
-    
-    <lastmod>2019-07-22T08:54:01.986Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zproo.github.io/project/stylesheets/style.css</loc>
+    <loc>http://zproo.github.io/tags/index.html</loc>
     
     <lastmod>2019-07-22T08:54:01.986Z</lastmod>
     
@@ -184,14 +177,21 @@
   </url>
   
   <url>
-    <loc>http://zproo.github.io/tags/index.html</loc>
+    <loc>http://zproo.github.io/project/stylesheets/style.css</loc>
     
     <lastmod>2019-07-22T08:54:01.986Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://zproo.github.io/project/canvas-ribbon/canvas-ribbon.min.js</loc>
+    <loc>http://zproo.github.io/project/canvas-ribbon/index.html</loc>
+    
+    <lastmod>2019-07-22T08:54:01.986Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/google091459981c22016a.html</loc>
     
     <lastmod>2019-07-22T08:54:01.970Z</lastmod>
     
@@ -205,7 +205,7 @@
   </url>
   
   <url>
-    <loc>http://zproo.github.io/google091459981c22016a.html</loc>
+    <loc>http://zproo.github.io/project/canvas-ribbon/canvas-ribbon.min.js</loc>
     
     <lastmod>2019-07-22T08:54:01.970Z</lastmod>
     
