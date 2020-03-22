@@ -1,0 +1,773 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Binder机制,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="一、概述本文将介绍系统服务获取的具体流程，如获取ActivityManagerService时，通过ServiceManager中的getService静态方法获取具体的服务，这个流程经历Java层，Native层，Kernel层，其通信流程如下：  1.发起端进程向Binder Driver发送binder_ioct请求后，采用不断的循环talkWithDriver，此时线程处于阻塞状态，直到收">
+<meta name="keywords" content="Binder机制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解Binder机制3-获取服务getService">
+<meta property="og:url" content="http://zproo.github.io/2020/深入理解Binder机制3-获取服务getService/index.html">
+<meta property="og:site_name" content="Skytoby">
+<meta property="og:description" content="一、概述本文将介绍系统服务获取的具体流程，如获取ActivityManagerService时，通过ServiceManager中的getService静态方法获取具体的服务，这个流程经历Java层，Native层，Kernel层，其通信流程如下：  1.发起端进程向Binder Driver发送binder_ioct请求后，采用不断的循环talkWithDriver，此时线程处于阻塞状态，直到收">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制3-获取服务getService/bind_getService.PNG">
+<meta property="og:updated_time" content="2020-03-22T14:34:33.604Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解Binder机制3-获取服务getService">
+<meta name="twitter:description" content="一、概述本文将介绍系统服务获取的具体流程，如获取ActivityManagerService时，通过ServiceManager中的getService静态方法获取具体的服务，这个流程经历Java层，Native层，Kernel层，其通信流程如下：  1.发起端进程向Binder Driver发送binder_ioct请求后，采用不断的循环talkWithDriver，此时线程处于阻塞状态，直到收">
+<meta name="twitter:image" content="http://zproo.github.io/2020/深入理解Binder机制3-获取服务getService/bind_getService.PNG">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zproo.github.io/2020/深入理解Binder机制3-获取服务getService/">
+
+  <title> 深入理解Binder机制3-获取服务getService | Skytoby </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+    
+    <header id="header_post" class="header" itemscope="" itemtype="http://schema.org/WPHeader" style="background-image: url('http://ortur5wom.bkt.clouddn.com/home_bg.jpg');">
+      <div class="header-inner-post"><a class="site-home" href="/">Skytoby</a>
+
+<div class="site-meta ">
+  
+  
+  
+    <div class="site-meta-headline">
+      <a>
+        <img class="custom-logo-image" src="/images/logo.png" style="width: 50px" alt="Skytoby">
+      </a>
+    </div>
+  
+
+  
+  
+  
+  
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+           <li class="menu-item menu-item-关于">
+             <a href="/about" rel="section">
+               
+               
+               关于
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-目录">
+             <a href="/archives" rel="section">
+               
+               
+               目录
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-首页">
+             <a href="/" rel="section">
+               
+               
+               首页
+             </a>
+           </li>
+        
+      
+
+      
+    </ul>
+  
+
+  
+</nav> </div>
+      <div class="header-post"> 
+  <div class="post-header">
+      <div class="tags">
+      
+        <a href="/tags/Binder机制/" rel="tag" title="Binder机制">Binder机制</a>
+      
+      </div>
+      <h1>深入理解Binder机制3-获取服务getService</h1>
+      <h2 class="subtitle"></h2>
+      <div class="post-time">
+        <span class="post-meta-item-text">Posted on </span>
+        <time itemprop="dateCreated" datetime="2020-02-04T21:28:28+08:00" content="2020-02-04" title="2020-02-04 21:28:28">
+          2020-02-04
+        </time>
+      </div>
+  </div>
+ </div>
+    </header>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                深入理解Binder机制3-获取服务getService
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2020-02-04T21:28:28+08:00" content="2020-02-04">
+              2020-02-04
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/深入理解Binder机制3-获取服务getService/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/深入理解Binder机制3-获取服务getService/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>本文将介绍系统服务获取的具体流程，如获取ActivityManagerService时，通过ServiceManager中的getService静态方法获取具体的服务，这个流程经历Java层，Native层，Kernel层，其通信流程如下：</p>
+<p><img src="/2020/深入理解Binder机制3-获取服务getService/bind_getService.PNG" alt="bind_getService"></p>
+<p>1.发起端进程向Binder Driver发送binder_ioct请求后，采用不断的循环talkWithDriver，此时线程处于阻塞状态，直到收到BR_RPLEY命令才会结束该流程；</p>
+<p>2.waitForResponse收到BR_RPLEY命令后，则直接退出循环，不会再执行executeCommand方法，除六种其他命令外(BR_REPLY、BR_TRANSACTION_COMPLETE、BR_DEAD_REPLY、BR_FAILED_REPLY、BR_ACQUIRE_RESULT<br>、BR_REPLY)会执行executeCommand方法；</p>
+<p>3.由于ServiceManager进程已经启动，并且有binder_loop一直在循环查询命令，当收到BR_TRANSACTION命令后，就开始处理findService过程。</p>
+<p>4.找到服务之后，通过binder驱动再传回到发起端进程，waitForResponse处理驱动发过来的BR_RPLEY，将服务的代理类返回给发起端进程。</p>
+<h2 id="二、获取服务进程"><a href="#二、获取服务进程" class="headerlink" title="二、获取服务进程"></a>二、获取服务进程</h2><h3 id="2-1-SM-getService"><a href="#2-1-SM-getService" class="headerlink" title="2.1 SM.getService"></a>2.1 SM.getService</h3><p>[-&gt;ServiceManager.java]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public static IBinder getService(String name) &#123;</span><br><span class="line">      try &#123;</span><br><span class="line">          IBinder service = sCache.get(name);</span><br><span class="line">          if (service != null) &#123;</span><br><span class="line">              return service;</span><br><span class="line">          &#125; else &#123;</span><br><span class="line">              return Binder.allowBlocking(rawGetService(name));</span><br><span class="line">          &#125;</span><br><span class="line">      &#125; catch (RemoteException e) &#123;</span><br><span class="line">          Log.e(TAG, &quot;error in getService&quot;, e);</span><br><span class="line">      &#125;</span><br><span class="line">      return null;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-1-1-rawGetService"><a href="#2-1-1-rawGetService" class="headerlink" title="2.1.1 rawGetService"></a>2.1.1 rawGetService</h4><p>[-&gt;ServiceManager.java]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">private static IBinder rawGetService(String name) throws RemoteException &#123;</span><br><span class="line">       final long start = sStatLogger.getTime();</span><br><span class="line"></span><br><span class="line">       final IBinder binder = getIServiceManager().getService(name);</span><br><span class="line">       </span><br><span class="line">       //记录获取服务时间</span><br><span class="line">       final int time = (int) sStatLogger.logDurationStat(Stats.GET_SERVICE, start);</span><br><span class="line"></span><br><span class="line">       final int myUid = Process.myUid();</span><br><span class="line">       final boolean isCore = UserHandle.isCore(myUid);</span><br><span class="line"></span><br><span class="line">       final long slowThreshold = isCore</span><br><span class="line">               ? GET_SERVICE_SLOW_THRESHOLD_US_CORE</span><br><span class="line">               : GET_SERVICE_SLOW_THRESHOLD_US_NON_CORE;</span><br><span class="line">       //记录时间</span><br><span class="line">       synchronized (sLock) &#123;</span><br><span class="line">           sGetServiceAccumulatedUs += time;</span><br><span class="line">           sGetServiceAccumulatedCallCount++;</span><br><span class="line"></span><br><span class="line">           final long nowUptime = SystemClock.uptimeMillis();</span><br><span class="line"></span><br><span class="line">           // Was a slow call?</span><br><span class="line">           if (time &gt;= slowThreshold) &#123;</span><br><span class="line">               // We do a slow log:</span><br><span class="line">               // - At most once in every SLOW_LOG_INTERVAL_MS</span><br><span class="line">               // - OR it was slower than the previously logged slow call.</span><br><span class="line">               if ((nowUptime &gt; (sLastSlowLogUptime + SLOW_LOG_INTERVAL_MS))</span><br><span class="line">                       || (sLastSlowLogActualTime &lt; time)) &#123;</span><br><span class="line">                   EventLogTags.writeServiceManagerSlow(time / 1000, name);</span><br><span class="line"></span><br><span class="line">                   sLastSlowLogUptime = nowUptime;</span><br><span class="line">                   sLastSlowLogActualTime = time;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           // Every GET_SERVICE_LOG_EVERY_CALLS calls, log the total time spent in getService().</span><br><span class="line"></span><br><span class="line">           final int logInterval = isCore</span><br><span class="line">                   ? GET_SERVICE_LOG_EVERY_CALLS_CORE</span><br><span class="line">                   : GET_SERVICE_LOG_EVERY_CALLS_NON_CORE;</span><br><span class="line"></span><br><span class="line">           if ((sGetServiceAccumulatedCallCount &gt;= logInterval)</span><br><span class="line">                   &amp;&amp; (nowUptime &gt;= (sLastStatsLogUptime + STATS_LOG_INTERVAL_MS))) &#123;</span><br><span class="line"></span><br><span class="line">               EventLogTags.writeServiceManagerStats(</span><br><span class="line">                       sGetServiceAccumulatedCallCount, // Total # of getService() calls.</span><br><span class="line">                       sGetServiceAccumulatedUs / 1000, // Total time spent in getService() calls.</span><br><span class="line">                       (int) (nowUptime - sLastStatsLogUptime)); // Uptime duration since last log.</span><br><span class="line">               sGetServiceAccumulatedCallCount = 0;</span><br><span class="line">               sGetServiceAccumulatedUs = 0;</span><br><span class="line">               sLastStatsLogUptime = nowUptime;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       return binder;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>由前面ServiceManager注册服务中3.3.1节可知getIServiceManager()相当于ServiceManagerProxy</p>
+<h4 id="2-1-2-allowBlocking"><a href="#2-1-2-allowBlocking" class="headerlink" title="2.1.2 allowBlocking"></a>2.1.2 allowBlocking</h4><p>[-&gt;Binder.java]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public static IBinder allowBlocking(IBinder binder) &#123;</span><br><span class="line">       try &#123;</span><br><span class="line">           if (binder instanceof BinderProxy) &#123;</span><br><span class="line">               ((BinderProxy) binder).mWarnOnBlocking = false;</span><br><span class="line">           &#125; else if (binder != null &amp;&amp; binder.getInterfaceDescriptor() != null</span><br><span class="line">                   &amp;&amp; binder.queryLocalInterface(binder.getInterfaceDescriptor()) == null) &#123;</span><br><span class="line">               Log.w(TAG, &quot;Unable to allow blocking on interface &quot; + binder);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125; catch (RemoteException ignored) &#123;</span><br><span class="line">       &#125;</span><br><span class="line">       return binder;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法用来判断IBinder类，根据不同情况添加标志。</p>
+<h3 id="2-2-SMP-getService"><a href="#2-2-SMP-getService" class="headerlink" title="2.2 SMP.getService"></a>2.2 SMP.getService</h3><p>[-&gt;ServiceManagerNative::ServiceManagerProxy]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public IBinder getService(String name) throws RemoteException &#123;</span><br><span class="line">       Parcel data = Parcel.obtain();</span><br><span class="line">       Parcel reply = Parcel.obtain();</span><br><span class="line">       data.writeInterfaceToken(IServiceManager.descriptor);</span><br><span class="line">       data.writeString(name);</span><br><span class="line">       mRemote.transact(GET_SERVICE_TRANSACTION, data, reply, 0);</span><br><span class="line">       IBinder binder = reply.readStrongBinder();</span><br><span class="line">       reply.recycle();</span><br><span class="line">       data.recycle();</span><br><span class="line">       return binder;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>由前面ServiceManager注册服务中3.3.1节</p>
+<p>mRemote为BinderProxy对象，该对象对应于BpBinder(0)，作为binder代理类，执行native层ServiceManager</p>
+<h3 id="2-3-BP-transact"><a href="#2-3-BP-transact" class="headerlink" title="2.3 BP.transact"></a>2.3 BP.transact</h3><p>[-&gt;BinderProxy.java]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">public boolean transact(int code, Parcel data, Parcel reply, int flags) throws RemoteException &#123;</span><br><span class="line">       Binder.checkParcel(this, code, data, &quot;Unreasonably large binder buffer&quot;);</span><br><span class="line"></span><br><span class="line">       if (mWarnOnBlocking &amp;&amp; ((flags &amp; FLAG_ONEWAY) == 0)) &#123;</span><br><span class="line">           // For now, avoid spamming the log by disabling after we&apos;ve logged</span><br><span class="line">           // about this interface at least once</span><br><span class="line">           mWarnOnBlocking = false;</span><br><span class="line">           Log.w(Binder.TAG, &quot;Outgoing transactions from this process must be FLAG_ONEWAY&quot;,</span><br><span class="line">                   new Throwable());</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       final boolean tracingEnabled = Binder.isTracingEnabled();</span><br><span class="line">       if (tracingEnabled) &#123;</span><br><span class="line">           final Throwable tr = new Throwable();</span><br><span class="line">           Binder.getTransactionTracker().addTrace(tr);</span><br><span class="line">           StackTraceElement stackTraceElement = tr.getStackTrace()[1];</span><br><span class="line">           Trace.traceBegin(Trace.TRACE_TAG_ALWAYS,</span><br><span class="line">                   stackTraceElement.getClassName() + &quot;.&quot; + stackTraceElement.getMethodName());</span><br><span class="line">       &#125;</span><br><span class="line">       try &#123;</span><br><span class="line">           //native层调用</span><br><span class="line">           return transactNative(code, data, reply, flags);</span><br><span class="line">       &#125; finally &#123;</span><br><span class="line">           if (tracingEnabled) &#123;</span><br><span class="line">               Trace.traceEnd(Trace.TRACE_TAG_ALWAYS);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-4-android-os-BinderProxy-transact"><a href="#2-4-android-os-BinderProxy-transact" class="headerlink" title="2.4  android_os_BinderProxy_transact"></a>2.4  android_os_BinderProxy_transact</h3><p>[-&gt;android_util_Binder.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">static jboolean android_os_BinderProxy_transact(JNIEnv* env, jobject obj,</span><br><span class="line">        jint code, jobject dataObj, jobject replyObj, jint flags) // throws RemoteException</span><br><span class="line">&#123;</span><br><span class="line">    if (dataObj == NULL) &#123;</span><br><span class="line">        jniThrowNullPointerException(env, NULL);</span><br><span class="line">        return JNI_FALSE;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">    //将java parcel转换为native parcel</span><br><span class="line">    Parcel* data = parcelForJavaObject(env, dataObj);</span><br><span class="line">    if (data == NULL) &#123;</span><br><span class="line">        return JNI_FALSE;</span><br><span class="line">    &#125;</span><br><span class="line">    Parcel* reply = parcelForJavaObject(env, replyObj);</span><br><span class="line">    if (reply == NULL &amp;&amp; replyObj != NULL) &#123;</span><br><span class="line">        return JNI_FALSE;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //获取binder native代理</span><br><span class="line">    IBinder* target = getBPNativeData(env, obj)-&gt;mObject.get();</span><br><span class="line">    if (target == NULL) &#123;</span><br><span class="line">        jniThrowException(env, &quot;java/lang/IllegalStateException&quot;, &quot;Binder has been finalized!&quot;);</span><br><span class="line">        return JNI_FALSE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ALOGV(&quot;Java code calling transact on %p in Java object %p with code %&quot; PRId32 &quot;/n&quot;,</span><br><span class="line">            target, obj, code);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    bool time_binder_calls;</span><br><span class="line">    int64_t start_millis;</span><br><span class="line">    if (kEnableBinderSample) &#123;</span><br><span class="line">        // Only log the binder call duration for things on the Java-level main thread.</span><br><span class="line">        // But if we don&apos;t</span><br><span class="line">        time_binder_calls = should_time_binder_calls();</span><br><span class="line"></span><br><span class="line">        if (time_binder_calls) &#123;</span><br><span class="line">            start_millis = uptimeMillis();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //printf(&quot;Transact from Java code to %p sending: &quot;, target); data-&gt;print();</span><br><span class="line">    //相当于BpBinder.transact</span><br><span class="line">    status_t err = target-&gt;transact(code, *data, reply, flags);</span><br><span class="line">    //if (reply) printf(&quot;Transact from Java code to %p received: &quot;, target); reply-&gt;print();</span><br><span class="line"></span><br><span class="line">    if (kEnableBinderSample) &#123;</span><br><span class="line">        if (time_binder_calls) &#123;</span><br><span class="line">            conditionally_log_binder_call(start_millis, target, code);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (err == NO_ERROR) &#123;</span><br><span class="line">        return JNI_TRUE;</span><br><span class="line">    &#125; else if (err == UNKNOWN_TRANSACTION) &#123;</span><br><span class="line">        return JNI_FALSE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    signalExceptionForError(env, obj, err, true /*canThrowRemoteException*/, data-&gt;dataSize());</span><br><span class="line">    return JNI_FALSE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-5-BpBinder-transact"><a href="#2-5-BpBinder-transact" class="headerlink" title="2.5 BpBinder::transact"></a>2.5 BpBinder::transact</h3><p>[-&gt;BpBinder.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">status_t BpBinder::transact(</span><br><span class="line">    uint32_t code, const Parcel&amp; data, Parcel* reply, uint32_t flags)</span><br><span class="line">&#123;</span><br><span class="line">    // Once a binder has died, it will never come back to life.</span><br><span class="line">    if (mAlive) &#123;</span><br><span class="line">        //见2.6节</span><br><span class="line">        status_t status = IPCThreadState::self()-&gt;transact(</span><br><span class="line">            mHandle, code, data, reply, flags);</span><br><span class="line">        if (status == DEAD_OBJECT) mAlive = 0;</span><br><span class="line">        return status;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return DEAD_OBJECT;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-5-1-BpBinder-transact"><a href="#2-5-1-BpBinder-transact" class="headerlink" title="2.5.1 BpBinder::transact"></a>2.5.1 BpBinder::transact</h4><p>[-&gt;IPCThreadState.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">IPCThreadState* IPCThreadState::self()</span><br><span class="line">&#123;</span><br><span class="line">    if (gHaveTLS) &#123;</span><br><span class="line">restart:</span><br><span class="line">        const pthread_key_t k = gTLS;</span><br><span class="line">        IPCThreadState* st = (IPCThreadState*)pthread_getspecific(k);</span><br><span class="line">        if (st) return st;</span><br><span class="line">        return new IPCThreadState; //创建IPCThreadState，见2.5.2</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (gShutdown) &#123;</span><br><span class="line">        ALOGW(&quot;Calling IPCThreadState::self() during shutdown is dangerous, expect a crash./n&quot;);</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //加锁</span><br><span class="line">    pthread_mutex_lock(&amp;gTLSMutex);</span><br><span class="line">    if (!gHaveTLS) &#123;</span><br><span class="line">        //创建线程TLS</span><br><span class="line">        int key_create_value = pthread_key_create(&amp;gTLS, threadDestructor);</span><br><span class="line">        if (key_create_value != 0) &#123;</span><br><span class="line">            pthread_mutex_unlock(&amp;gTLSMutex);</span><br><span class="line">            ALOGW(&quot;IPCThreadState::self() unable to create TLS key, expect a crash: %s/n&quot;,</span><br><span class="line">                    strerror(key_create_value));</span><br><span class="line">            return NULL;</span><br><span class="line">        &#125;</span><br><span class="line">        gHaveTLS = true;</span><br><span class="line">    &#125;</span><br><span class="line">    //释放锁</span><br><span class="line">    pthread_mutex_unlock(&amp;gTLSMutex);</span><br><span class="line">    goto restart;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>TLS(Thread local storage),线程本地存储空间，每个线程都有自己私有的TLS,线程之间不能共享。</p>
+<p>pthread_setspecific/pthread_getspecific可以设置和获取这些空间中的内容。</p>
+<h4 id="2-5-2-new-IPCThreadState"><a href="#2-5-2-new-IPCThreadState" class="headerlink" title="2.5.2 new IPCThreadState"></a>2.5.2 new IPCThreadState</h4><p>[-&gt;IPCThreadState.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">IPCThreadState::IPCThreadState()</span><br><span class="line">    : mProcess(ProcessState::self()),</span><br><span class="line">      mStrictModePolicy(0),</span><br><span class="line">      mLastTransactionBinderFlags(0)</span><br><span class="line">&#123;</span><br><span class="line">    pthread_setspecific(gTLS, this);</span><br><span class="line">    clearCaller();</span><br><span class="line">    mIn.setDataCapacity(256);</span><br><span class="line">    mOut.setDataCapacity(256);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每个线程都有一个IPCThreadState，每个IPCThreadState都有一个mIn，mOut，成员变量mProcess保存了ProcessState变量，每个进程只有一个。</p>
+<p>mInt用来接收来自Binder设备的数据，默认大小事256</p>
+<p>mOut用来存储发往Binder设备的数据，默认大小事256</p>
+<h3 id="2-6-IPC-transact"><a href="#2-6-IPC-transact" class="headerlink" title="2.6 IPC::transact"></a>2.6 IPC::transact</h3><p>[-&gt;IPCThreadState.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">status_t IPCThreadState::transact(int32_t handle,</span><br><span class="line">                                  uint32_t code, const Parcel&amp; data,</span><br><span class="line">                                  Parcel* reply, uint32_t flags)</span><br><span class="line">&#123;</span><br><span class="line">    status_t err;</span><br><span class="line"></span><br><span class="line">    flags |= TF_ACCEPT_FDS;</span><br><span class="line"></span><br><span class="line">    IF_LOG_TRANSACTIONS() &#123;</span><br><span class="line">        TextOutput::Bundle _b(alog);</span><br><span class="line">        alog &lt;&lt; &quot;BC_TRANSACTION thr &quot; &lt;&lt; (void*)pthread_self() &lt;&lt; &quot; / hand &quot;</span><br><span class="line">            &lt;&lt; handle &lt;&lt; &quot; / code &quot; &lt;&lt; TypeCode(code) &lt;&lt; &quot;: &quot;</span><br><span class="line">            &lt;&lt; indent &lt;&lt; data &lt;&lt; dedent &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    LOG_ONEWAY(&quot;&gt;&gt;&gt;&gt; SEND from pid %d uid %d %s&quot;, getpid(), getuid(),</span><br><span class="line">        (flags &amp; TF_ONE_WAY) == 0 ? &quot;READ REPLY&quot; : &quot;ONE WAY&quot;);</span><br><span class="line">    //传输数据，见2.7    </span><br><span class="line">    err = writeTransactionData(BC_TRANSACTION, flags, handle, code, data, NULL);</span><br><span class="line"></span><br><span class="line">    if (err != NO_ERROR) &#123;</span><br><span class="line">        //错误则返回</span><br><span class="line">        if (reply) reply-&gt;setError(err);</span><br><span class="line">        return (mLastError = err);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if ((flags &amp; TF_ONE_WAY) == 0) &#123;</span><br><span class="line">        #if 0</span><br><span class="line">        if (code == 4) &#123; // relayout</span><br><span class="line">            ALOGI(&quot;&gt;&gt;&gt;&gt;&gt;&gt; CALLING transaction 4&quot;);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            ALOGI(&quot;&gt;&gt;&gt;&gt;&gt;&gt; CALLING transaction %d&quot;, code);</span><br><span class="line">        &#125;</span><br><span class="line">        #endif</span><br><span class="line">        if (reply) &#123;</span><br><span class="line">            //等待回应</span><br><span class="line">            err = waitForResponse(reply);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            Parcel fakeReply;</span><br><span class="line">            err = waitForResponse(&amp;fakeReply);</span><br><span class="line">        &#125;</span><br><span class="line">        #if 0</span><br><span class="line">        if (code == 4) &#123; // relayout</span><br><span class="line">            ALOGI(&quot;&lt;&lt;&lt;&lt;&lt;&lt; RETURNING transaction 4&quot;);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            ALOGI(&quot;&lt;&lt;&lt;&lt;&lt;&lt; RETURNING transaction %d&quot;, code);</span><br><span class="line">        &#125;</span><br><span class="line">        #endif</span><br><span class="line"></span><br><span class="line">        IF_LOG_TRANSACTIONS() &#123;</span><br><span class="line">            TextOutput::Bundle _b(alog);</span><br><span class="line">            alog &lt;&lt; &quot;BR_REPLY thr &quot; &lt;&lt; (void*)pthread_self() &lt;&lt; &quot; / hand &quot;</span><br><span class="line">                &lt;&lt; handle &lt;&lt; &quot;: &quot;;</span><br><span class="line">            if (reply) alog &lt;&lt; indent &lt;&lt; *reply &lt;&lt; dedent &lt;&lt; endl;</span><br><span class="line">            else alog &lt;&lt; &quot;(none requested)&quot; &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        //oneway，不需要等待reply的场景</span><br><span class="line">        err = waitForResponse(NULL, NULL);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return err;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>transact主要工作：</p>
+<ul>
+<li>errorCheck错误检查</li>
+<li>writeTransactionData传输数据</li>
+<li>waitForResponse等待响应</li>
+</ul>
+<h3 id="2-7-IPC-writeTransactionData"><a href="#2-7-IPC-writeTransactionData" class="headerlink" title="2.7  IPC::writeTransactionData"></a>2.7  IPC::writeTransactionData</h3><p>[-&gt;IPCThreadState.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">status_t IPCThreadState::writeTransactionData(int32_t cmd, uint32_t binderFlags,</span><br><span class="line">    int32_t handle, uint32_t code, const Parcel&amp; data, status_t* statusBuffer)</span><br><span class="line">&#123;</span><br><span class="line">    binder_transaction_data tr;</span><br><span class="line"></span><br><span class="line">    tr.target.ptr = 0; /* Don&apos;t pass uninitialized stack data to a remote process */</span><br><span class="line">    tr.target.handle = handle;  //handle = 0</span><br><span class="line">    tr.code = code;             //code = ADD_SERVICE_TRANSACTION</span><br><span class="line">    tr.flags = binderFlags;     // binderFlags = 0</span><br><span class="line">    tr.cookie = 0;</span><br><span class="line">    tr.sender_pid = 0;</span><br><span class="line">    tr.sender_euid = 0;</span><br><span class="line"></span><br><span class="line">    //data记录服务的Parcel对象</span><br><span class="line">    const status_t err = data.errorCheck();</span><br><span class="line">    if (err == NO_ERROR) &#123;</span><br><span class="line">        tr.data_size = data.ipcDataSize();</span><br><span class="line">        tr.data.ptr.buffer = data.ipcData();</span><br><span class="line">        tr.offsets_size = data.ipcObjectsCount()*sizeof(binder_size_t);</span><br><span class="line">        tr.data.ptr.offsets = data.ipcObjects();</span><br><span class="line">    &#125; else if (statusBuffer) &#123;</span><br><span class="line">        tr.flags |= TF_STATUS_CODE;</span><br><span class="line">        *statusBuffer = err;</span><br><span class="line">        tr.data_size = sizeof(status_t);</span><br><span class="line">        tr.data.ptr.buffer = reinterpret_cast&lt;uintptr_t&gt;(statusBuffer);</span><br><span class="line">        tr.offsets_size = 0;</span><br><span class="line">        tr.data.ptr.offsets = 0;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        return (mLastError = err);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mOut.writeInt32(cmd);</span><br><span class="line">    mOut.write(&amp;tr, sizeof(tr));</span><br><span class="line"></span><br><span class="line">    return NO_ERROR;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>handler对象用来标记目的端，注册服务的目的端为ServiceManager,这里handle = 0所对应的是binder实体对象。</p>
+<p>binder_transaction_data是binder驱动通信的数据结构，该过程吧Binder请求码BC_TRANSACTION和binder_transaction_data结构体写入mOut，写完后执行waitForResponse方法。</p>
+<p>binder_transaction_data中重要的成员变量</p>
+<ul>
+<li>data_size，binder_transaction的数据大小</li>
+<li>data.ptr.buffer，binder_transaction数据的起始地址</li>
+<li>offsets_size，记录flat_binder_object结构体的个数</li>
+<li>data.ptr.offsets，记录flat_binder_object结构体的数据偏移量</li>
+</ul>
+<h3 id="2-8-IPC-waitForResponse"><a href="#2-8-IPC-waitForResponse" class="headerlink" title="2.8 IPC::waitForResponse"></a>2.8 IPC::waitForResponse</h3><p>[-&gt;IPCThreadState.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">status_t IPCThreadState::waitForResponse(Parcel *reply, status_t *acquireResult)</span><br><span class="line">&#123;</span><br><span class="line">    uint32_t cmd;</span><br><span class="line">    int32_t err;</span><br><span class="line"></span><br><span class="line">    while (1) &#123;</span><br><span class="line">        //见3.13小节</span><br><span class="line">        if ((err=talkWithDriver()) &lt; NO_ERROR) break;</span><br><span class="line">        err = mIn.errorCheck();</span><br><span class="line">        if (err &lt; NO_ERROR) break;</span><br><span class="line">        if (mIn.dataAvail() == 0) continue;</span><br><span class="line"></span><br><span class="line">        cmd = (uint32_t)mIn.readInt32();</span><br><span class="line"></span><br><span class="line">        IF_LOG_COMMANDS() &#123;</span><br><span class="line">            alog &lt;&lt; &quot;Processing waitForResponse Command: &quot;</span><br><span class="line">                &lt;&lt; getReturnString(cmd) &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        switch (cmd) &#123;</span><br><span class="line">        case BR_TRANSACTION_COMPLETE:</span><br><span class="line">            if (!reply &amp;&amp; !acquireResult) goto finish;</span><br><span class="line">            break;</span><br><span class="line"></span><br><span class="line">        case BR_DEAD_REPLY:</span><br><span class="line">            err = DEAD_OBJECT;</span><br><span class="line">            goto finish;</span><br><span class="line"></span><br><span class="line">        case BR_FAILED_REPLY:</span><br><span class="line">            err = FAILED_TRANSACTION;</span><br><span class="line">            goto finish;</span><br><span class="line"></span><br><span class="line">        case BR_ACQUIRE_RESULT:</span><br><span class="line">            &#123;</span><br><span class="line">                ALOG_ASSERT(acquireResult != NULL, &quot;Unexpected brACQUIRE_RESULT&quot;);</span><br><span class="line">                const int32_t result = mIn.readInt32();</span><br><span class="line">                if (!acquireResult) continue;</span><br><span class="line">                *acquireResult = result ? NO_ERROR : INVALID_OPERATION;</span><br><span class="line">            &#125;</span><br><span class="line">            goto finish;</span><br><span class="line"></span><br><span class="line">        case BR_REPLY:</span><br><span class="line">            &#123;</span><br><span class="line">                binder_transaction_data tr;</span><br><span class="line">                err = mIn.read(&amp;tr, sizeof(tr));</span><br><span class="line">                ALOG_ASSERT(err == NO_ERROR, &quot;Not enough command data for brREPLY&quot;);</span><br><span class="line">                if (err != NO_ERROR) goto finish;</span><br><span class="line"></span><br><span class="line">                if (reply) &#123;</span><br><span class="line">                    if ((tr.flags &amp; TF_STATUS_CODE) == 0) &#123;</span><br><span class="line">                        reply-&gt;ipcSetDataReference(</span><br><span class="line">                            reinterpret_cast&lt;const uint8_t*&gt;(tr.data.ptr.buffer),</span><br><span class="line">                            tr.data_size,</span><br><span class="line">                            reinterpret_cast&lt;const binder_size_t*&gt;(tr.data.ptr.offsets),</span><br><span class="line">                            tr.offsets_size/sizeof(binder_size_t),</span><br><span class="line">                            freeBuffer, this);</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        err = *reinterpret_cast&lt;const status_t*&gt;(tr.data.ptr.buffer);</span><br><span class="line">                        freeBuffer(NULL,</span><br><span class="line">                            reinterpret_cast&lt;const uint8_t*&gt;(tr.data.ptr.buffer),</span><br><span class="line">                            tr.data_size,</span><br><span class="line">                            reinterpret_cast&lt;const binder_size_t*&gt;(tr.data.ptr.offsets),</span><br><span class="line">                            tr.offsets_size/sizeof(binder_size_t), this);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    freeBuffer(NULL,</span><br><span class="line">                        reinterpret_cast&lt;const uint8_t*&gt;(tr.data.ptr.buffer),</span><br><span class="line">                        tr.data_size,</span><br><span class="line">                        reinterpret_cast&lt;const binder_size_t*&gt;(tr.data.ptr.offsets),</span><br><span class="line">                        tr.offsets_size/sizeof(binder_size_t), this);</span><br><span class="line">                    continue;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            goto finish;</span><br><span class="line"></span><br><span class="line">        default:</span><br><span class="line">            err = executeCommand(cmd);</span><br><span class="line">            if (err != NO_ERROR) goto finish;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">finish:</span><br><span class="line">    if (err != NO_ERROR) &#123;</span><br><span class="line">        if (acquireResult) *acquireResult = err;</span><br><span class="line">        if (reply) reply-&gt;setError(err);</span><br><span class="line">        mLastError = err;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return err;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>talkWithDriver过程是和binder驱动通信过程，Binder驱动收到BC_TRANSACTION后，会回应BR_TRANSACTION_COMPLETE,然后等待目标进程的BR_REPLY.</p>
+<h3 id="2-9-IPC-talkWithDriver"><a href="#2-9-IPC-talkWithDriver" class="headerlink" title="2.9 IPC::talkWithDriver"></a>2.9 IPC::talkWithDriver</h3><p>[-&gt;IPCThreadState.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line">status_t IPCThreadState::talkWithDriver(bool doReceive)</span><br><span class="line">&#123;</span><br><span class="line">    if (mProcess-&gt;mDriverFD &lt;= 0) &#123;</span><br><span class="line">        return -EBADF;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    binder_write_read bwr;</span><br><span class="line"></span><br><span class="line">    // Is the read buffer empty?</span><br><span class="line">    // 读缓冲是否为空</span><br><span class="line">    const bool needRead = mIn.dataPosition() &gt;= mIn.dataSize();</span><br><span class="line"></span><br><span class="line">    // We don&apos;t want to write anything if we are still reading</span><br><span class="line">    // from data left in the input buffer and the caller</span><br><span class="line">    // has requested to read the next data.</span><br><span class="line">    const size_t outAvail = (!doReceive || needRead) ? mOut.dataSize() : 0;</span><br><span class="line"></span><br><span class="line">    bwr.write_size = outAvail;</span><br><span class="line">    bwr.write_buffer = (uintptr_t)mOut.data();</span><br><span class="line"></span><br><span class="line">    // This is what we&apos;ll read.</span><br><span class="line">    if (doReceive &amp;&amp; needRead) &#123;</span><br><span class="line">        //接收数据缓冲区信息，如果收到数据，就直接填在mInt中</span><br><span class="line">        bwr.read_size = mIn.dataCapacity();</span><br><span class="line">        bwr.read_buffer = (uintptr_t)mIn.data();</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        bwr.read_size = 0;</span><br><span class="line">        bwr.read_buffer = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    IF_LOG_COMMANDS() &#123;</span><br><span class="line">        TextOutput::Bundle _b(alog);</span><br><span class="line">        if (outAvail != 0) &#123;</span><br><span class="line">            alog &lt;&lt; &quot;Sending commands to driver: &quot; &lt;&lt; indent;</span><br><span class="line">            const void* cmds = (const void*)bwr.write_buffer;</span><br><span class="line">            const void* end = ((const uint8_t*)cmds)+bwr.write_size;</span><br><span class="line">            alog &lt;&lt; HexDump(cmds, bwr.write_size) &lt;&lt; endl;</span><br><span class="line">            while (cmds &lt; end) cmds = printCommand(alog, cmds);</span><br><span class="line">            alog &lt;&lt; dedent;</span><br><span class="line">        &#125;</span><br><span class="line">        alog &lt;&lt; &quot;Size of receive buffer: &quot; &lt;&lt; bwr.read_size</span><br><span class="line">            &lt;&lt; &quot;, needRead: &quot; &lt;&lt; needRead &lt;&lt; &quot;, doReceive: &quot; &lt;&lt; doReceive &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Return immediately if there is nothing to do.</span><br><span class="line">    //读缓冲和写缓冲为空，直接返回</span><br><span class="line">    if ((bwr.write_size == 0) &amp;&amp; (bwr.read_size == 0)) return NO_ERROR;</span><br><span class="line"></span><br><span class="line">    //先清零</span><br><span class="line">    bwr.write_consumed = 0;</span><br><span class="line">    bwr.read_consumed = 0;</span><br><span class="line">    status_t err;</span><br><span class="line">    do &#123;</span><br><span class="line">        IF_LOG_COMMANDS() &#123;</span><br><span class="line">            alog &lt;&lt; &quot;About to read/write, write size = &quot; &lt;&lt; mOut.dataSize() &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line">#if defined(__ANDROID__)</span><br><span class="line">        //通过ioctl和Binder Driver进行通信，进行读写操作</span><br><span class="line">        if (ioctl(mProcess-&gt;mDriverFD, BINDER_WRITE_READ, &amp;bwr) &gt;= 0)</span><br><span class="line">            err = NO_ERROR;</span><br><span class="line">        else</span><br><span class="line">            err = -errno;</span><br><span class="line">#else</span><br><span class="line">        err = INVALID_OPERATION;</span><br><span class="line">#endif</span><br><span class="line">        if (mProcess-&gt;mDriverFD &lt;= 0) &#123;</span><br><span class="line">            err = -EBADF;</span><br><span class="line">        &#125;</span><br><span class="line">        IF_LOG_COMMANDS() &#123;</span><br><span class="line">            alog &lt;&lt; &quot;Finished read/write, write size = &quot; &lt;&lt; mOut.dataSize() &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; while (err == -EINTR); //当被中断，则继续执行</span><br><span class="line"></span><br><span class="line">    IF_LOG_COMMANDS() &#123;</span><br><span class="line">        alog &lt;&lt; &quot;Our err: &quot; &lt;&lt; (void*)(intptr_t)err &lt;&lt; &quot;, write consumed: &quot;</span><br><span class="line">            &lt;&lt; bwr.write_consumed &lt;&lt; &quot; (of &quot; &lt;&lt; mOut.dataSize()</span><br><span class="line">                        &lt;&lt; &quot;), read consumed: &quot; &lt;&lt; bwr.read_consumed &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (err &gt;= NO_ERROR) &#123;</span><br><span class="line">        if (bwr.write_consumed &gt; 0) &#123;</span><br><span class="line">            //写的数据大于0</span><br><span class="line">            if (bwr.write_consumed &lt; mOut.dataSize())</span><br><span class="line">                mOut.remove(0, bwr.write_consumed);</span><br><span class="line">            else &#123;</span><br><span class="line">                mOut.setDataSize(0);</span><br><span class="line">                //清除引用</span><br><span class="line">                processPostWriteDerefs();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (bwr.read_consumed &gt; 0) &#123;</span><br><span class="line">            //读取的数据大于0，设置mIn数据大小和将指针位置置为开始位置</span><br><span class="line">            mIn.setDataSize(bwr.read_consumed);</span><br><span class="line">            mIn.setDataPosition(0);</span><br><span class="line">        &#125;</span><br><span class="line">        IF_LOG_COMMANDS() &#123;</span><br><span class="line">            TextOutput::Bundle _b(alog);</span><br><span class="line">            alog &lt;&lt; &quot;Remaining data size: &quot; &lt;&lt; mOut.dataSize() &lt;&lt; endl;</span><br><span class="line">            alog &lt;&lt; &quot;Received commands from driver: &quot; &lt;&lt; indent;</span><br><span class="line">            const void* cmds = mIn.data();</span><br><span class="line">            const void* end = mIn.data() + mIn.dataSize();</span><br><span class="line">            alog &lt;&lt; HexDump(cmds, mIn.dataSize()) &lt;&lt; endl;</span><br><span class="line">            while (cmds &lt; end) cmds = printReturnCommand(alog, cmds);</span><br><span class="line">            alog &lt;&lt; dedent;</span><br><span class="line">        &#125;</span><br><span class="line">        return NO_ERROR;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return err;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>binder_write_read结构体用来与Binder驱动进行数据交换，通过ioctl与mDriverFD通信，主要操作的是mInt和mOut.</p>
+<p>ioctl通过系统调用进入到Binder Driver。</p>
+<p>进入到Binder Driver在前面ServiceManager注册服务中第四章有详细的描述，这里直接到ServiceManager进程、</p>
+<h2 id="三、ServiceManager进程"><a href="#三、ServiceManager进程" class="headerlink" title="三、ServiceManager进程"></a>三、ServiceManager进程</h2><p>从在前面ServiceManager注册服务中第二章可以看到servicemanager启动后，循环再binder_loop过程，会调用binder_parse方法</p>
+<h3 id="3-1-binder-parse"><a href="#3-1-binder-parse" class="headerlink" title="3.1 binder_parse"></a>3.1 binder_parse</h3><p>[-&gt;servicemanager/binder.c]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">int binder_parse(struct binder_state *bs, struct binder_io *bio,</span><br><span class="line">                 uintptr_t ptr, size_t size, binder_handler func)</span><br><span class="line">&#123;</span><br><span class="line">    int r = 1;</span><br><span class="line">    uintptr_t end = ptr + (uintptr_t) size;</span><br><span class="line"></span><br><span class="line">    while (ptr &lt; end) &#123;</span><br><span class="line">        uint32_t cmd = *(uint32_t *) ptr;</span><br><span class="line">        ptr += sizeof(uint32_t);</span><br><span class="line">#if TRACE</span><br><span class="line">        fprintf(stderr,&quot;%s:/n&quot;, cmd_name(cmd));</span><br><span class="line">#endif</span><br><span class="line">        switch(cmd) &#123;</span><br><span class="line">        ...</span><br><span class="line">        //从上面传过来的是BR_TRANSACTION</span><br><span class="line">        case BR_TRANSACTION: &#123;</span><br><span class="line">            struct binder_transaction_data *txn = (struct binder_transaction_data *) ptr;</span><br><span class="line">            if ((end - ptr) &lt; sizeof(*txn)) &#123;</span><br><span class="line">                ALOGE(&quot;parse: txn too small!/n&quot;);</span><br><span class="line">                return -1;</span><br><span class="line">            &#125;</span><br><span class="line">            binder_dump_txn(txn);</span><br><span class="line">            if (func) &#123;</span><br><span class="line">                unsigned rdata[256/4];</span><br><span class="line">                struct binder_io msg;</span><br><span class="line">                struct binder_io reply;</span><br><span class="line">                int res;</span><br><span class="line"></span><br><span class="line">                bio_init(&amp;reply, rdata, sizeof(rdata), 4);</span><br><span class="line">                //从txn解析出binder_io信息</span><br><span class="line">                bio_init_from_txn(&amp;msg, txn);</span><br><span class="line">                //收到Binder事务</span><br><span class="line">                res = func(bs, txn, &amp;msg, &amp;reply);</span><br><span class="line">                //这里走的是非oneway</span><br><span class="line">                if (txn-&gt;flags &amp; TF_ONE_WAY) &#123;</span><br><span class="line">                    binder_free_buffer(bs, txn-&gt;data.ptr.buffer);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    //发送reply事件</span><br><span class="line">                    binder_send_reply(bs, &amp;reply, txn-&gt;data.ptr.buffer, res);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            ptr += sizeof(*txn);</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-2-svcmgr-handler"><a href="#3-2-svcmgr-handler" class="headerlink" title="3.2 svcmgr_handler"></a>3.2 svcmgr_handler</h3><p>[-&gt;service_manager.c]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">int svcmgr_handler(struct binder_state *bs,</span><br><span class="line">                   struct binder_transaction_data *txn,</span><br><span class="line">                   struct binder_io *msg,</span><br><span class="line">                   struct binder_io *reply)</span><br><span class="line">&#123;</span><br><span class="line">    struct svcinfo *si;</span><br><span class="line">    uint16_t *s;</span><br><span class="line">    size_t len;</span><br><span class="line">    uint32_t handle;</span><br><span class="line">    uint32_t strict_policy;</span><br><span class="line">    int allow_isolated;</span><br><span class="line">    uint32_t dumpsys_priority;</span><br><span class="line"></span><br><span class="line">    //ALOGI(&quot;target=%p code=%d pid=%d uid=%d/n&quot;,</span><br><span class="line">    //      (void*) txn-&gt;target.ptr, txn-&gt;code, txn-&gt;sender_pid, txn-&gt;sender_euid);</span><br><span class="line"></span><br><span class="line">    if (txn-&gt;target.ptr != BINDER_SERVICE_MANAGER)</span><br><span class="line">        return -1;</span><br><span class="line"></span><br><span class="line">    if (txn-&gt;code == PING_TRANSACTION)</span><br><span class="line">        return 0;</span><br><span class="line"></span><br><span class="line">    // Equivalent to Parcel::enforceInterface(), reading the RPC</span><br><span class="line">    // header with the strict mode policy mask and the interface name.</span><br><span class="line">    // Note that we ignore the strict_policy and don&apos;t propagate it</span><br><span class="line">    // further (since we do no outbound RPCs anyway).</span><br><span class="line">    strict_policy = bio_get_uint32(msg);</span><br><span class="line">    s = bio_get_string16(msg, &amp;len);</span><br><span class="line">    if (s == NULL) &#123;</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if ((len != (sizeof(svcmgr_id) / 2)) ||</span><br><span class="line">        memcmp(svcmgr_id, s, sizeof(svcmgr_id))) &#123;</span><br><span class="line">        fprintf(stderr,&quot;invalid id %s/n&quot;, str8(s, len));</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (sehandle &amp;&amp; selinux_status_updated() &gt; 0) &#123;</span><br><span class="line">#ifdef VENDORSERVICEMANAGER</span><br><span class="line">        struct selabel_handle *tmp_sehandle = selinux_android_vendor_service_context_handle();</span><br><span class="line">#else</span><br><span class="line">        struct selabel_handle *tmp_sehandle = selinux_android_service_context_handle();</span><br><span class="line">#endif</span><br><span class="line">        if (tmp_sehandle) &#123;</span><br><span class="line">            selabel_close(sehandle);</span><br><span class="line">            sehandle = tmp_sehandle;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    switch(txn-&gt;code) &#123;</span><br><span class="line">    case SVC_MGR_GET_SERVICE:</span><br><span class="line">    case SVC_MGR_CHECK_SERVICE:</span><br><span class="line">        s = bio_get_string16(msg, &amp;len);</span><br><span class="line">        if (s == NULL) &#123;</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line">        handle = do_find_service(s, len, txn-&gt;sender_euid, txn-&gt;sender_pid);</span><br><span class="line">        if (!handle)</span><br><span class="line">            break;</span><br><span class="line">        bio_put_ref(reply, handle);</span><br><span class="line">        return 0;</span><br><span class="line">      ...  </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    bio_put_uint32(reply, 0);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-3-do-find-service"><a href="#3-3-do-find-service" class="headerlink" title="3.3 do_find_service"></a>3.3 do_find_service</h3><p>[-&gt;service_manager.c]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">uint32_t do_find_service(const uint16_t *s, size_t len, uid_t uid, pid_t spid)</span><br><span class="line">&#123;</span><br><span class="line">    //查找列表</span><br><span class="line">    struct svcinfo *si = find_svc(s, len);</span><br><span class="line"></span><br><span class="line">    if (!si || !si-&gt;handle) &#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (!si-&gt;allow_isolated) &#123;</span><br><span class="line">        // If this service doesn&apos;t allow access from isolated processes,</span><br><span class="line">        // then check the uid to see if it is isolated.</span><br><span class="line">        uid_t appid = uid % AID_USER;</span><br><span class="line">        if (appid &gt;= AID_ISOLATED_START &amp;&amp; appid &lt;= AID_ISOLATED_END) &#123;</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (!svc_can_find(s, len, spid, uid)) &#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return si-&gt;handle;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里返回已经注册的服务。</p>
+<h3 id="3-4-binder-send-reply"><a href="#3-4-binder-send-reply" class="headerlink" title="3.4 binder_send_reply"></a>3.4 binder_send_reply</h3><p>[-&gt;servicemanager/binder.c]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">void binder_send_reply(struct binder_state *bs,</span><br><span class="line">                       struct binder_io *reply,</span><br><span class="line">                       binder_uintptr_t buffer_to_free,</span><br><span class="line">                       int status)</span><br><span class="line">&#123;</span><br><span class="line">    struct &#123;</span><br><span class="line">        uint32_t cmd_free;</span><br><span class="line">        binder_uintptr_t buffer;</span><br><span class="line">        uint32_t cmd_reply;</span><br><span class="line">        struct binder_transaction_data txn;</span><br><span class="line">    &#125; __attribute__((packed)) data;</span><br><span class="line"></span><br><span class="line">    data.cmd_free = BC_FREE_BUFFER;</span><br><span class="line">    data.buffer = buffer_to_free;</span><br><span class="line">    data.cmd_reply = BC_REPLY;</span><br><span class="line">    data.txn.target.ptr = 0;</span><br><span class="line">    data.txn.cookie = 0;</span><br><span class="line">    data.txn.code = 0;</span><br><span class="line">    if (status) &#123;</span><br><span class="line">        data.txn.flags = TF_STATUS_CODE;</span><br><span class="line">        data.txn.data_size = sizeof(int);</span><br><span class="line">        data.txn.offsets_size = 0;</span><br><span class="line">        data.txn.data.ptr.buffer = (uintptr_t)&amp;status;</span><br><span class="line">        data.txn.data.ptr.offsets = 0;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        data.txn.flags = 0;</span><br><span class="line">        data.txn.data_size = reply-&gt;data - reply-&gt;data0;</span><br><span class="line">        data.txn.offsets_size = ((char*) reply-&gt;offs) - ((char*) reply-&gt;offs0);</span><br><span class="line">        data.txn.data.ptr.buffer = (uintptr_t)reply-&gt;data0;</span><br><span class="line">        data.txn.data.ptr.offsets = (uintptr_t)reply-&gt;offs0;</span><br><span class="line">    &#125;</span><br><span class="line">    //向Binder驱动写数据，见5.5</span><br><span class="line">    binder_write(bs, &amp;data, sizeof(data));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将BC_FREE_BUFFER和BC_REPLY发送给binder驱动，向client发送reply。</p>
+<h2 id="四、获取服务进程"><a href="#四、获取服务进程" class="headerlink" title="四、获取服务进程"></a>四、获取服务进程</h2><p>上面2.2节中transact之后，执行reply的readStrongBinder操作。</p>
+<h3 id="4-1-readStrongBinder"><a href="#4-1-readStrongBinder" class="headerlink" title="4.1 readStrongBinder"></a>4.1 readStrongBinder</h3><p>[-&gt;Parcel.java]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Read an object from the parcel at the current dataPosition().</span><br><span class="line"> */</span><br><span class="line">public final IBinder readStrongBinder() &#123;</span><br><span class="line">    //native调用，见4.2节</span><br><span class="line">    return nativeReadStrongBinder(mNativePtr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-2-android-os-Parcel-readStrongBinder"><a href="#4-2-android-os-Parcel-readStrongBinder" class="headerlink" title="4.2 android_os_Parcel_readStrongBinder"></a>4.2 android_os_Parcel_readStrongBinder</h3><p>[-&gt;android_os_Parcel.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">static jobject android_os_Parcel_readStrongBinder(JNIEnv* env, jclass clazz, jlong nativePtr)</span><br><span class="line">&#123;</span><br><span class="line">    Parcel* parcel = reinterpret_cast&lt;Parcel*&gt;(nativePtr);</span><br><span class="line">    if (parcel != NULL) &#123;</span><br><span class="line">        //返回IBinder</span><br><span class="line">        return javaObjectForIBinder(env, parcel-&gt;readStrongBinder());</span><br><span class="line">    &#125;</span><br><span class="line">    return NULL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-3-readStrongBinder-Java"><a href="#4-3-readStrongBinder-Java" class="headerlink" title="4.3 readStrongBinder(Java)"></a>4.3 readStrongBinder(Java)</h3><p>[-&gt;Parcel.java]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public final IBinder readStrongBinder() &#123;</span><br><span class="line">     return nativeReadStrongBinder(mNativePtr);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>[-&gt;android_os_Parcel.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">static jobject android_os_Parcel_readStrongBinder(JNIEnv* env, jclass clazz, jlong nativePtr)</span><br><span class="line">&#123;</span><br><span class="line">    //指向Parcel内存</span><br><span class="line">    Parcel* parcel = reinterpret_cast&lt;Parcel*&gt;(nativePtr);</span><br><span class="line">    if (parcel != NULL) &#123;</span><br><span class="line">        return javaObjectForIBinder(env, parcel-&gt;readStrongBinder());</span><br><span class="line">    &#125;</span><br><span class="line">    return NULL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-4-readStrongBinder-C"><a href="#4-4-readStrongBinder-C" class="headerlink" title="4.4 readStrongBinder(C++)"></a>4.4 readStrongBinder(C++)</h3><p>[-&gt;Parcel.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">sp&lt;IBinder&gt; Parcel::readStrongBinder() const</span><br><span class="line">&#123;</span><br><span class="line">    sp&lt;IBinder&gt; val; //sp为智能指针，strong point</span><br><span class="line">    // Note that a lot of code in Android reads binders by hand with this</span><br><span class="line">    // method, and that code has historically been ok with getting nullptr</span><br><span class="line">    // back (while ignoring error codes).</span><br><span class="line">    readNullableStrongBinder(&amp;val);</span><br><span class="line">    return val;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">status_t Parcel::readNullableStrongBinder(sp&lt;IBinder&gt;* val) const</span><br><span class="line">&#123;</span><br><span class="line">    //见4.4.1节</span><br><span class="line">    return unflatten_binder(ProcessState::self(), *this, val);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-4-1-unflatten-binder"><a href="#4-4-1-unflatten-binder" class="headerlink" title="4.4.1 unflatten_binder"></a>4.4.1 unflatten_binder</h4><p>[-&gt;Parcel.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">status_t unflatten_binder(const sp&lt;ProcessState&gt;&amp; proc,</span><br><span class="line">    const Parcel&amp; in, sp&lt;IBinder&gt;* out)</span><br><span class="line">&#123;</span><br><span class="line">    const flat_binder_object* flat = in.readObject&lt;flat_binder_object&gt;();</span><br><span class="line"></span><br><span class="line">    if (flat) &#123;</span><br><span class="line">        switch (flat-&gt;hdr.type) &#123;</span><br><span class="line">            //当请求服务的进程和服务进程属于同一个进程</span><br><span class="line">            case BINDER_TYPE_BINDER:</span><br><span class="line">                *out = reinterpret_cast&lt;IBinder*&gt;(flat-&gt;cookie);</span><br><span class="line">                return finish_unflatten_binder(NULL, *flat, in);</span><br><span class="line">            //当请求服务的进程与服务属于不同的进程</span><br><span class="line">            case BINDER_TYPE_HANDLE:</span><br><span class="line">                *out = proc-&gt;getStrongProxyForHandle(flat-&gt;handle);</span><br><span class="line">                return finish_unflatten_binder(</span><br><span class="line">                    static_cast&lt;BpHwBinder*&gt;(out-&gt;get()), *flat, in);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return BAD_TYPE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-4-2-getStrongProxyForHandle"><a href="#4-4-2-getStrongProxyForHandle" class="headerlink" title="4.4.2 getStrongProxyForHandle"></a>4.4.2 getStrongProxyForHandle</h4><p>[-&gt;ProcessState.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">sp&lt;IBinder&gt; ProcessState::getStrongProxyForHandle(int32_t handle)</span><br><span class="line">&#123;</span><br><span class="line">    sp&lt;IBinder&gt; result;</span><br><span class="line"></span><br><span class="line">    AutoMutex _l(mLock);</span><br><span class="line"></span><br><span class="line">    handle_entry* e = lookupHandleLocked(handle);</span><br><span class="line"></span><br><span class="line">    if (e != NULL) &#123;</span><br><span class="line">        // We need to create a new BpHwBinder if there isn&apos;t currently one, OR we</span><br><span class="line">        // are unable to acquire a weak reference on this current one.  See comment</span><br><span class="line">        // in getWeakProxyForHandle() for more info about this.</span><br><span class="line">        IBinder* b = e-&gt;binder;</span><br><span class="line">        if (b == NULL || !e-&gt;refs-&gt;attemptIncWeak(this)) &#123;</span><br><span class="line">            //当handle值所对应的IBinder不存在或者弱引用无效时，则创建BpHwBinder对象</span><br><span class="line">            b = new BpHwBinder(handle);</span><br><span class="line">            e-&gt;binder = b;</span><br><span class="line">            if (b) e-&gt;refs = b-&gt;getWeakRefs();</span><br><span class="line">            result = b;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            // This little bit of nastyness is to allow us to add a primary</span><br><span class="line">            // reference to the remote proxy when this team doesn&apos;t have one</span><br><span class="line">            // but another team is sending the handle to us.</span><br><span class="line">            result.force_set(b);</span><br><span class="line">            e-&gt;refs-&gt;decWeak(this);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回BpHwBinder代理对象。</p>
+<h4 id="4-4-3-lookupHandleLocked"><a href="#4-4-3-lookupHandleLocked" class="headerlink" title="4.4.3 lookupHandleLocked"></a>4.4.3 lookupHandleLocked</h4><p>[-&gt;ProcessState.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ProcessState::handle_entry* ProcessState::lookupHandleLocked(int32_t handle)</span><br><span class="line">&#123;</span><br><span class="line">    const size_t N=mHandleToObject.size();</span><br><span class="line">     //当handle值大于mHandleToObject时才进入</span><br><span class="line">    if (N &lt;= (size_t)handle) &#123;</span><br><span class="line">        handle_entry e;</span><br><span class="line">        e.binder = NULL;</span><br><span class="line">        e.refs = NULL;</span><br><span class="line">        //从mHandleToObject的第N个位置开始插入handler+1-n e到队列中</span><br><span class="line">        status_t err = mHandleToObject.insertAt(e, N, handle+1-N);</span><br><span class="line">        if (err &lt; NO_ERROR) return NULL;</span><br><span class="line">    &#125;</span><br><span class="line">    return &amp;mHandleToObject.editItemAt(handle);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-4-4-finish-unflatten-binder"><a href="#4-4-4-finish-unflatten-binder" class="headerlink" title="4.4.4 finish_unflatten_binder"></a>4.4.4 finish_unflatten_binder</h4><p>[-&gt;Parcel.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">inline static status_t finish_unflatten_binder(</span><br><span class="line">    BpHwBinder* /*proxy*/, const flat_binder_object&amp; /*flat*/,</span><br><span class="line">    const Parcel&amp; /*in*/)</span><br><span class="line">&#123;</span><br><span class="line">    return NO_ERROR;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-5-javaObjectForIBinder"><a href="#4-5-javaObjectForIBinder" class="headerlink" title="4.5  javaObjectForIBinder"></a>4.5  javaObjectForIBinder</h3><p>[-&gt;android_util_Binder.cpp]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">jobject javaObjectForIBinder(JNIEnv* env, const sp&lt;IBinder&gt;&amp; val)</span><br><span class="line">&#123;</span><br><span class="line">    if (val == NULL) return NULL;</span><br><span class="line">    //如果是JavaBBinder则直接返回</span><br><span class="line">    if (val-&gt;checkSubclass(&amp;gBinderOffsets)) &#123;</span><br><span class="line">        // It&apos;s a JavaBBinder created by ibinderForJavaObject. Already has Java object.</span><br><span class="line">        jobject object = static_cast&lt;JavaBBinder*&gt;(val.get())-&gt;object();</span><br><span class="line">        LOGDEATH(&quot;objectForBinder %p: it&apos;s our own %p!/n&quot;, val.get(), object);</span><br><span class="line">        return object;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // For the rest of the function we will hold this lock, to serialize</span><br><span class="line">    // looking/creation/destruction of Java proxies for native Binder proxies.</span><br><span class="line">    AutoMutex _l(gProxyLock);</span><br><span class="line"></span><br><span class="line">    BinderProxyNativeData* nativeData = gNativeDataCache;</span><br><span class="line">    if (nativeData == nullptr) &#123;</span><br><span class="line">        nativeData = new BinderProxyNativeData();</span><br><span class="line">    &#125;</span><br><span class="line">    // gNativeDataCache is now logically empty.</span><br><span class="line">    //返回服务的代理,见4.6节</span><br><span class="line">    jobject object = env-&gt;CallStaticObjectMethod(gBinderProxyOffsets.mClass,</span><br><span class="line">            gBinderProxyOffsets.mGetInstance, (jlong) nativeData, (jlong) val.get());</span><br><span class="line">    if (env-&gt;ExceptionCheck()) &#123;</span><br><span class="line">        // In the exception case, getInstance still took ownership of nativeData.</span><br><span class="line">        gNativeDataCache = nullptr;</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line">    BinderProxyNativeData* actualNativeData = getBPNativeData(env, object);</span><br><span class="line">    if (actualNativeData == nativeData) &#123;</span><br><span class="line">        // New BinderProxy; we still have exclusive access.</span><br><span class="line">        nativeData-&gt;mOrgue = new DeathRecipientList;</span><br><span class="line">        nativeData-&gt;mObject = val;</span><br><span class="line">        gNativeDataCache = nullptr;</span><br><span class="line">        ++gNumProxies;</span><br><span class="line">        if (gNumProxies &gt;= gProxiesWarned + PROXY_WARN_INTERVAL) &#123;</span><br><span class="line">            ALOGW(&quot;Unexpectedly many live BinderProxies: %d/n&quot;, gNumProxies);</span><br><span class="line">            gProxiesWarned = gNumProxies;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // nativeData wasn&apos;t used. Reuse it the next time.</span><br><span class="line">        gNativeDataCache = nativeData;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return object;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>gBinderProxyOffsets作为全局变量，其初始化在int_register_android_os_BinderProxy方法中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">static int int_register_android_os_BinderProxy(JNIEnv* env)</span><br><span class="line">&#123;</span><br><span class="line">    jclass clazz = FindClassOrDie(env, &quot;java/lang/Error&quot;);</span><br><span class="line">    gErrorOffsets.mClass = MakeGlobalRefOrDie(env, clazz);</span><br><span class="line"></span><br><span class="line">    clazz = FindClassOrDie(env, kBinderProxyPathName);</span><br><span class="line">    //初始化gBinderProxyOffsets值</span><br><span class="line">    gBinderProxyOffsets.mClass = MakeGlobalRefOrDie(env, clazz);</span><br><span class="line">    gBinderProxyOffsets.mGetInstance = GetStaticMethodIDOrDie(env, clazz, &quot;getInstance&quot;,</span><br><span class="line">            &quot;(JJ)Landroid/os/BinderProxy;&quot;);</span><br><span class="line">    gBinderProxyOffsets.mSendDeathNotice = GetStaticMethodIDOrDie(env, clazz, &quot;sendDeathNotice&quot;,</span><br><span class="line">            &quot;(Landroid/os/IBinder$DeathRecipient;)V&quot;);</span><br><span class="line">    gBinderProxyOffsets.mNativeData = GetFieldIDOrDie(env, clazz, &quot;mNativeData&quot;, &quot;J&quot;);</span><br><span class="line"></span><br><span class="line">    clazz = FindClassOrDie(env, &quot;java/lang/Class&quot;);</span><br><span class="line">    gClassOffsets.mGetName = GetMethodIDOrDie(env, clazz, &quot;getName&quot;, &quot;()Ljava/lang/String;&quot;);</span><br><span class="line"></span><br><span class="line">    return RegisterMethodsOrDie(</span><br><span class="line">        env, kBinderProxyPathName,</span><br><span class="line">        gBinderProxyMethods, NELEM(gBinderProxyMethods));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>env-&gt;CallStaticObjectMethod，jni调用BinderProxy中的getInstance方法。</p>
+<h3 id="4-6-getInstance"><a href="#4-6-getInstance" class="headerlink" title="4.6 getInstance"></a>4.6 getInstance</h3><p>[-&gt;BinderProxy.java]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">private static BinderProxy getInstance(long nativeData, long iBinder) &#123;</span><br><span class="line">       BinderProxy result;</span><br><span class="line">       synchronized (sProxyMap) &#123;</span><br><span class="line">           try &#123;</span><br><span class="line">               result = sProxyMap.get(iBinder);</span><br><span class="line">               //如果已经存在则直接返回，否则新建BinderProxy</span><br><span class="line">               if (result != null) &#123;</span><br><span class="line">                   return result;</span><br><span class="line">               &#125;</span><br><span class="line">               result = new BinderProxy(nativeData);</span><br><span class="line">           &#125; catch (Throwable e) &#123;</span><br><span class="line">               // We&apos;re throwing an exception (probably OOME); don&apos;t drop nativeData.</span><br><span class="line">               NativeAllocationRegistry.applyFreeFunction(NoImagePreloadHolder.sNativeFinalizer,</span><br><span class="line">                       nativeData);</span><br><span class="line">               throw e;</span><br><span class="line">           &#125;</span><br><span class="line">           NoImagePreloadHolder.sRegistry.registerNativeAllocation(result, nativeData);</span><br><span class="line">           // The registry now owns nativeData, even if registration threw an exception.</span><br><span class="line">           sProxyMap.set(iBinder, result);</span><br><span class="line">       &#125;</span><br><span class="line">       return result;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>由上面分析， <strong>reply.readStrongBinder();等价于new BinderProxy</strong>即SMP.getService等价于new BinderProxy</p>
+<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p><strong>getService的核心过程</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public IBinder getService(String name) throws RemoteException &#123;</span><br><span class="line">       //这里需要将Java层的Parcel转换成Native层的Parcel</span><br><span class="line">       Parcel data = Parcel.obtain();</span><br><span class="line">       Parcel reply = Parcel.obtain();</span><br><span class="line">       data.writeInterfaceToken(IServiceManager.descriptor);</span><br><span class="line">       data.writeString(name);</span><br><span class="line">       //与binder驱动交互</span><br><span class="line">       mRemote.transact(GET_SERVICE_TRANSACTION, data, reply, 0);</span><br><span class="line">       //返回代理对象，为new BinderProxy(nativeData)</span><br><span class="line">       IBinder binder = javaObjectForIBinder(env, new BpHwBinder(handle));</span><br><span class="line">       reply.recycle();</span><br><span class="line">       data.recycle();</span><br><span class="line">       return binder;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>获取服务通过BpBinder发送GET_SERVICE_TRANSACTION命令和Binder驱动层进行数据交互，javaObjectForIBinder的作用是创建 BinderProxy对象，并将BpHwBinder对象的地址保存到BinderProxy的mObjects中,最后返回代理对象。</p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><p>源码路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/os/ServiceManager.java</span><br><span class="line">frameworks/base/core/java/android/os/ServiceManagerNative.java</span><br><span class="line">frameworks/base/core/java/android/os/Parcel.java</span><br><span class="line">frameworks/base/core/java/android/os/BinderProxy.java</span><br><span class="line"></span><br><span class="line">frameworks/base/core/jni/android_os_Parcel.cpp</span><br><span class="line">frameworks/base/core/jni/android_util_Binder.cpp</span><br><span class="line">native/libs/binder/Parcel.cpp</span><br><span class="line">native/libs/binder/ProcessState.cpp</span><br><span class="line">native/libs/binder/BpBinder.cpp</span><br><span class="line">native/libs/binder/IPCThreadState.cpp</span><br><span class="line">native/cmds/servicemanager/binder.c</span><br><span class="line">native/cmds/servicemanager/service_manager.c</span><br><span class="line">native/cmds/servicemanager/servicemanager.rc</span><br><span class="line"></span><br><span class="line">kernel/include/linux/syscalls.h</span><br><span class="line">kernel/drivers/android/binder.c</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Binder机制/" rel="tag">#Binder机制</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/深入理解Binder机制2-注册服务addService/" rel="next" title="深入理解Binder机制2-注册服务addService">
+                <i class="fa fa-chevron-left"></i> 深入理解Binder机制2-注册服务addService
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/深入理解Binder机制4-bindService过程分析/" rel="prev" title="深入理解Binder机制4-bindService过程分析">
+                深入理解Binder机制4-bindService过程分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Skytoby">
+          <p class="site-author-name" itemprop="name">Skytoby</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br> 技术领域：Android、AI <br><br>座右铭：想法+行动+坚持</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">28</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/caoxiaoliang" target="_blank" title="GitHub">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://me.csdn.net/cao861544325" target="_blank" title="CSDN">
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、概述"><span class="nav-text">一、概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、获取服务进程"><span class="nav-text">二、获取服务进程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-SM-getService"><span class="nav-text">2.1 SM.getService</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-rawGetService"><span class="nav-text">2.1.1 rawGetService</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-2-allowBlocking"><span class="nav-text">2.1.2 allowBlocking</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-SMP-getService"><span class="nav-text">2.2 SMP.getService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-BP-transact"><span class="nav-text">2.3 BP.transact</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-android-os-BinderProxy-transact"><span class="nav-text">2.4  android_os_BinderProxy_transact</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-BpBinder-transact"><span class="nav-text">2.5 BpBinder::transact</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-1-BpBinder-transact"><span class="nav-text">2.5.1 BpBinder::transact</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-2-new-IPCThreadState"><span class="nav-text">2.5.2 new IPCThreadState</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-IPC-transact"><span class="nav-text">2.6 IPC::transact</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-IPC-writeTransactionData"><span class="nav-text">2.7  IPC::writeTransactionData</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-8-IPC-waitForResponse"><span class="nav-text">2.8 IPC::waitForResponse</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-9-IPC-talkWithDriver"><span class="nav-text">2.9 IPC::talkWithDriver</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、ServiceManager进程"><span class="nav-text">三、ServiceManager进程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-binder-parse"><span class="nav-text">3.1 binder_parse</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-svcmgr-handler"><span class="nav-text">3.2 svcmgr_handler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-do-find-service"><span class="nav-text">3.3 do_find_service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-binder-send-reply"><span class="nav-text">3.4 binder_send_reply</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、获取服务进程"><span class="nav-text">四、获取服务进程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-readStrongBinder"><span class="nav-text">4.1 readStrongBinder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-android-os-Parcel-readStrongBinder"><span class="nav-text">4.2 android_os_Parcel_readStrongBinder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-readStrongBinder-Java"><span class="nav-text">4.3 readStrongBinder(Java)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-readStrongBinder-C"><span class="nav-text">4.4 readStrongBinder(C++)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-1-unflatten-binder"><span class="nav-text">4.4.1 unflatten_binder</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-2-getStrongProxyForHandle"><span class="nav-text">4.4.2 getStrongProxyForHandle</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-3-lookupHandleLocked"><span class="nav-text">4.4.3 lookupHandleLocked</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-4-finish-unflatten-binder"><span class="nav-text">4.4.4 finish_unflatten_binder</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-javaObjectForIBinder"><span class="nav-text">4.5  javaObjectForIBinder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-getInstance"><span class="nav-text">4.6 getInstance</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、总结"><span class="nav-text">五、总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-text">附录</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2019 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Skytoby</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme Next
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'https-zproo-github-io';
+      var disqus_identifier = '2020/深入理解Binder机制3-获取服务getService/';
+      var disqus_title = "深入理解Binder机制3-获取服务getService";
+      var disqus_url = 'http://zproo.github.io/2020/深入理解Binder机制3-获取服务getService/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+</html>
