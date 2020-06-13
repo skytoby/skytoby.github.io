@@ -4,8 +4,129 @@
 
     
   <url>
+    <loc>http://zproo.github.io/2020/Android%20JNI%20%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2020-06-13T07:52:36.105Z</lastmod>
+    <data>
+        <display>
+        <title>Android JNI原理分析</title>
+        <pubTime>2020-05-16T13:18:23.000Z</pubTime>
+        
+        <tag>JNI</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/Android%E7%B3%BB%E7%BB%9FSystemServer%E5%90%AF%E5%8A%A8%EF%BC%88%E4%B8%8A%EF%BC%89/</loc>
+    <lastmod>2020-06-12T08:58:13.670Z</lastmod>
+    <data>
+        <display>
+        <title>Android系统SystemServer启动（上）</title>
+        <pubTime>2019-05-16T13:18:23.000Z</pubTime>
+        
+        <tag>systemserver</tag>
+         
+        <tag>zygote</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B65-binder%E9%A9%B1%E5%8A%A8%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2020-05-27T02:36:57.478Z</lastmod>
+    <data>
+        <display>
+        <title>深入理解Binder机制5-binder驱动分析</title>
+        <pubTime>2020-02-26T13:28:28.000Z</pubTime>
+        
+        <tag>Binder机制</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/WMS%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2020-05-22T04:48:24.112Z</lastmod>
+    <data>
+        <display>
+        <title>WMS启动流程分析</title>
+        <pubTime>2019-07-20T13:38:24.000Z</pubTime>
+        
+        <tag>WindowManagerService</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B62-%E6%B3%A8%E5%86%8C%E6%9C%8D%E5%8A%A1addService/</loc>
+    <lastmod>2020-05-11T04:06:38.384Z</lastmod>
+    <data>
+        <display>
+        <title>深入理解Binder机制2-注册服务addService</title>
+        <pubTime>2020-01-10T14:28:28.000Z</pubTime>
+        
+        <tag>Binder机制</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/BroadcastCast%E5%B9%BF%E6%92%AD%E6%9C%BA%E5%88%B6%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2020-05-08T08:20:57.670Z</lastmod>
+    <data>
+        <display>
+        <title>BroadcastCast广播机制原理</title>
+        <pubTime>2019-09-22T13:40:23.000Z</pubTime>
+        
+        <tag>BroadcastCast</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/Android%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2020-05-08T02:03:17.529Z</lastmod>
+    <data>
+        <display>
+        <title>Android进程创建流程分析</title>
+        <pubTime>2019-10-20T13:50:23.000Z</pubTime>
+        
+        <tag>Android进程</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://zproo.github.io/2020/Android10.0%E5%A6%82%E4%BD%95hook%20Activity/</loc>
-    <lastmod>2020-04-06T09:10:31.865Z</lastmod>
+    <lastmod>2020-05-08T01:49:03.247Z</lastmod>
     <data>
         <display>
         <title>Android10.0如何hook Activity</title>
@@ -20,10 +141,94 @@
     </url>
 
     
+  <url>
+    <loc>http://zproo.github.io/2019/Android%20OTA%E5%8D%87%E7%BA%A7%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2020-05-07T08:43:35.532Z</lastmod>
+    <data>
+        <display>
+        <title>Android OTA升级流程分析</title>
+        <pubTime>2019-12-10T14:18:28.000Z</pubTime>
+        
+        <tag>OTA升级</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/installd%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/</loc>
+    <lastmod>2020-05-06T08:01:47.171Z</lastmod>
+    <data>
+        <display>
+        <title>installd守护进程</title>
+        <pubTime>2019-06-02T13:18:23.000Z</pubTime>
+        
+        <tag>installd</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/%E5%BC%80%E6%9C%BA%E5%B9%BF%E6%92%ADBOOT_COMPLETED%E5%8F%91%E9%80%81%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2020-05-06T07:34:06.931Z</lastmod>
+    <data>
+        <display>
+        <title>开机广播BOOT_COMPLETED发送流程分析</title>
+        <pubTime>2019-10-05T13:32:23.000Z</pubTime>
+        
+        <tag>BOOT_COMPLETED</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/AMS%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2020-05-06T07:12:49.150Z</lastmod>
+    <data>
+        <display>
+        <title>AMS启动流程分析</title>
+        <pubTime>2019-08-07T14:18:29.000Z</pubTime>
+        
+        <tag>ActivityManagerService</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B66-%E6%80%BB%E7%BB%93%E7%AF%87/</loc>
+    <lastmod>2020-05-05T06:34:34.164Z</lastmod>
+    <data>
+        <display>
+        <title>深入理解Binder机制6-总结篇</title>
+        <pubTime>2020-03-15T13:28:28.000Z</pubTime>
+        
+        <tag>Binder机制</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
     
   <url>
     <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B64-bindService%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2020-03-24T07:10:02.676Z</lastmod>
+    <lastmod>2020-05-05T02:14:34.154Z</lastmod>
     <data>
         <display>
         <title>深入理解Binder机制4-bindService过程分析</title>
@@ -37,6 +242,7 @@
     </data>
     </url>
 
+    
     
   <url>
     <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B63-%E8%8E%B7%E5%8F%96%E6%9C%8D%E5%8A%A1getService/</loc>
@@ -56,82 +262,14 @@
 
     
   <url>
-    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B66-%E6%80%BB%E7%BB%93%E7%AF%87/</loc>
-    <lastmod>2020-03-22T15:13:59.252Z</lastmod>
-    <data>
-        <display>
-        <title>深入理解Binder机制6-总结篇</title>
-        <pubTime>2020-03-15T13:28:28.000Z</pubTime>
-        
-        <tag>Binder机制</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://zproo.github.io/2019/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B61-AIDL%E5%8E%9F%E7%90%86/</loc>
-    <lastmod>2020-03-22T15:09:19.162Z</lastmod>
+    <lastmod>2020-03-24T06:45:26.997Z</lastmod>
     <data>
         <display>
         <title>深入理解Binder机制1-AIDL原理</title>
         <pubTime>2019-12-25T14:18:28.000Z</pubTime>
         
         <tag>Binder机制</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B65-binder%E9%A9%B1%E5%8A%A8%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2020-03-22T14:38:30.366Z</lastmod>
-    <data>
-        <display>
-        <title>深入理解Binder机制5-binder驱动分析</title>
-        <pubTime>2020-02-26T13:28:28.000Z</pubTime>
-        
-        <tag>Binder机制</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B62-%E6%B3%A8%E5%86%8C%E6%9C%8D%E5%8A%A1addService/</loc>
-    <lastmod>2020-03-22T14:32:08.115Z</lastmod>
-    <data>
-        <display>
-        <title>深入理解Binder机制2-注册服务addService</title>
-        <pubTime>2020-01-10T14:28:28.000Z</pubTime>
-        
-        <tag>Binder机制</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://zproo.github.io/2019/Android%20OTA%E5%8D%87%E7%BA%A7%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2019-12-29T14:15:54.872Z</lastmod>
-    <data>
-        <display>
-        <title>Android OTA升级流程分析</title>
-        <pubTime>2019-12-10T14:18:28.000Z</pubTime>
-        
-        <tag>OTA升级</tag>
          
          
            
@@ -158,40 +296,6 @@
 
     
   <url>
-    <loc>http://zproo.github.io/2019/WMS%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2019-12-29T14:10:13.871Z</lastmod>
-    <data>
-        <display>
-        <title>WMS启动流程分析</title>
-        <pubTime>2019-07-20T13:38:24.000Z</pubTime>
-        
-        <tag>WindowManagerService</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://zproo.github.io/2019/AMS%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2019-12-29T14:09:04.414Z</lastmod>
-    <data>
-        <display>
-        <title>AMS启动流程分析</title>
-        <pubTime>2019-08-07T14:18:29.000Z</pubTime>
-        
-        <tag>ActivityManagerService</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://zproo.github.io/2019/startActivity%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/</loc>
     <lastmod>2019-12-29T14:07:24.298Z</lastmod>
     <data>
@@ -200,23 +304,6 @@
         <pubTime>2019-08-15T14:18:23.000Z</pubTime>
         
         <tag>Activity</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://zproo.github.io/2019/%E5%BC%80%E6%9C%BA%E5%B9%BF%E6%92%ADBOOT_COMPLETED%E5%8F%91%E9%80%81%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2019-12-29T14:06:04.576Z</lastmod>
-    <data>
-        <display>
-        <title>开机广播BOOT_COMPLETED发送流程分析</title>
-        <pubTime>2019-10-05T13:32:23.000Z</pubTime>
-        
-        <tag>BOOT_COMPLETED</tag>
          
          
            
@@ -260,23 +347,6 @@
 
     
   <url>
-    <loc>http://zproo.github.io/2019/Android%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2019-12-28T06:41:00.555Z</lastmod>
-    <data>
-        <display>
-        <title>Android进程创建流程分析</title>
-        <pubTime>2019-10-20T13:50:23.000Z</pubTime>
-        
-        <tag>Android进程</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://zproo.github.io/2019/selinux%E4%BF%AE%E6%94%B9/</loc>
     <lastmod>2019-12-28T06:38:37.150Z</lastmod>
     <data>
@@ -302,23 +372,6 @@
         <pubTime>2019-09-10T13:25:23.000Z</pubTime>
         
         <tag>ContentProvider</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://zproo.github.io/2019/BroadcastCast%E5%B9%BF%E6%92%AD%E6%9C%BA%E5%88%B6%E5%8E%9F%E7%90%86/</loc>
-    <lastmod>2019-12-28T06:26:27.158Z</lastmod>
-    <data>
-        <display>
-        <title>BroadcastCast广播机制原理</title>
-        <pubTime>2019-09-22T13:40:23.000Z</pubTime>
-        
-        <tag>BroadcastCast</tag>
          
          
            
@@ -396,23 +449,6 @@
 
     
   <url>
-    <loc>http://zproo.github.io/2019/installd%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/</loc>
-    <lastmod>2019-08-14T08:57:13.534Z</lastmod>
-    <data>
-        <display>
-        <title>installd守护进程</title>
-        <pubTime>2019-06-02T13:18:23.000Z</pubTime>
-        
-        <tag>installd</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://zproo.github.io/2019/PKMS%E7%9B%B8%E5%85%B3%E7%B1%BB%E5%88%86%E6%9E%90/</loc>
     <lastmod>2019-08-14T08:55:32.795Z</lastmod>
     <data>
@@ -421,25 +457,6 @@
         <pubTime>2019-06-10T13:18:23.000Z</pubTime>
         
         <tag>PackageManagerService</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://zproo.github.io/2019/Android%E7%B3%BB%E7%BB%9FSystemServer%E5%90%AF%E5%8A%A8%EF%BC%88%E4%B8%8A%EF%BC%89/</loc>
-    <lastmod>2019-08-14T08:23:22.443Z</lastmod>
-    <data>
-        <display>
-        <title>Android系统SystemServer启动（上）</title>
-        <pubTime>2019-05-16T13:18:23.000Z</pubTime>
-        
-        <tag>zygote</tag>
-         
-        <tag>systemserver</tag>
          
          
            

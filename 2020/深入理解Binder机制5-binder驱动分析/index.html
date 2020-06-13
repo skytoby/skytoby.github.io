@@ -106,7 +106,7 @@
 <meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制5-binder驱动分析/内存模型.PNG">
 <meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制5-binder驱动分析/binder内存转换.PNG">
 <meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制5-binder驱动分析/bwr.PNG">
-<meta property="og:updated_time" content="2020-03-22T14:38:30.366Z">
+<meta property="og:updated_time" content="2020-05-27T02:36:57.478Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解Binder机制5-binder驱动分析">
 <meta name="twitter:description" content="一、概述Binder驱动是Android专用的，但底层的驱动架构与Linux驱动一样。binder驱动在以misc设备进行注册，作为虚拟字符设备，没有直接操作硬件，只是对设备内存的处理，主要是驱动设备的初始化（binder_init）,打开（binder_open）,映射（binder_mmap）,数据操作（binder_ioctl）。  通过init()，创建/dev/binder设备节点 通过">
@@ -1674,12 +1674,12 @@
         <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Skytoby">
           <p class="site-author-name" itemprop="name">Skytoby</p>
-          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br> 技术领域：Android、AI <br><br>座右铭：想法+行动+坚持</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br>Android、AI<br>座右铭：想法+行动+坚持</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -1689,7 +1689,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">tags</span>
               
             </div>

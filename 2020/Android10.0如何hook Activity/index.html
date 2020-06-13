@@ -100,7 +100,7 @@
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://zproo.github.io/2020/Android10.0如何hook%20Activity/classloader.PNG">
 <meta property="og:image" content="http://zproo.github.io/2020/Android10.0如何hook%20Activity/startActivity.jpg">
-<meta property="og:updated_time" content="2020-04-06T09:10:31.865Z">
+<meta property="og:updated_time" content="2020-05-08T01:49:03.247Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android10.0如何hook Activity">
 <meta name="twitter:description" content="在插件化中，hook Activity作为最基本的技术，用来在宿主app中新增Activity，而通常情况下，Activity必须在Manifest中注册在才可以使用，下面将就Android10.0来分析hook Activity的详细过程。 要hook Activity之前，必须知道Activity的启动过程，才能够选择合适的点进行hook，在前面的文章中有分析Activity详细的启动过程，h">
@@ -407,7 +407,7 @@
 <p>那么要替换intent首先需要hook handleMessage</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">//获取ActivityThread对象</span><br><span class="line">Class&lt;?&gt; clazz = Class.forName(&quot;android.app.ActivityThread&quot;);</span><br><span class="line">Field sCurrentActivityThreadField = clazz.getDeclaredField(&quot;sCurrentActivityThread&quot;);</span><br><span class="line">sCurrentActivityThreadField.setAccessible(true);</span><br><span class="line">Object activityThread = sCurrentActivityThreadField.get(null);</span><br><span class="line"></span><br><span class="line">//获取handler</span><br><span class="line">Field mHField = clazz.getDeclaredField(&quot;mH&quot;);</span><br><span class="line">mHField.setAccessible(true);</span><br><span class="line">Object mH = mHField.get(activityThread);</span><br><span class="line"></span><br><span class="line">//获取callback对象</span><br><span class="line">Field mCallbackField = Handler.class.getDeclaredField(&quot;mCallback&quot;);</span><br><span class="line">mCallbackField.setAccessible(true);</span><br><span class="line">mCallbackField.set(mH, new Handler.Callback() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public boolean handleMessage(Message msg) &#123;</span><br><span class="line">      switch (msg.what)&#123;</span><br><span class="line">          case 159:</span><br><span class="line">              try &#123;</span><br><span class="line">                  //获取List&lt;ClientTransactionItem&gt; mActivityCallbacks对象</span><br><span class="line">                  Class&lt;?&gt; clientTransactionClass = msg.obj.getClass();</span><br><span class="line">                  Field mActivityCallbacksField = clientTransactionClass.getDeclaredField(&quot;mActivityCallbacks&quot;);</span><br><span class="line">                  mActivityCallbacksField.setAccessible(true);</span><br><span class="line">                  List mActivityCallbacks = (List) mActivityCallbacksField.get(msg.obj);</span><br><span class="line">                  for(int i=0;i&lt;mActivityCallbacks.size();i++)&#123;                          if(mActivityCallbacks.get(i).getClass().getName().equals(&quot;android.app.servertransaction.LaunchActivityItem&quot;))&#123;</span><br><span class="line">                          //获取LaunchActivityItem</span><br><span class="line">                          Object launchActivityItem = mActivityCallbacks.get(i);</span><br><span class="line">                          Class&lt;?&gt; launchActivityItemClass = launchActivityItem.getClass();</span><br><span class="line"></span><br><span class="line">                          Field mIntentField = launchActivityItemClass.getDeclaredField(&quot;mIntent&quot;);</span><br><span class="line">                          mIntentField.setAccessible(true);</span><br><span class="line"></span><br><span class="line">                          //代理intent</span><br><span class="line">                          Intent proxyIntent = (Intent) mIntentField.get(launchActivityItem);</span><br><span class="line">                          //插件intent</span><br><span class="line">                          Intent intent = proxyIntent.getParcelableExtra(&quot;target&quot;);</span><br><span class="line">                          //插件intent替换代理intent</span><br><span class="line">                          proxyIntent.setComponent(intent.getComponent());</span><br><span class="line"></span><br><span class="line">                      &#125;</span><br><span class="line"></span><br><span class="line">                  &#125;</span><br></pre></td></tr></table></figure>
 <p>hook了handleMessage后，通过LaunchActivityItem中的mIntent完成代理intent的替换。</p>
-<h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><p>hook Activity涉及的技术比较多，Activity的启动流程，类加载，动态加载，资源加载，反射，binder机制等，只有在掌握了这些技术的基础上才能够完成插件化技术的开发。</p>
+<h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><p>hook Activity涉及的技术比较多，Activity的启动流程，类加载，动态代理，资源加载，反射，binder机制等，只有在掌握了这些技术的基础上才能够完成插件化技术的开发。</p>
 <p>本文介绍了hook Activity的具体实现方法，通过该方法引申出类的加载和资源加载的原理，并分析具体插件的加载实现，后面结合之前文章分析的<a href="https://skytoby.github.io/2019/startActivity%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" target="_blank" rel="noopener">startActivity的启动流程</a>，引出了两个具体的hook点：</p>
 <p>1.在ActivityManager.getService().startActivity时通过反射获取IActivityManager对象，startActivity时将插件的Activity替换成代理的Activity；</p>
 <p>2.反射获取ActivityThread对象，通过获取类成员变量mH，重新设置callback，将handleMessage中的EXECUTE_TRANSACTION分支进行hook，在mActivityCallbacks中找到LaunchActivityItem，将其类成员变量mIntent替换成插件的Activity，这样就完成的插件Activity的启动过程。</p>
@@ -450,6 +450,10 @@
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/Android JNI 原理分析/" rel="prev" title="Android JNI原理分析">
+                Android JNI原理分析 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -515,12 +519,12 @@
         <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Skytoby">
           <p class="site-author-name" itemprop="name">Skytoby</p>
-          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br> 技术领域：Android、AI <br><br>座右铭：想法+行动+坚持</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br>Android、AI<br>座右铭：想法+行动+坚持</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -530,7 +534,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">tags</span>
               
             </div>

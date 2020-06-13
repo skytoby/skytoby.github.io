@@ -99,7 +99,7 @@
 <meta property="og:description" content="基于Android10.0，分析BOOT_COMPLETED的发送流程  一、概述开机广播在很多应用中都会用到，用来启动应用程序，下面将介绍开机广播的广播过程。这个过程比较复杂，需要和AcitvityManagerService、WindowManagerService、PackageManagerService等交互，其具体的时序图如下。  二、开机广播启动过程在AMS启动那篇文章中已经讲到桌">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://zproo.github.io/2019/开机广播BOOT_COMPLETED发送流程分析/bootcompleted.jpg">
-<meta property="og:updated_time" content="2019-12-29T14:06:04.576Z">
+<meta property="og:updated_time" content="2020-05-06T07:34:06.931Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="开机广播BOOT_COMPLETED发送流程分析">
 <meta name="twitter:description" content="基于Android10.0，分析BOOT_COMPLETED的发送流程  一、概述开机广播在很多应用中都会用到，用来启动应用程序，下面将介绍开机广播的广播过程。这个过程比较复杂，需要和AcitvityManagerService、WindowManagerService、PackageManagerService等交互，其具体的时序图如下。  二、开机广播启动过程在AMS启动那篇文章中已经讲到桌">
@@ -382,7 +382,7 @@
 <ul>
 <li><p>这里主要的工作是停止开机动画，通知SurfaceFlinger开机结束等。在停止开机动画前会有很多的判断，如果现有的window（桌面，状态栏，keyguard，壁纸等）都已经绘制完成包括，才会停止动画。</p>
 </li>
-<li><p>停止动画是执行了SystemProperties.set(“service.bootanim.exit”, “1”)；在system/bin/bootanimation一般会在显示的时候循环查询这个prop的值，如果变成了1则推出。</p>
+<li><p>停止动画是执行了SystemProperties.set(“service.bootanim.exit”, “1”)；在system/bin/bootanimation一般会在显示的时候循环查询这个prop的值，如果变成了1则退出。</p>
 </li>
 </ul>
 <h4 id="1-10-1-PWM-canDismissBootAnimation"><a href="#1-10-1-PWM-canDismissBootAnimation" class="headerlink" title="1.10.1 PWM.canDismissBootAnimation"></a>1.10.1 PWM.canDismissBootAnimation</h4><p>[-&gt;PhoneWindowManager.java]</p>
@@ -540,12 +540,12 @@
         <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Skytoby">
           <p class="site-author-name" itemprop="name">Skytoby</p>
-          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br> 技术领域：Android、AI <br><br>座右铭：想法+行动+坚持</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br>Android、AI<br>座右铭：想法+行动+坚持</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -555,7 +555,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">tags</span>
               
             </div>

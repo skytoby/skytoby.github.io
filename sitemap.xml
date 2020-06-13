@@ -2,9 +2,100 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://zproo.github.io/2020/Android%20JNI%20%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/</loc>
+    
+    <lastmod>2020-06-13T07:52:36.105Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2019/Android%E7%B3%BB%E7%BB%9FSystemServer%E5%90%AF%E5%8A%A8%EF%BC%88%E4%B8%8A%EF%BC%89/</loc>
+    
+    <lastmod>2020-06-12T08:58:13.670Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B65-binder%E9%A9%B1%E5%8A%A8%E5%88%86%E6%9E%90/</loc>
+    
+    <lastmod>2020-05-27T02:36:57.478Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2019/WMS%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    
+    <lastmod>2020-05-22T04:48:24.112Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B62-%E6%B3%A8%E5%86%8C%E6%9C%8D%E5%8A%A1addService/</loc>
+    
+    <lastmod>2020-05-11T04:06:38.384Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2019/BroadcastCast%E5%B9%BF%E6%92%AD%E6%9C%BA%E5%88%B6%E5%8E%9F%E7%90%86/</loc>
+    
+    <lastmod>2020-05-08T08:20:57.670Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2019/Android%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    
+    <lastmod>2020-05-08T02:03:17.529Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://zproo.github.io/2020/Android10.0%E5%A6%82%E4%BD%95hook%20Activity/</loc>
     
-    <lastmod>2020-04-06T09:10:31.865Z</lastmod>
+    <lastmod>2020-05-08T01:49:03.247Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2019/Android%20OTA%E5%8D%87%E7%BA%A7%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    
+    <lastmod>2020-05-07T08:43:35.532Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2019/installd%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/</loc>
+    
+    <lastmod>2020-05-06T08:01:47.171Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2019/%E5%BC%80%E6%9C%BA%E5%B9%BF%E6%92%ADBOOT_COMPLETED%E5%8F%91%E9%80%81%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    
+    <lastmod>2020-05-06T07:34:06.931Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2019/AMS%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    
+    <lastmod>2020-05-06T07:12:49.150Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B66-%E6%80%BB%E7%BB%93%E7%AF%87/</loc>
+    
+    <lastmod>2020-05-05T06:34:34.164Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B64-bindService%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    
+    <lastmod>2020-05-05T02:14:34.154Z</lastmod>
     
   </url>
   
@@ -16,13 +107,6 @@
   </url>
   
   <url>
-    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B64-bindService%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    
-    <lastmod>2020-03-24T07:10:02.676Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B63-%E8%8E%B7%E5%8F%96%E6%9C%8D%E5%8A%A1getService/</loc>
     
     <lastmod>2020-03-24T07:02:46.274Z</lastmod>
@@ -30,37 +114,9 @@
   </url>
   
   <url>
-    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B66-%E6%80%BB%E7%BB%93%E7%AF%87/</loc>
-    
-    <lastmod>2020-03-22T15:13:59.252Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://zproo.github.io/2019/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B61-AIDL%E5%8E%9F%E7%90%86/</loc>
     
-    <lastmod>2020-03-22T15:09:19.162Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B65-binder%E9%A9%B1%E5%8A%A8%E5%88%86%E6%9E%90/</loc>
-    
-    <lastmod>2020-03-22T14:38:30.366Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B62-%E6%B3%A8%E5%86%8C%E6%9C%8D%E5%8A%A1addService/</loc>
-    
-    <lastmod>2020-03-22T14:32:08.115Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zproo.github.io/2019/Android%20OTA%E5%8D%87%E7%BA%A7%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    
-    <lastmod>2019-12-29T14:15:54.872Z</lastmod>
+    <lastmod>2020-03-24T06:45:26.997Z</lastmod>
     
   </url>
   
@@ -72,30 +128,9 @@
   </url>
   
   <url>
-    <loc>http://zproo.github.io/2019/WMS%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    
-    <lastmod>2019-12-29T14:10:13.871Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zproo.github.io/2019/AMS%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    
-    <lastmod>2019-12-29T14:09:04.414Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://zproo.github.io/2019/startActivity%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/</loc>
     
     <lastmod>2019-12-29T14:07:24.298Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zproo.github.io/2019/%E5%BC%80%E6%9C%BA%E5%B9%BF%E6%92%ADBOOT_COMPLETED%E5%8F%91%E9%80%81%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    
-    <lastmod>2019-12-29T14:06:04.576Z</lastmod>
     
   </url>
   
@@ -114,13 +149,6 @@
   </url>
   
   <url>
-    <loc>http://zproo.github.io/2019/Android%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    
-    <lastmod>2019-12-28T06:41:00.555Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://zproo.github.io/2019/selinux%E4%BF%AE%E6%94%B9/</loc>
     
     <lastmod>2019-12-28T06:38:37.150Z</lastmod>
@@ -131,13 +159,6 @@
     <loc>http://zproo.github.io/2019/ContentProvider%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/</loc>
     
     <lastmod>2019-12-28T06:30:13.606Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zproo.github.io/2019/BroadcastCast%E5%B9%BF%E6%92%AD%E6%9C%BA%E5%88%B6%E5%8E%9F%E7%90%86/</loc>
-    
-    <lastmod>2019-12-28T06:26:27.158Z</lastmod>
     
   </url>
   
@@ -170,23 +191,9 @@
   </url>
   
   <url>
-    <loc>http://zproo.github.io/2019/installd%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B/</loc>
-    
-    <lastmod>2019-08-14T08:57:13.534Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://zproo.github.io/2019/PKMS%E7%9B%B8%E5%85%B3%E7%B1%BB%E5%88%86%E6%9E%90/</loc>
     
     <lastmod>2019-08-14T08:55:32.795Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zproo.github.io/2019/Android%E7%B3%BB%E7%BB%9FSystemServer%E5%90%AF%E5%8A%A8%EF%BC%88%E4%B8%8A%EF%BC%89/</loc>
-    
-    <lastmod>2019-08-14T08:23:22.443Z</lastmod>
     
   </url>
   
@@ -226,14 +233,14 @@
   </url>
   
   <url>
-    <loc>http://zproo.github.io/project/stylesheets/style.css</loc>
+    <loc>http://zproo.github.io/project/canvas-ribbon/index.html</loc>
     
     <lastmod>2019-07-22T08:54:01.986Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://zproo.github.io/project/canvas-ribbon/index.html</loc>
+    <loc>http://zproo.github.io/project/stylesheets/style.css</loc>
     
     <lastmod>2019-07-22T08:54:01.986Z</lastmod>
     

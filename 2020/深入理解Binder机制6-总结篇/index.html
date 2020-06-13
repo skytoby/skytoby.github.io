@@ -106,7 +106,7 @@
 <meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制6-总结篇/binder_proc_relation.png">
 <meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制6-总结篇/binder_transaction.png">
 <meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制6-总结篇/Ibinder_classes.jpg">
-<meta property="og:updated_time" content="2020-03-22T15:13:59.252Z">
+<meta property="og:updated_time" content="2020-05-05T06:34:34.164Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解Binder机制6-总结篇">
 <meta name="twitter:description" content="深入理解Binder机制系列如下： 深入理解Binder机制1-AIDL原理深入理解Binder机制2-注册服务addService深入理解Binder机制3-获取服务getService深入理解Binder机制4-bindService过程分析深入理解Binder机制5-binder驱动分析深入理解Binder机制6-总结篇 1.Binder架构下面将从不同的角度对binder进行描述：  从I">
@@ -358,7 +358,7 @@
 <p>2.waitForResponse收到BR_TRANSACTION_COMPLETE，则直接退出循环，不会执行executeCommand方法，除上述五种BR_XXX命令，当收到其他BR命令，则会执行executeCommand方法。</p>
 <p>3.目标Binder线程创建之后，便进入joinThreadPool方法，不断循环执行getAndExecuteCommand方法，当bwr的读写buffer没有数据时，则阻塞在binder_thread_read的wait_event过程。正常情况下binder线程一旦创建就不会退出。</p>
 <p><img src="/2020/深入理解Binder机制6-总结篇/bindservice_cm_frame.PNG" alt="bindservice_cm_frame" style="zoom:80%;"></p>
-<h3 id="4-Binder进程与线程"><a href="#4-Binder进程与线程" class="headerlink" title="4.Binder进程与线程"></a>4.Binder进程与线程</h3><p>对于底层Binder驱动，通过binder_procs链表记录所有创建的binder_proc结构体，binder驱动层的每一个binder_proc结构体都与用户空间的一个用于binder通信的进程一一对应，且每个进程有且只有一个ProcessState对象，这是通过单例模式来保证的。每个进程中可以有很多线程，每个线程对应一个IPCThreadState对象，IPCThreadState对象也是单例模式即一个线程对应一个IPCThreadState对象。在BInder驱动层也有与之相对应的结构，那就是binder_thread结构体，在binder_proc结构体中通过成员变量rb_root threads，来记录当前进程内所有的binder_thread。</p>
+<h3 id="4-Binder进程与线程"><a href="#4-Binder进程与线程" class="headerlink" title="4.Binder进程与线程"></a>4.Binder进程与线程</h3><p>对于底层Binder驱动，通过binder_procs链表记录所有创建的binder_proc结构体，binder驱动层的每一个binder_proc结构体都与用户空间的一个用于binder通信的进程一一对应，且每个进程有且只有一个ProcessState对象，这是通过单例模式来保证的。每个进程中可以有很多线程，每个线程对应一个IPCThreadState对象，IPCThreadState对象也是单例模式即一个线程对应一个IPCThreadState对象。在Binder驱动层也有与之相对应的结构，那就是binder_thread结构体，在binder_proc结构体中通过成员变量rb_root threads，来记录当前进程内所有的binder_thread。</p>
 <p><img src="/2020/深入理解Binder机制6-总结篇/binder_proc_relation.png" alt="binder_proc_relation" style="zoom: 50%;"></p>
 <p>Binder线程池：每个Server进程在启动时会创建一个binder线程池，并向其中注册一个Binder线程，之后Server进程也可以向binder线程池注册新的线程，或者binder驱动在检测到没有空闲binder线程时主动向Server进程注册新的binder线程。对于一个Server进程有一个最大的线程数限制，默认是16个binder线程，例如：Android的system_server进程就有16个线程。对于所有Client端进程的binder请求都是交给Server端进程的binder线程进行处理的。</p>
 <h3 id="5-Binder传输过程"><a href="#5-Binder传输过程" class="headerlink" title="5.Binder传输过程"></a>5.Binder传输过程</h3><p>Binder IPC机制是指在进程间传输数据（binder_transaction_data）,一次数据的传输称为事务（binder_transaction）。对于多个不同进程向同一个进程发送事务时，这个同一个进程或线程的事务需要串行执行，在Binder驱动中为binder_proc和binder_thread的todo队列。</p>
@@ -488,12 +488,12 @@
         <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Skytoby">
           <p class="site-author-name" itemprop="name">Skytoby</p>
-          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br> 技术领域：Android、AI <br><br>座右铭：想法+行动+坚持</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br>Android、AI<br>座右铭：想法+行动+坚持</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -503,7 +503,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">tags</span>
               
             </div>

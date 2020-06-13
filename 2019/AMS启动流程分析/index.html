@@ -99,7 +99,7 @@
 <meta property="og:description" content="基于Android10.0，分析AMS的启动过程  一、概述ActivityManagerService(简称AMS),是Android系统中核心服务之一，负责管理四大组件和应用进程的工作，如四大组件的启动、切换、调度，应用进程的调度等。AMS类图如下：  ActivityManager通过ActivityManagerNative的getDefault方法得到IActivityManager，">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://zproo.github.io/2019/AMS启动流程分析/AMS.jpg">
-<meta property="og:updated_time" content="2019-12-29T14:09:04.414Z">
+<meta property="og:updated_time" content="2020-05-06T07:12:49.150Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AMS启动流程分析">
 <meta name="twitter:description" content="基于Android10.0，分析AMS的启动过程  一、概述ActivityManagerService(简称AMS),是Android系统中核心服务之一，负责管理四大组件和应用进程的工作，如四大组件的启动、切换、调度，应用进程的调度等。AMS类图如下：  ActivityManager通过ActivityManagerNative的getDefault方法得到IActivityManager，">
@@ -380,7 +380,7 @@
 <h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><p>1.创建了AMS实例对象，创建了名为ActivityManager、Android.ui、ProcStart、SKill、CpuTracker的线程，创建Context、ActivityThread对象。</p>
 <p>2.setSystemProcess主要注册meminfo、gfxinfo、dbinfo 、cpuinfo等服务到ServiceManager，并且更新adj。</p>
 <p>3.installSystemProviders加载SystemProviders</p>
-<p>4.ASM的systemReady主要是执行相关服务的systemReady，启动sytemui服务，webview,HomeAcitvity</p>
+<p>4.AMS的systemReady主要是执行相关服务的systemReady，启动sytemui服务，webview,HomeAcitvity</p>
 <h3 id="4-1-注册Binder服务"><a href="#4-1-注册Binder服务" class="headerlink" title="4.1 注册Binder服务"></a>4.1 注册Binder服务</h3><p>AMS.setSystemProcess过程中向ServiceManager注册了如下Binder服务</p>
 <table>
 <thead>
@@ -559,12 +559,12 @@
         <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Skytoby">
           <p class="site-author-name" itemprop="name">Skytoby</p>
-          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br> 技术领域：Android、AI <br><br>座右铭：想法+行动+坚持</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br>Android、AI<br>座右铭：想法+行动+坚持</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -574,7 +574,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">tags</span>
               
             </div>

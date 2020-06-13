@@ -99,8 +99,8 @@
 <meta property="og:description" content="基于Android10.0，分析进程的创建过程  一、概述每个app在启动前都必须创建一个进程，这个进程是由zygote fork而来，进程具有独立的资源空间，用于app上运行的各种Activity、Service等组件。大多数情况下一个应用运行在一个进程中，除非在AndroidManifest.xml中配置Android:process属性，或者通过Native代码fork进程。相对于线程，线">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://zproo.github.io/2019/Android进程创建流程分析/process_create.jpg">
-<meta property="og:image" content="http://zproo.github.io/2019/Android进程创建流程分析/学习笔记/AMS/zygote.PNG">
-<meta property="og:updated_time" content="2019-12-28T06:41:00.555Z">
+<meta property="og:image" content="http://zproo.github.io/2019/Android进程创建流程分析/zygote.PNG">
+<meta property="og:updated_time" content="2020-05-08T02:03:17.529Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android进程创建流程分析">
 <meta name="twitter:description" content="基于Android10.0，分析进程的创建过程  一、概述每个app在启动前都必须创建一个进程，这个进程是由zygote fork而来，进程具有独立的资源空间，用于app上运行的各种Activity、Service等组件。大多数情况下一个应用运行在一个进程中，除非在AndroidManifest.xml中配置Android:process属性，或者通过Native代码fork进程。相对于线程，线">
@@ -369,7 +369,7 @@
 <p>这里主要是处理客户端返回过来的参数，并调用forkAndSpecialize方法创建进程，返回pid</p>
 <h3 id="7-Zygote-forkAndSpecialize"><a href="#7-Zygote-forkAndSpecialize" class="headerlink" title="7.Zygote.forkAndSpecialize"></a>7.Zygote.forkAndSpecialize</h3><p>[-&gt;Zygote.java]</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * @return 0 if this is the child, pid of the child</span><br><span class="line">  * if this is the parent, or -1 on error.</span><br><span class="line"> */</span><br><span class="line">public static int forkAndSpecialize(int uid, int gid, int[] gids, int runtimeFlags,</span><br><span class="line">            int[][] rlimits, int mountExternal, String seInfo, String niceName, int[] fdsToClose,</span><br><span class="line">            int[] fdsToIgnore, boolean startChildZygote, String instructionSet, String appDataDir,</span><br><span class="line">            int targetSdkVersion) &#123;</span><br><span class="line">        //见小节8</span><br><span class="line">        ZygoteHooks.preFork();</span><br><span class="line">        // Resets nice priority for zygote process.</span><br><span class="line">        resetNicePriority();</span><br><span class="line">        //见小节9</span><br><span class="line">        int pid = nativeForkAndSpecialize(</span><br><span class="line">                uid, gid, gids, runtimeFlags, rlimits, mountExternal, seInfo, niceName, fdsToClose,</span><br><span class="line">                fdsToIgnore, startChildZygote, instructionSet, appDataDir);</span><br><span class="line">        // Enable tracing as soon as possible for the child process.</span><br><span class="line">        if (pid == 0) &#123;</span><br><span class="line">            Zygote.disableExecuteOnly(targetSdkVersion);</span><br><span class="line">            Trace.setTracingEnabled(true, runtimeFlags);</span><br><span class="line"></span><br><span class="line">            // Note that this event ends at the end of handleChildProc,</span><br><span class="line">            Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;PostFork&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">       //见小节12</span><br><span class="line">        ZygoteHooks.postForkCommon();</span><br><span class="line">        return pid;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/2019/Android进程创建流程分析/学习笔记/AMS/zygote.PNG" alt=""></p>
+<p><img src="/2019/Android进程创建流程分析/zygote.PNG" alt=""></p>
 <p>Zygote进程有4个子线程分别为ReferenceQueueD、FinalizerDaemon、FinalizerWatchd、HeapTaskDaemon，图中的线程名显示并不完整，是由于底层的进程结构体task_struct是由长度16的char型数组保存。</p>
 <h3 id="8-ZygoteHooks-preFork"><a href="#8-ZygoteHooks-preFork" class="headerlink" title="8. ZygoteHooks.preFork"></a>8. ZygoteHooks.preFork</h3><p>[-&gt;ZygoteHooks.java]</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public void preFork() &#123;</span><br><span class="line">       Daemons.stop();  //停止4个Daemons子进程</span><br><span class="line">       waitUntilAllThreadsStopped(); //等待所有子线程结束</span><br><span class="line">       token = nativePreFork(); //完成gc堆得初始化</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
@@ -575,12 +575,12 @@
         <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Skytoby">
           <p class="site-author-name" itemprop="name">Skytoby</p>
-          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br> 技术领域：Android、AI <br><br>座右铭：想法+行动+坚持</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br>Android、AI<br>座右铭：想法+行动+坚持</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -590,7 +590,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">tags</span>
               
             </div>
