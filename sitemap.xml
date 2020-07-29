@@ -2,9 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://zproo.github.io/2020/Android%E5%88%B7%E6%96%B0%E6%9C%BA%E5%88%B6-View%E7%BB%98%E5%88%B6%E5%8E%9F%E7%90%86/</loc>
+    
+    <lastmod>2020-07-29T08:41:52.534Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2020/Android%E5%88%B7%E6%96%B0%E6%9C%BA%E5%88%B6-Choreographer%E5%8E%9F%E7%90%86/</loc>
+    
+    <lastmod>2020-07-29T08:36:40.282Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2020/Android%E5%88%B7%E6%96%B0%E6%9C%BA%E5%88%B6-SurfaceFlinger%E5%8E%9F%E7%90%86/</loc>
+    
+    <lastmod>2020-07-29T08:31:49.287Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://zproo.github.io/2020/Android%20JNI%20%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/</loc>
     
-    <lastmod>2020-06-13T07:52:36.105Z</lastmod>
+    <lastmod>2020-07-29T08:28:03.638Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B66-%E6%80%BB%E7%BB%93%E7%AF%87/</loc>
+    
+    <lastmod>2020-07-23T10:10:17.312Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2019/PackageManagerService%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    
+    <lastmod>2020-06-29T09:14:57.866Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B64-bindService%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    
+    <lastmod>2020-06-25T09:29:55.008Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B65-binder%E9%A9%B1%E5%8A%A8%E5%88%86%E6%9E%90/</loc>
+    
+    <lastmod>2020-06-25T09:28:36.870Z</lastmod>
     
   </url>
   
@@ -12,13 +61,6 @@
     <loc>http://zproo.github.io/2019/Android%E7%B3%BB%E7%BB%9FSystemServer%E5%90%AF%E5%8A%A8%EF%BC%88%E4%B8%8A%EF%BC%89/</loc>
     
     <lastmod>2020-06-12T08:58:13.670Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B65-binder%E9%A9%B1%E5%8A%A8%E5%88%86%E6%9E%90/</loc>
-    
-    <lastmod>2020-05-27T02:36:57.478Z</lastmod>
     
   </url>
   
@@ -86,20 +128,6 @@
   </url>
   
   <url>
-    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B66-%E6%80%BB%E7%BB%93%E7%AF%87/</loc>
-    
-    <lastmod>2020-05-05T06:34:34.164Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B64-bindService%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    
-    <lastmod>2020-05-05T02:14:34.154Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://zproo.github.io/about/index.html</loc>
     
     <lastmod>2020-03-24T07:13:12.812Z</lastmod>
@@ -117,13 +145,6 @@
     <loc>http://zproo.github.io/2019/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B61-AIDL%E5%8E%9F%E7%90%86/</loc>
     
     <lastmod>2020-03-24T06:45:26.997Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://zproo.github.io/2019/PackageManagerService%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    
-    <lastmod>2019-12-29T14:12:12.747Z</lastmod>
     
   </url>
   

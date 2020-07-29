@@ -100,13 +100,13 @@
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制5-binder驱动分析/systemcall.PNG">
 <meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制5-binder驱动分析/binderdriver_frame.PNG">
-<meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制5-binder驱动分析/bindermodel.PNG">
+<meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制5-binder驱动分析/bindermodel.png">
 <meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制5-binder驱动分析/binder_procol1.PNG">
 <meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制5-binder驱动分析/binder_procol2.PNG">
 <meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制5-binder驱动分析/内存模型.PNG">
 <meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制5-binder驱动分析/binder内存转换.PNG">
 <meta property="og:image" content="http://zproo.github.io/2020/深入理解Binder机制5-binder驱动分析/bwr.PNG">
-<meta property="og:updated_time" content="2020-05-27T02:36:57.478Z">
+<meta property="og:updated_time" content="2020-06-25T09:28:36.870Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解Binder机制5-binder驱动分析">
 <meta name="twitter:description" content="一、概述Binder驱动是Android专用的，但底层的驱动架构与Linux驱动一样。binder驱动在以misc设备进行注册，作为虚拟字符设备，没有直接操作硬件，只是对设备内存的处理，主要是驱动设备的初始化（binder_init）,打开（binder_open）,映射（binder_mmap）,数据操作（binder_ioctl）。  通过init()，创建/dev/binder设备节点 通过">
@@ -373,8 +373,8 @@
 <p>binder_mmap：申请内核空间，将用户空间和内核空间映射到同一块物理内存；</p>
 <p>binder_ioctl：执行相应的ioctl操作，主要进行读写操作。</p>
 <p>下面看下binder通信的具体协议。</p>
-<h2 id="三、Binder通信协议"><a href="#三、Binder通信协议" class="headerlink" title="三、Binder通信协议"></a>三、Binder通信协议</h2><h3 id="3-1-通信模型"><a href="#3-1-通信模型" class="headerlink" title="3.1 通信模型"></a>3.1 通信模型</h3><p>一次完整的Binder通信过程如下：</p>
-<p><img src="/2020/深入理解Binder机制5-binder驱动分析/bindermodel.PNG" alt="bindermodel" style="zoom:80%;"></p>
+<h2 id="三、Binder通信协议"><a href="#三、Binder通信协议" class="headerlink" title="三、Binder通信协议"></a>三、Binder通信协议</h2><h3 id="3-1-通信模型"><a href="#3-1-通信模型" class="headerlink" title="3.1 通信模型"></a>3.1 通信模型</h3><p>一次完整的Binder通信过程如下(非oneway)：</p>
+<p><img src="/2020/深入理解Binder机制5-binder驱动分析/bindermodel.png" alt="bindermodel" style="zoom:80%;"></p>
 <p>Binder协议包含在IPC数据中，分为两类：</p>
 <p>1.BINDER_COMMAND_PROTOCOL:binder请求码，以BC_开头，简称BC码，用于从IPC层传递到Binder Driver层;</p>
 <p>2.BINDER_RETURN_PROTOCOL:binder响应码，以BR_开头，简称BR码，用于从Binder Driver层传递到IPC层。</p>
@@ -1679,7 +1679,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -1689,7 +1689,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">tags</span>
               
             </div>

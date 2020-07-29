@@ -100,7 +100,7 @@
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://zproo.github.io/2019/PackageManagerService启动流程分析/pkms.jpg">
 <meta property="og:image" content="http://zproo.github.io/2019/PackageManagerService启动流程分析/scanDir.png">
-<meta property="og:updated_time" content="2019-12-29T14:12:12.747Z">
+<meta property="og:updated_time" content="2020-06-29T09:14:57.866Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PackageManagerService启动流程分析">
 <meta name="twitter:description" content="基于Android10.0，分析PackageManagerService启动  一、PakageManagerService概述1.1  作用PakageManagerService(简称PKMS)，是Android核心服务之一，管理着所有package相关的工作。 如：安装、卸载应用 ​       查询、增加、删除permission相关信息 ​       查询Application相关">
@@ -451,7 +451,8 @@
 <h3 id="3-5-waitForAppDataPrepared"><a href="#3-5-waitForAppDataPrepared" class="headerlink" title="3.5  waitForAppDataPrepared"></a>3.5  waitForAppDataPrepared</h3><p>该方法主要是等待mPrepareAppDataFuture多线程的任务都处理完成。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public void waitForAppDataPrepared() &#123;</span><br><span class="line">       if (mPrepareAppDataFuture == null) &#123;</span><br><span class="line">           return;</span><br><span class="line">       &#125;</span><br><span class="line">       ConcurrentUtils.waitForFutureNoInterrupt(mPrepareAppDataFuture, &quot;wait for prepareAppData&quot;);</span><br><span class="line">       mPrepareAppDataFuture = null;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">  /**</span><br><span class="line">    * Waits if necessary for the computation to complete, and then retrieves its result.</span><br><span class="line">    * &lt;p&gt;If &#123;@code InterruptedException&#125; occurs, this method will interrupt the current thread</span><br><span class="line">    * and throw &#123;@code IllegalStateException&#125;&lt;/p&gt;</span><br><span class="line">    *</span><br><span class="line">    * @param future future to wait for result</span><br><span class="line">    * @param description short description of the operation</span><br><span class="line">    * @return the computed result</span><br><span class="line">    * @throws IllegalStateException if interrupted during wait</span><br><span class="line">    * @throws RuntimeException if an error occurs while waiting for &#123;@link Future#get()&#125;</span><br><span class="line">    * @see Future#get()</span><br><span class="line">    */</span><br><span class="line">   public static &lt;T&gt; T waitForFutureNoInterrupt(Future&lt;T&gt; future, String description) &#123;</span><br><span class="line">       try &#123;</span><br><span class="line">           return future.get();</span><br><span class="line">       &#125; catch (InterruptedException e) &#123;</span><br><span class="line">           Thread.currentThread().interrupt();</span><br><span class="line">           throw new IllegalStateException(description + &quot; interrupted&quot;);</span><br><span class="line">       &#125; catch (ExecutionException e) &#123;</span><br><span class="line">           throw new RuntimeException(description + &quot; failed&quot;, e);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 <h2 id="四、PKMS总结"><a href="#四、PKMS总结" class="headerlink" title="四、PKMS总结"></a>四、PKMS总结</h2><p>主要介绍了PKMS从SystemServer开始启动的相关流程，并详细介绍了流程相关的重要方法。PKMS初始化按照其代码的日志区分可以分为五个阶段，但从其功能上来说，可以分为三个阶段：</p>
-<p>第一阶段：主要是扫描解析XML文件，并将其中的信息保存到特定的数据结构中，为下一阶段工作提供重要的参考信息；第二阶段：扫描各个目录下的APK，可以看到手机上apk，扫描的工作量就越大，系统启动速度也就越慢；                            第三阶段：主要是更新相关信息并启动PackageInstallerService服务。</p>
+<p>第一阶段：主要是扫描解析XML文件，并将其中的信息保存到特定的数据结构中，为下一阶段工作提供重要的参考信息；</p>
+<p>第二阶段：扫描各个目录下的APK，可以看到手机上apk，扫描的工作量就越大，系统启动速度也就越慢；                            第三阶段：主要是更新相关信息并启动PackageInstallerService服务。</p>
 <p>PKMS构造函数工作任务非常繁重，特别是在扫描apk的时候。如果需要优化该流程以加快启动速度，则这个是一个好的方向。如延时扫描不重要的apk，或者保存Package信息到文件，然后启动时从文件中恢复这些信息以减少APK文件读取并解析xml的工作量。但是一直没有比较满意的方案，原因很多，比如apk之间有着比较多微妙的关系，因此到底延时扫描哪些apk，尚不能确定。还有一种方案是，PKMS可以启动多个线程扫描不同的目录，在android10.0中可以看到在扫描的时候已经启动多线程来扫描。对于PKMS的优化，Google基本上能想到基本上已经优化了，我们也可以思考。</p>
 <h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>对于这些流程中有一些操作并没有详细的描述，由于篇幅有限将单独介绍。</p>
 <p><a href="https://skytoby.github.io/2019/PKMS%E7%9B%B8%E5%85%B3%E7%B1%BB%E5%88%86%E6%9E%90/" target="_blank" rel="noopener">PKMS相关类分析</a></p>
@@ -732,7 +733,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -742,7 +743,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">tags</span>
               
             </div>

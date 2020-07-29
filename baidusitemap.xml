@@ -4,14 +4,133 @@
 
     
   <url>
+    <loc>http://zproo.github.io/2020/Android%E5%88%B7%E6%96%B0%E6%9C%BA%E5%88%B6-View%E7%BB%98%E5%88%B6%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2020-07-29T08:41:52.534Z</lastmod>
+    <data>
+        <display>
+        <title>Android刷新机制-View绘制原理</title>
+        <pubTime>2020-06-10T12:10:23.000Z</pubTime>
+        
+        <tag>View</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2020/Android%E5%88%B7%E6%96%B0%E6%9C%BA%E5%88%B6-Choreographer%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2020-07-29T08:36:40.282Z</lastmod>
+    <data>
+        <display>
+        <title>Android刷新机制-Choreographer原理</title>
+        <pubTime>2020-06-30T13:10:56.000Z</pubTime>
+        
+        <tag>Choreographer</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2020/Android%E5%88%B7%E6%96%B0%E6%9C%BA%E5%88%B6-SurfaceFlinger%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2020-07-29T08:31:49.287Z</lastmod>
+    <data>
+        <display>
+        <title>Android刷新机制-SurfaceFlinger原理</title>
+        <pubTime>2020-07-15T12:24:11.000Z</pubTime>
+        
+        <tag>SurfaceFlinger</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://zproo.github.io/2020/Android%20JNI%20%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2020-06-13T07:52:36.105Z</lastmod>
+    <lastmod>2020-07-29T08:28:03.638Z</lastmod>
     <data>
         <display>
         <title>Android JNI原理分析</title>
         <pubTime>2020-05-16T13:18:23.000Z</pubTime>
         
         <tag>JNI</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B66-%E6%80%BB%E7%BB%93%E7%AF%87/</loc>
+    <lastmod>2020-07-23T10:10:17.312Z</lastmod>
+    <data>
+        <display>
+        <title>深入理解Binder机制6-总结篇</title>
+        <pubTime>2020-03-15T13:28:28.000Z</pubTime>
+        
+        <tag>Binder机制</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2019/PackageManagerService%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2020-06-29T09:14:57.866Z</lastmod>
+    <data>
+        <display>
+        <title>PackageManagerService启动流程分析</title>
+        <pubTime>2019-06-30T13:18:23.000Z</pubTime>
+        
+        <tag>PackageManagerService</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B64-bindService%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2020-06-25T09:29:55.008Z</lastmod>
+    <data>
+        <display>
+        <title>深入理解Binder机制4-bindService过程分析</title>
+        <pubTime>2020-02-10T13:28:28.000Z</pubTime>
+        
+        <tag>Binder机制</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B65-binder%E9%A9%B1%E5%8A%A8%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2020-06-25T09:28:36.870Z</lastmod>
+    <data>
+        <display>
+        <title>深入理解Binder机制5-binder驱动分析</title>
+        <pubTime>2020-02-26T13:28:28.000Z</pubTime>
+        
+        <tag>Binder机制</tag>
          
          
            
@@ -28,26 +147,9 @@
         <title>Android系统SystemServer启动（上）</title>
         <pubTime>2019-05-16T13:18:23.000Z</pubTime>
         
-        <tag>systemserver</tag>
-         
         <tag>zygote</tag>
          
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B65-binder%E9%A9%B1%E5%8A%A8%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2020-05-27T02:36:57.478Z</lastmod>
-    <data>
-        <display>
-        <title>深入理解Binder机制5-binder驱动分析</title>
-        <pubTime>2020-02-26T13:28:28.000Z</pubTime>
-        
-        <tag>Binder机制</tag>
+        <tag>systemserver</tag>
          
          
            
@@ -209,40 +311,6 @@
     </url>
 
     
-  <url>
-    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B66-%E6%80%BB%E7%BB%93%E7%AF%87/</loc>
-    <lastmod>2020-05-05T06:34:34.164Z</lastmod>
-    <data>
-        <display>
-        <title>深入理解Binder机制6-总结篇</title>
-        <pubTime>2020-03-15T13:28:28.000Z</pubTime>
-        
-        <tag>Binder机制</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B64-bindService%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2020-05-05T02:14:34.154Z</lastmod>
-    <data>
-        <display>
-        <title>深入理解Binder机制4-bindService过程分析</title>
-        <pubTime>2020-02-10T13:28:28.000Z</pubTime>
-        
-        <tag>Binder机制</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
     
   <url>
     <loc>http://zproo.github.io/2020/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Binder%E6%9C%BA%E5%88%B63-%E8%8E%B7%E5%8F%96%E6%9C%8D%E5%8A%A1getService/</loc>
@@ -270,23 +338,6 @@
         <pubTime>2019-12-25T14:18:28.000Z</pubTime>
         
         <tag>Binder机制</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://zproo.github.io/2019/PackageManagerService%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
-    <lastmod>2019-12-29T14:12:12.747Z</lastmod>
-    <data>
-        <display>
-        <title>PackageManagerService启动流程分析</title>
-        <pubTime>2019-06-30T13:18:23.000Z</pubTime>
-        
-        <tag>PackageManagerService</tag>
          
          
            
