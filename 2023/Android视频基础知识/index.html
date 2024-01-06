@@ -1,0 +1,911 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="视频,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="一、图像概念像素 像素是图像的基本单元，一个个像素就组成了图像。你可以认为像素就是图像中的一个点。在下面这张图中，你可以看到一个个方块，这些方块就是像素。  分辨率 图像（或视频）的分辨率是指图像的大小或尺寸。我们一般用像素个数来表示图像的尺寸。比如说一张1920x1080的图像，前者1920指的是该图像的宽度方向上有1920个像素点，而后者1080指的是图像的高度方向上有1080个像素点。 视频">
+<meta name="keywords" content="视频">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android视频基础知识">
+<meta property="og:url" content="http://zproo.github.io/2023/Android视频基础知识/index.html">
+<meta property="og:site_name" content="Skytoby">
+<meta property="og:description" content="一、图像概念像素 像素是图像的基本单元，一个个像素就组成了图像。你可以认为像素就是图像中的一个点。在下面这张图中，你可以看到一个个方块，这些方块就是像素。  分辨率 图像（或视频）的分辨率是指图像的大小或尺寸。我们一般用像素个数来表示图像的尺寸。比如说一张1920x1080的图像，前者1920指的是该图像的宽度方向上有1920个像素点，而后者1080指的是图像的高度方向上有1080个像素点。 视频">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/pix.PNG">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/resolution.PNG">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/stride.PNG">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/video_basic.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/rgb.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/yuv444.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/yuv422.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/yuv420.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/yuc444yu24.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/yu16.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/yv16.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/nv16.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/nv61.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/yu12.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/yv12.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/nv12.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/nv21.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/yuvtype.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/rgb_yuv.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/video_image.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/video_image_basic.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/video_image1.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/video_codec.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/video_i_p_b.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/IBBPB.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/GOP12.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/IBBab.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/mediaplayer_nulplayer.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/mediaplayerstate.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/mediacodec.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/nuplayercreate.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android视频基础知识/nulfactory.png">
+<meta property="og:updated_time" content="2024-01-06T03:40:36.687Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android视频基础知识">
+<meta name="twitter:description" content="一、图像概念像素 像素是图像的基本单元，一个个像素就组成了图像。你可以认为像素就是图像中的一个点。在下面这张图中，你可以看到一个个方块，这些方块就是像素。  分辨率 图像（或视频）的分辨率是指图像的大小或尺寸。我们一般用像素个数来表示图像的尺寸。比如说一张1920x1080的图像，前者1920指的是该图像的宽度方向上有1920个像素点，而后者1080指的是图像的高度方向上有1080个像素点。 视频">
+<meta name="twitter:image" content="http://zproo.github.io/2023/Android视频基础知识/pix.PNG">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zproo.github.io/2023/Android视频基础知识/">
+
+  <title> Android视频基础知识 | Skytoby </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+    
+    <header id="header_post" class="header" itemscope="" itemtype="http://schema.org/WPHeader" style="background-image: url('http://ortur5wom.bkt.clouddn.com/home_bg.jpg');">
+      <div class="header-inner-post"><a class="site-home" href="/">Skytoby</a>
+
+<div class="site-meta ">
+  
+  
+  
+    <div class="site-meta-headline">
+      <a>
+        <img class="custom-logo-image" src="/images/logo.png" style="width: 50px" alt="Skytoby">
+      </a>
+    </div>
+  
+
+  
+  
+  
+  
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+           <li class="menu-item menu-item-关于">
+             <a href="/about" rel="section">
+               
+               
+               关于
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-目录">
+             <a href="/archives" rel="section">
+               
+               
+               目录
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-首页">
+             <a href="/" rel="section">
+               
+               
+               首页
+             </a>
+           </li>
+        
+      
+
+      
+    </ul>
+  
+
+  
+</nav> </div>
+      <div class="header-post"> 
+  <div class="post-header">
+      <div class="tags">
+      
+        <a href="/tags/视频/" rel="tag" title="视频">视频</a>
+      
+      </div>
+      <h1>Android视频基础知识</h1>
+      <h2 class="subtitle"></h2>
+      <div class="post-time">
+        <span class="post-meta-item-text">Posted on </span>
+        <time itemprop="dateCreated" datetime="2023-12-15T21:18:23+08:00" content="2023-12-15" title="2023-12-15 21:18:23">
+          2023-12-15
+        </time>
+      </div>
+  </div>
+ </div>
+    </header>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Android视频基础知识
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+		  
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2023-12-15T21:18:23+08:00" content="2023-12-15">
+              2023-12-15
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2023/Android视频基础知识/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/Android视频基础知识/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一、图像概念"><a href="#一、图像概念" class="headerlink" title="一、图像概念"></a>一、图像概念</h1><p><strong>像素</strong></p>
+<p>像素是图像的基本单元，一个个像素就组成了图像。你可以认为像素就是图像中的一个点。在下面这张图中，你可以看到一个个方块，这些方块就是像素。</p>
+<p><img src="/2023/Android视频基础知识/pix.PNG" style="zoom: 25%;"></p>
+<p><strong>分辨率</strong></p>
+<p>图像（或视频）的分辨率是指图像的大小或尺寸。我们一般用像素个数来表示图像的尺寸。比如说一张1920x1080的图像，前者1920指的是该图像的宽度方向上有1920个像素点，而后者1080指的是图像的高度方向上有1080个像素点。</p>
+<p>视频行业常见的分辨率有QCIF (176x144)、CIF (352x288)、D1 (704x576或720x576),还有我们 比较熟悉的360P (640x360)、720P (1280x720)、1080P (1920x1080)、4K (3840x2160)、8K (7680x4320)等。</p>
+<p><img src="/2023/Android视频基础知识/resolution.PNG" style="zoom:50%;"></p>
+<p>1 .像素就只是一个帯有颜色的小块。</p>
+<p>2.不能简单地认为分辨率数值越高的图像就越清晰。</p>
+<p>原始图像的话，分辨率越高确实会越清晰，但是我们看到的 图像往往是经过后期处理的，比如放大缩小，或者磨皮美颜。经过处理过后的图像，尤其是放大之后的图 像，分辨率很高，但是它并没有很清晰。</p>
+<p>因为放大的图像是通过”插值”处理得到的，而插值的像素是使用邻近像素经过插值算法计算得到的, 跟实际相机拍摄的像素是不一样的，相当于”脑补”出来的像素值。</p>
+<p><strong>位深</strong></p>
+<p>一般来说，我们看到的彩色图像中，都有三个通道，这三个通道就是R、G、B通道,（有的时候还会有Alpha值，代表透明度)</p>
+<p>通常R、G、B各占8个位，我们称这种图像是8bit图像，而这个8bit就是位深,位深越大，我们能够表示的颜色值就越多,目前我们大多数情 况下看到的图像以及视频还是8bit位深的。</p>
+<p><strong>Stride</strong></p>
+<p>Stride也可以称之为跨距，指的是图像存储时内存中每行像素所占用的 空间。跨距为了能够快速读取一行像素，我们一般会对内存中的图像实现内存对齐，比如16字节对齐。</p>
+<p>举个例子，我们现在有一张RGB图像，分辨率是1278x720。我们将它存储在内存当中，一行像素需要 1278x3 = 3834个字节，3834除以16无法整除。因此，没有16字节对齐。所以如果需要对齐的话，我们需 要在3834个字节后面填充6个字节，也就是3840个字节做16字节对齐，这样这幅图像的Stride就是3840 了。如下图所示：</p>
+<p><img src="/2023/Android视频基础知识/stride.PNG" style="zoom: 50%;"></p>
+<p>也就是说，每读取一行数据时候需要跳过这多余的6个字节</p>
+<p><strong>帧率</strong></p>
+<p>FPS（frame per second 每秒钟要多少帧画面）</p>
+<p>帧率：影响画面流畅度，与画面流畅度成正比：</p>
+<p>帧率越大，画面越流畅；</p>
+<p>帧率越小，画面越有跳动感。</p>
+<p><strong>码率</strong></p>
+<p>编码器每秒编出的数据大小，单位是kbps，比如800kbps代表编码器每秒产生800kb（或100KB）的数据。</p>
+<p><img src="/2023/Android视频基础知识/video_basic.png" style="zoom: 67%;"></p>
+<p><strong>RGB</strong></p>
+<p>RGB中的值不一定是按R-G-B顺序排列的，也可能是G-B-R顺序</p>
+<p><img src="/2023/Android视频基础知识/rgb.png" style="zoom: 80%;"></p>
+<p><strong>YUV</strong></p>
+<p>YUV 颜色编码采用的是 明亮度 和 色度 来指定像素的颜色。</p>
+<p>其中，Y 表示明亮度（Luminance、Luma），而 U 和 V 表示色度（Chrominance、Chroma）。</p>
+<p>YUV主要分为YUV 4:4:4,YUV 4:2:2,YUV 4:2:0几种常用类型。</p>
+<p><img src="/2023/Android视频基础知识/yuv444.png" style="zoom:80%;"></p>
+<p><img src="/2023/Android视频基础知识/yuv422.png" style="zoom:80%;"></p>
+<p><img src="/2023/Android视频基础知识/yuv420.png" style="zoom:80%;"></p>
+<p>1.YUV 4:4:4, 每一个Y对应一组UV。</p>
+<p>2.YUV 4:2:2,每两个Y共用一组UV。</p>
+<p>3.YUV 4:2:0,每四个Y共用一组UV。</p>
+<p><strong>1.YUV 4:4:4采样</strong></p>
+<p>1个像素存储示意图</p>
+<p><img src="/2023/Android视频基础知识/yuc444yu24.png" style="zoom:80%;"></p>
+<p>举个例子 ：</p>
+<p>假如图像像素为：[Y0 U0 V0]、[Y1 U1 V1]、[Y2 U2 V2]、[Y3 U3 V3]</p>
+<p>那么采样的码流为：Y0 U0 V0 Y1 U1 V1 Y2 U2 V2 Y3 U3 V3</p>
+<p>最后映射出的像素点依旧为 [Y0 U0 V0]、[Y1 U1 V1]、[Y2 U2 V2]、[Y3 U3 V3]</p>
+<p>这种采样方式的图像和 RGB 颜色模型的图像大小是一样，并没有达到节省带宽的目的</p>
+<p><strong>2.YUV4:2:2 采样</strong></p>
+<p>有4种类型</p>
+<p>1）YU16 (或者称为I422、YUV422P)，Planar格式</p>
+<p><img src="/2023/Android视频基础知识/yu16.png" alt=""></p>
+<p>2）YV16 (YUV422P)，Planar格式</p>
+<p><img src="/2023/Android视频基础知识/yv16.png" alt=""></p>
+<p>3）NV16(YUV422SP),Packed格式</p>
+<p><img src="/2023/Android视频基础知识/nv16.png" alt=""></p>
+<p>4）NV61(YUV422SP),Packed格式</p>
+<p><img src="/2023/Android视频基础知识/nv61.png" alt=""></p>
+<p>举个例子 ：</p>
+<p>假如图像像素为：[Y0 U0 V0]、[Y1 U1 V1]、[Y2 U2 V2]、[Y3 U3 V3]</p>
+<p>那么采样的码流为：Y0 U0 Y1 V1 Y2 U2 Y3 V3</p>
+<p>其中，每采样过一个像素点，都会采样其 Y 分量，而 U、V 分量就会间隔一个采集一个。</p>
+<p>最后映射出的像素点为 [Y0 U0 V1]、[Y1 U0 V1]、[Y2 U2 V3]、[Y3 U2 V3]</p>
+<p>一张 1280 * 720 大小的图片，在 YUV 4:2:2 采样时的大小为：</p>
+<p>（1280 <em> 720 </em> 8 + 1280 <em> 720 </em> 0.5 <em> 8 </em> 2）/ 8 / 1024 / 1024 = 1.76 MB 。</p>
+<p><strong>3.YUV4:2:0</strong></p>
+<p>1）YU12（I420，YUV420P），Planar格式</p>
+<p><img src="/2023/Android视频基础知识/yu12.png" alt=""></p>
+<p>2）YV12（YUV420P），Planar格式</p>
+<p><img src="/2023/Android视频基础知识/yv12.png" alt=""></p>
+<p>3）NV12（YUV420SP），Packed格式</p>
+<p><img src="/2023/Android视频基础知识/nv12.png" alt=""></p>
+<p>4）NV21（YUV420SP），Packed格式</p>
+<p><img src="/2023/Android视频基础知识/nv21.png" alt=""></p>
+<p>举个例子 ：</p>
+<p>假设图像像素为：</p>
+<p>[Y0 U0 V0]、[Y1 U1 V1]、 [Y2 U2 V2]、 [Y3 U3 V3]</p>
+<p>[Y5 U5 V5]、[Y6 U6 V6]、 [Y7 U7 V7] 、[Y8 U8 V8]</p>
+<p>那么采样的码流为：Y0 U0 Y1 Y2 U2 Y3 Y5 V5 Y6 Y7 V7 Y8</p>
+<p>其中，每采样过一个像素点，都会采样其 Y 分量，而 U、V 分量就会间隔一行按照 2 : 1 进行采样。</p>
+<p>最后映射出的像素点为：</p>
+<p>[Y0 U0 V5]、[Y1 U0 V5]、[Y2 U2 V7]、[Y3 U2 V7]</p>
+<p>[Y5 U0 V5]、[Y6 U0 V5]、[Y7 U2 V7]、[Y8 U2 V7]</p>
+<p>一张 1280 * 720 大小的图片，在 YUV 4:2:0 采样时的大小为：</p>
+<p>（1280 <em> 720 </em> 8 + 1280 <em> 720 </em> 0.25 <em> 8 </em> 2）/ 8 / 1024 / 1024 = 1.32 MB 。</p>
+<p><strong>YUV</strong> <strong>存储格式</strong></p>
+<p>YUV 的存储格式，有两种：</p>
+<p>planar 平面格式</p>
+<p>指先连续存储所有像素点的 Y 分量，然后存储 U 分量，最后是 V 分量。</p>
+<p>packed 打包模式</p>
+<p>指每个像素点的 Y、U、V 分量是连续交替存储的。</p>
+<p><img src="/2023/Android视频基础知识/yuvtype.png" alt=""></p>
+<p>RGB 到 YUV 的转换</p>
+<p>对于图像显示器来说，它是通过 RGB 模型来显示图像的，而在传输图像数据时又是使用 YUV 模型，这是因为 YUV 模型可以节省带宽。因此就需要采集图像时将 RGB 模型转换到 YUV 模型，显示时再将 YUV 模型转换为 RGB 模型。</p>
+<p>RGB 到 YUV 的转换，就是将图像所有像素点的 R、G、B 分量转换到 Y、U、V 分量。</p>
+<p>有如下公式进行转换：</p>
+<p><img src="/2023/Android视频基础知识/rgb_yuv.png" alt=""></p>
+<h1 id="二、视频编码"><a href="#二、视频编码" class="headerlink" title="二、视频编码"></a>二、视频编码</h1><p><strong>视频和图像和关系</strong></p>
+<p>大量的图像连续起来，就是视频。</p>
+<p><img src="/2023/Android视频基础知识/video_image.png" alt=""></p>
+<p>衡量视频，又是用的什么指标参数呢?最主要的一个，就是帧率(Frame Rate)。在视频中，一个帧(Frame)就是指一幅静止的画面。帧率，就是指视频每秒钟包括的画面数量(FPS，Frame per second)。</p>
+<p><strong>码率</strong></p>
+<p>编码器每秒编出的数据大小，单位是kbps，比如800kbps代表编码器每秒产生800kb（或100KB）的数据。</p>
+<p><img src="/2023/Android视频基础知识/video_image_basic.png" alt=""></p>
+<p><strong>为什么视频数据需要编码？</strong></p>
+<p>有了视频之后，就涉及到两个问题：</p>
+<p>一个是存储;</p>
+<p>二个是传输。</p>
+<p>未经编码的视频，它的体积是非常庞大的。</p>
+<p>以一个分辨率1920×1280，30FPS的视频为例：</p>
+<p>共：1920×1280=2,073,600(Pixels 像素)，每个像素点是24bit(前面算过的哦);</p>
+<p>也就是：每幅图片2073600×24=49766400 bit，8 bit(位)=1 byte(字节);</p>
+<p>所以：49766400bit=6220800byte≈6.22MB。</p>
+<p>这是一幅1920×1280图片的原始大小，再乘以帧率30。</p>
+<p>也就是说：每秒视频的大小是186.6MB，每分钟大约是11GB，一部90分钟的电影，约是1000GB</p>
+<p>显然如此大的体积需要压缩，于是编码就产生了。</p>
+<p><strong>什么是编码?</strong></p>
+<p>编码：就是按指定的方法，将信息从一种形式(格式)，转换成另一种形式(格式)。视频编码：就是将一种视频格式，转换成另一种视频格式。</p>
+<p>编码的终极目的，就是为了压缩。各种视频编码方式，都是为了让视频变得体积更小，有利于存储和传输。</p>
+<p>要实现压缩，就要设计各种算法，将视频数据中的冗余信息去除。</p>
+<p>当你面对一张图片，或者一段视频的时候，如果是你，你会如何进行压缩呢?</p>
+<p>我觉得，首先你想到的，应该是找规律。是的，寻找像素之间的相关性，还有不同时间的图像帧之间，它们的相关性。</p>
+<p>举个例子：如果一幅图(1920×1080分辨率)，全是红色的，我有没有必要说2073600次[255,0,0]?我只要说一次[255,0,0]，然后再说2073599次“同上”。</p>
+<p>如果一段1分钟的视频，有十几秒画面是不动的，或者，有80%的图像面积，整个过程都是不变(不动)的。那么，是不是这块存储开销，就可以节约掉了?</p>
+<p><img src="/2023/Android视频基础知识/video_image1.png" alt=""></p>
+<p>图像一般都是有数据冗余的，主要包括以下4种:</p>
+<p><strong>空间冗余</strong>。比如说将一帧图像划分成一个个16x16的块之后，相邻的块很多时候都有比较明显的相似性, 这种就叫空间冗余。</p>
+<p><strong>时间冗余</strong>。一个帧率为25fps的视频中前后两帧图像相差只有40ms,两张图像的变化是比较小的，相似性很高，这种叫做时间冗余。</p>
+<p><strong>视觉冗余</strong>。我们的眼睛是有视觉灵敏度这个东西的。人的眼睛对于图像中高频信息的敏感度是小于低频信息的。有的时候去除图像中的一些高频信息，人眼看起来跟不去除高频信息差别不大，这种叫做视觉冗余。</p>
+<p><strong>信息炳冗余</strong>。我们一般会使用Zip等压缩工具去压缩文件，将文件大小减小，这个对于图像来说也是可以 做的，这种冗余叫做信息嫡冗余。</p>
+<p>各种视频压缩算法就是为了减少上面的这几种冗余。视频编码技术优先消除的目标，就是空间冗余和时间冗余。</p>
+<p><strong>宏块</strong></p>
+<p>每一帧图像，又是划分成一个个块来进行编码的，这一个个块在H264中叫做宏块，而在VP9、AV1 中称之为超级块，其实概念是一样的。宏块大小一般是16x16 （H264、VP8） , 32x32 （H265、VP9）, 64x64 （H265、VP9、AV1） , 128x128 （AV1）这几种。这里提到的H264、H265、VP8、VP9和AV1都是市面上常见的编码标准。</p>
+<p><img src="/2023/Android视频基础知识/video_codec.png" alt=""></p>
+<p><strong>帧内预测 帧间预测</strong></p>
+<p>帧内预测——基于同一帧内已编码块预测，构造预测块，计算与当前块的残差，对残差、预测模式等信息进行编码。其主要去除的是空间冗余。</p>
+<p>帧间预测——基于一个或多个已编码帧预测，构造预测块，计算与当前块的残差，对残差、预测模式、运动矢量残差、参考图像索引等信息进行编码。其主要去除的是时间冗余。</p>
+<p><strong>帧类型</strong></p>
+<p>帧间预测需要参考已经编码的帧，帧间编码帧可以分为只参考前面帧的前向编码帧和前后都可以参考的双向编码帧</p>
+<p><strong>I帧</strong>：是自带全部信息的独立帧，是最完整的画面(占用的空间最大)，无需参考其它图像便可独立进行解码。视频序列中的第一个帧，始终都是I帧。</p>
+<p><strong>P帧</strong>：“帧间预测编码帧”，需要参考前面的I帧和/或P帧的不同部分，才能进行编码。P帧对前面的P和I参考帧有依赖性。但是，P帧压缩率比较高，占用的空间较小。</p>
+<p><strong>B帧</strong>：“双向预测编码帧”，以前帧后帧作为参考帧。不仅参考前面，还参考后面的帧，所以，它的压缩率最高，可以达到200:1。</p>
+<p><img src="/2023/Android视频基础知识/video_i_p_b.png" alt=""></p>
+<p>如图，箭头是从参考帧指向编码帧</p>
+<p><img src="/2023/Android视频基础知识/IBBPB.png" alt=""></p>
+<p><strong>GOP(序列)和IDR</strong></p>
+<p>在H264中图像以序列为单位进行组织，一个序列是一段图像编码后的数据流。</p>
+<p>一个序列的第一个图像叫做 IDR 图像（立即刷新图像），IDR 图像都是 I 帧图像。H.264 引入 IDR 图像是为了解码的重同步，当解码器解码到 IDR 图像时，立即将参考帧队列清空，将已解码的数据全部输出或抛弃，重新查找参数集，开始一个新的序列。这样，如果前一个序列出现重大错误，在这里可以获得重新同步的机会。IDR图像之后的图像永远不会使用IDR之前的图像的数据来解码。</p>
+<p>一个序列就是一段内容差异不太大的图像编码后生成的一串数据流。当运动变化比较少时，一个序列可以很长，因为运动变化少就代表图像画面的内容变动很小，所以就可以编一个I帧，然后一直P帧、B帧了。当运动变化多时，可能一个序列就比较短了，比如就包含一个I帧和3、4个P帧。</p>
+<p>在视频编码序列中，GOP即Group of picture（图像组），指两个I帧之间的距离，Reference（参考周期）指两个P帧之间的距离。两个I帧之间形成一组图片，就是GOP（Group Of Picture）。</p>
+<p><img src="/2023/Android视频基础知识/GOP12.png" alt=""></p>
+<p><strong>PTS和DTS</strong></p>
+<p>为什么会有PTS和DTS的概念？</p>
+<p>P帧需要参考前面的I帧或P帧才可以生成一张完整的图片，而B帧则需要参考前面I帧或P帧及其后面的一个P帧才可以生成一张完整的图片。这样就带来了一个问题：在视频流中，先到来的 B 帧无法立即解码，需要等待它依赖的后面的 I、P 帧先解码完成，这样一来播放时间与解码时间不一致了，顺序打乱了，那这些帧该如何播放呢？这时就引入了另外两个概念：DTS 和 PTS。</p>
+<p><strong>DTS</strong>（Decoding Time Stamp）：即解码时间戳，这个时间戳的意义在于告诉播放器该在什么时候解码这一帧的数据。</p>
+<p><strong>PTS</strong>（Presentation Time Stamp）：即显示时间戳，这个时间戳用来告诉播放器该在什么时候显示这一帧的数据。</p>
+<p>在视频采集的时候是录制一帧就编码一帧发送一帧的，在编码的时候会生成 PTS，这里需要特别注意的是 frame（帧）的编码方式，在通常的场景中，编解码器编码一个 I 帧，然后向后跳过几个帧，用编码 I 帧作为基准帧对一个未来 P 帧进行编码，然后跳回到 I 帧之后的下一个帧。编码的 I 帧和 P 帧之间的帧被编码为 B 帧。之后，编码器会再次跳过几个帧，使用第一个 P 帧作为基准帧编码另外一个 P 帧，然后再次跳回，用 B 帧填充显示序列中的空隙。这个过程不断继续，每 12 到 15 个 P 帧和 B 帧内插入一个新的 I 帧。P 帧由前一个 I 帧或 P 帧图像来预测，而 B 帧由前后的两个 P 帧或一个 I 帧和一个 P 帧来预测，因而编解码和帧的显示顺序有所不同，如下所示：</p>
+<p><img src="/2023/Android视频基础知识/IBBab.png" alt=""></p>
+<p>假设编码器采集到的帧是这个样子的：</p>
+<p> I B B P B B P</p>
+<p>那么它的显示顺序，也就是PTS应该是这样：</p>
+<p>1 2 3 4 5 6 7</p>
+<p>编码器的编码顺序是：</p>
+<p>1 4 2 3 7 5 6</p>
+<p>推流顺序也是按照编码顺序去推的，即</p>
+<p>I P B B P B B</p>
+<p>那么接收断收到的视频流也就是：</p>
+<p>I P B B P B B</p>
+<p>这时候去解码，也是按照收到的视频流一帧一帧去解的了，接收一帧解码一帧，因为在编码的时候已经按照 I、B、P 的依赖关系编好了，接收到数据直接解码就好了。那么解码顺序是：</p>
+<p> I P B B P B B</p>
+<p>DTS：1 2 3 4 5 6 7</p>
+<p>PTS：1 4 2 3 7 5 6</p>
+<p>可以看到解码出来对应的 PTS 不是顺序的，为了正确显示视频流，这时候我们就必须按照 PTS 重新调整解码后的 frame(帧)，即</p>
+<p>I B B P B B P</p>
+<p>DTS：1 3 4 2 6 7 5</p>
+<p>PTS：1 2 3 4 5 6 7</p>
+<h1 id="三、Android视频播放流程"><a href="#三、Android视频播放流程" class="headerlink" title="三、Android视频播放流程"></a>三、Android视频播放流程</h1><h2 id="3-1-概述"><a href="#3-1-概述" class="headerlink" title="3.1 概述"></a><strong>3.1 概述</strong></h2><p>Android上经常会使用到MediaPlayer去播放音频和视频。但是从严格意义上来说，MediaPlayer并不是播放器本身，它只是Android框架层众多媒体播放器（包括ROM厂商自定义的播放器）的“壳”。</p>
+<p>MediaPlayer的主要操作（包括但不限于播放、暂停、快进等）都会调用到框架层的播放器，比如常见的NuPlayer播放器。</p>
+<p><img src="/2023/Android视频基础知识/mediaplayer_nulplayer.png" alt=""></p>
+<h2 id="3-2-MediaPlayer播放视频"><a href="#3-2-MediaPlayer播放视频" class="headerlink" title="3.2 MediaPlayer播放视频"></a><strong>3.2 MediaPlayer播放视频</strong></h2><p>MediaPlayer的使用很简单，如果是想要在一个SurfaceView上播放assets下的video.mp4视频，以下简单的代码就能实现视频画面的显示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surface);</span><br><span class="line">surfaceView.getHolder().addCallback(<span class="keyword">new</span> SurfaceHolder.Callback() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">surfaceCreated</span><span class="params">(SurfaceHolder holder)</span> </span>&#123;</span><br><span class="line">        MediaPlayer player = <span class="keyword">new</span> MediaPlayer();</span><br><span class="line">        player.setDisplay(holder); <span class="comment">//设置画面显示在哪</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            player.setDataSource(getAssets().openFd(<span class="string">"video.mp4"</span>));<span class="comment">//设置视频源</span></span><br><span class="line">            player.prepare(); <span class="comment">//准备视频数据</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        player.start(); <span class="comment">//开始播放</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">surfaceChanged</span><span class="params">(SurfaceHolder holder, <span class="keyword">int</span> format, <span class="keyword">int</span> width, <span class="keyword">int</span> height)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">surfaceDestroyed</span><span class="params">(SurfaceHolder holder)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>MediaPlayer的API和用法比较简单，只要熟悉掌握下面的状态图就能很方便的使用。主要涉及的状态有setDataSource、prepare、start、pause、stop、reset、release。</p>
+<p><img src="/2023/Android视频基础知识/mediaplayerstate.png" alt=""></p>
+<h2 id="3-3-从MediaPlayer到NuPlayer"><a href="#3-3-从MediaPlayer到NuPlayer" class="headerlink" title="3.3 从MediaPlayer到NuPlayer"></a><strong>3.3 从MediaPlayer到NuPlayer</strong></h2><h3 id="3-3-1-整体架构"><a href="#3-3-1-整体架构" class="headerlink" title="3.3.1 整体架构"></a><strong>3.3.1 整体架构</strong></h3><p>应用里面调了MediaPlayer的方法,其实底层都会通过IPC机制调到MediaPlayerService。其实不仅是MediaPlayer，android.media包下的媒体播放接口像AudioTrack、SoundPool、MediaCodec都是会调到MediaPlayerService去做具体的编解码操作的，安卓的媒体播放是个典型的C/S架构。</p>
+<p><img src="/2023/Android视频基础知识/mediacodec.png" alt=""></p>
+<p>其实android.media.MediaPlayer这个java类只是native层的一个代理,具体的实现都是通过jni调用到libmedia_jni.so里面的c/c++代码。比如设置音视频数据的setDataSource()方法有如下调用关系：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">==&gt; android.media.MediaPlayer</span><br><span class="line">    ==&gt; android_media_MediaPlayer.cpp</span><br><span class="line">        ==&gt; mediaplayer.cpp</span><br></pre></td></tr></table></figure>
+<p>mediaplayer.cpp</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">status_t MediaPlayer::setDataSource(<span class="keyword">const</span> sp&lt;IDataSource&gt; &amp;source)</span><br><span class="line">&#123;</span><br><span class="line">    ALOGV(<span class="string">"setDataSource(IDataSource)"</span>);</span><br><span class="line">    status_t err = UNKNOWN_ERROR;</span><br><span class="line">    <span class="function"><span class="keyword">const</span> sp&lt;IMediaPlayerService&gt; <span class="title">service</span><span class="params">(getMediaPlayerService()</span>)</span>;</span><br><span class="line">    <span class="keyword">if</span> (service != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="function">sp&lt;IMediaPlayer&gt; <span class="title">player</span><span class="params">(service-&gt;create(<span class="keyword">this</span>, mAudioSessionId)</span>)</span>;</span><br><span class="line">        <span class="keyword">if</span> ((NO_ERROR != doSetRetransmitEndpoint(player)) ||</span><br><span class="line">            (NO_ERROR != player-&gt;setDataSource(source))) &#123;</span><br><span class="line">            player.clear();</span><br><span class="line">        &#125;</span><br><span class="line">        err = attachNewPlayer(player);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> err;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>MediaPlayerService会创建一个Client返回给客户端，客户端这个Client调用到MediaPlayerService的功能了。Client是MediaPlayerService的一个内部类，它继承了BnMediaPlayerService，而BnMediaPlayer又继承了BnInterface。</p>
+<h3 id="3-3-2-NuPlayer创建"><a href="#3-3-2-NuPlayer创建" class="headerlink" title="3.3.2 NuPlayer创建"></a><strong>3.3.2 NuPlayer创建</strong></h3><p><img src="/2023/Android视频基础知识/nuplayercreate.png" alt=""></p>
+<p>MediaPlayerService.cpp</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">status_t MediaPlayerService::Client::setDataSource(</span><br><span class="line">        <span class="keyword">const</span> sp&lt;IDataSource&gt; &amp;source) &#123;</span><br><span class="line">    sp&lt;DataSource&gt; dataSource = DataSource::CreateFromIDataSource(source);</span><br><span class="line">    player_type playerType = MediaPlayerFactory::getPlayerType(<span class="keyword">this</span>, dataSource); <span class="comment">// 对已经注册的播放器进行打分，创建得分最高的播放器（NU_PLAYER）</span></span><br><span class="line">    sp&lt;MediaPlayerBase&gt; p = setDataSource_pre(playerType);</span><br><span class="line">    <span class="keyword">if</span> (p == NULL) &#123;</span><br><span class="line">        <span class="keyword">return</span> NO_INIT;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// now set data source</span></span><br><span class="line">    <span class="keyword">return</span> mStatus = setDataSource_post(p, p-&gt;setDataSource(dataSource));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>MediaPlayerFactory::getPlayerType：该函数涉及Android底层媒体播放器的评分机制。通过评分，获得一个最优的播放器类型。一般情况下，函数调用返回的是NuPlayer对应的播放器类型NU_PLAYER。</p>
+<p>setDataSource_pre：该函数的作用是根据前面获得的播放器类型创建播放器对象。</p>
+<p>setDataSource_post：将媒体资源设置给播放器，这才是真正的setDataSource操作。</p>
+<p>（1）setDataSource()方法中，这里先来看一下getPlayerType()获取的类型。如下，在MediaPlayerInterface.h中枚举所有的播放器类型。</p>
+<p>MediaPlayerInterface.h</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> player_type &#123;</span><br><span class="line">    STAGEFRIGHT_PLAYER = <span class="number">3</span>,</span><br><span class="line">    NU_PLAYER = <span class="number">4</span>,</span><br><span class="line">    <span class="comment">// Test players are available only in the 'test' and 'eng' builds.</span></span><br><span class="line">    <span class="comment">// The shared library with the test player is passed passed as an</span></span><br><span class="line">    <span class="comment">// argument to the 'test:' url in the setDataSource call.</span></span><br><span class="line">    TEST_PLAYER = <span class="number">5</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>目前只注册了NU_PLAYER和TEST_PLAYER两种播放器。 STAGEFRIGHT_PLAYER实际上指的是AwesomePlayer，在早期的安卓系统使用AwesomePlayer去播放本地视频，用NuPlayer去播放流媒体。后来因为某些原因所以逐渐用弃用了AwesomePlayer，统一使用NuPlayer去播放。在某些过度版本的安卓系统开发者选项里面还可以选择NuPlayer代替AwesomePlayer，到后期都不用选了，只有一个NuPlayer可以用。</p>
+<p>用于创建两种播放器的NuPlayerFactory和TestPlayerFactory，在如下代码中注册的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> MediaPlayerFactory::registerBuiltinFactories() &#123;</span><br><span class="line">    Mutex::<span class="function">Autolock <span class="title">lock_</span><span class="params">(&amp;sLock)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (sInitComplete)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    IFactory* factory = <span class="keyword">new</span> NuPlayerFactory();</span><br><span class="line">    <span class="keyword">if</span> (registerFactory_l(factory, NU_PLAYER) != OK)</span><br><span class="line">        delete factory;</span><br><span class="line">    factory = <span class="keyword">new</span> TestPlayerFactory();</span><br><span class="line">    <span class="keyword">if</span> (registerFactory_l(factory, TEST_PLAYER) != OK)</span><br><span class="line">        delete factory;</span><br><span class="line"></span><br><span class="line">    sInitComplete = <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>（2）紧接着执行了setDataSource_pre()方法</p>
+<p>MediaPlayerService.cpp</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">sp&lt;MediaPlayerBase&gt; MediaPlayerService::Client::setDataSource_pre(</span><br><span class="line">        player_type playerType)</span><br><span class="line">&#123;</span><br><span class="line">...</span><br><span class="line">    sp&lt;MediaPlayerBase&gt; p = createPlayer(playerType); <span class="comment">// 根据类型创建player</span></span><br><span class="line">    <span class="keyword">if</span> (p == NULL) &#123;</span><br><span class="line">        <span class="keyword">return</span> p;</span><br><span class="line">    &#125;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br><span class="line">sp&lt;MediaPlayerBase&gt; MediaPlayerService::Client::createPlayer(player_type playerType)</span><br><span class="line">&#123;</span><br><span class="line">    sp&lt;MediaPlayerBase&gt; p = mPlayer;</span><br><span class="line">    ...</span><br><span class="line">    p = MediaPlayerFactory::createPlayer(playerType, <span class="keyword">this</span>, notify, mPid);</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">virtual sp&lt;MediaPlayerBase&gt; <span class="title">createPlayer</span><span class="params">(pid_t pid)</span> </span>&#123;</span><br><span class="line">    ALOGV(<span class="string">" create NuPlayer"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> NuPlayerDriver(pid);</span><br><span class="line">&#125;</span><br><span class="line">mPlayer(AVNuFactory::get()-&gt;createNuPlayer(pid)),</span><br><span class="line">sp&lt;NuPlayer&gt; AVNuFactory::createNuPlayer(pid_t pid) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> NuPlayer(pid);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>NuPlayerFactory创建出来的是NuPlayerDriver，不过NuPlayerDriver内部也是封装了NuPlayer。对应上述代码中的mPlayer，后续的start()，stop()，setDataSource()等都是通过该对象进行操作。</p>
+<h3 id="3-3-3-播放器工厂"><a href="#3-3-3-播放器工厂" class="headerlink" title="3.3.3 播放器工厂"></a>3.3.3 播放器工厂</h3><p>默认情况下，只有NuPlayerFactory和TestPlayerFactory两种播放器的工厂，ROM厂商也可以根据标准进行自定义。播放器工厂的类图如下：</p>
+<p><img src="/2023/Android视频基础知识/nulfactory.png" alt=""></p>
+<p><strong>参考资源</strong></p>
+<p><a href="https://blog.csdn.net/u012124438/article/details/123147043" target="_blank" rel="noopener">https://blog.csdn.net/u012124438/article/details/123147043</a></p>
+<p><a href="https://blog.csdn.net/u012124438/article/details/123385424" target="_blank" rel="noopener">https://blog.csdn.net/u012124438/article/details/123385424</a></p>
+<p><a href="https://blog.csdn.net/yihanss/article/details/130204958" target="_blank" rel="noopener">https://blog.csdn.net/yihanss/article/details/130204958</a></p>
+
+      
+    </div>
+
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/视频/" rel="tag">#视频</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/Android音频基础知识/" rel="next" title="Android音频基础知识">
+                <i class="fa fa-chevron-left"></i> Android音频基础知识
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Skytoby">
+          <p class="site-author-name" itemprop="name">Skytoby</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br>Android、AI<br>座右铭：想法+行动+坚持</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/caoxiaoliang" target="_blank" title="GitHub">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://me.csdn.net/cao861544325" target="_blank" title="CSDN">
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、图像概念"><span class="nav-text">一、图像概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、视频编码"><span class="nav-text">二、视频编码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、Android视频播放流程"><span class="nav-text">三、Android视频播放流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-概述"><span class="nav-text">3.1 概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-MediaPlayer播放视频"><span class="nav-text">3.2 MediaPlayer播放视频</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-从MediaPlayer到NuPlayer"><span class="nav-text">3.3 从MediaPlayer到NuPlayer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-1-整体架构"><span class="nav-text">3.3.1 整体架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-2-NuPlayer创建"><span class="nav-text">3.3.2 NuPlayer创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-3-播放器工厂"><span class="nav-text">3.3.3 播放器工厂</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2019 - 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Skytoby</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme Next
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'https-zproo-github-io';
+      var disqus_identifier = '2023/Android视频基础知识/';
+      var disqus_title = "Android视频基础知识";
+      var disqus_url = 'http://zproo.github.io/2023/Android视频基础知识/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+</html>

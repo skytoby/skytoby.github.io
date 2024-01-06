@@ -1,0 +1,755 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="音频,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="一、音频数据1.1 声音概念音频文件的生成过程是将声音信息采样、量化和编码产生的数字信号的过程，我们人耳所能听到的声音频率范围为（20Hz~20KHz），因此音频文件格式的最大带宽是20KHZ。 声音有三个属性：  音调：声音频率的高低，表示人的听觉分辨一个声音的调子高低的程度。音调主要由声音的频率决定，同时也与声音强度有关。 音量：由“振幅”（amplitude）和人离声源的距离决定，振幅越大响">
+<meta name="keywords" content="音频">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android音频基础知识">
+<meta property="og:url" content="http://zproo.github.io/2023/Android音频基础知识/index.html">
+<meta property="og:site_name" content="Skytoby">
+<meta property="og:description" content="一、音频数据1.1 声音概念音频文件的生成过程是将声音信息采样、量化和编码产生的数字信号的过程，我们人耳所能听到的声音频率范围为（20Hz~20KHz），因此音频文件格式的最大带宽是20KHZ。 声音有三个属性：  音调：声音频率的高低，表示人的听觉分辨一个声音的调子高低的程度。音调主要由声音的频率决定，同时也与声音强度有关。 音量：由“振幅”（amplitude）和人离声源的距离决定，振幅越大响">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://zproo.github.io/2023/Android音频基础知识/pcm音频数据格式.PNG">
+<meta property="og:image" content="http://zproo.github.io/2023/Android音频基础知识/android音频架构.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android音频基础知识/android播放流程.png">
+<meta property="og:image" content="http://zproo.github.io/2023/Android音频基础知识/Android播放链路.png">
+<meta property="og:updated_time" content="2024-01-06T03:35:28.158Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android音频基础知识">
+<meta name="twitter:description" content="一、音频数据1.1 声音概念音频文件的生成过程是将声音信息采样、量化和编码产生的数字信号的过程，我们人耳所能听到的声音频率范围为（20Hz~20KHz），因此音频文件格式的最大带宽是20KHZ。 声音有三个属性：  音调：声音频率的高低，表示人的听觉分辨一个声音的调子高低的程度。音调主要由声音的频率决定，同时也与声音强度有关。 音量：由“振幅”（amplitude）和人离声源的距离决定，振幅越大响">
+<meta name="twitter:image" content="http://zproo.github.io/2023/Android音频基础知识/pcm音频数据格式.PNG">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zproo.github.io/2023/Android音频基础知识/">
+
+  <title> Android音频基础知识 | Skytoby </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+    
+    <header id="header_post" class="header" itemscope="" itemtype="http://schema.org/WPHeader" style="background-image: url('http://ortur5wom.bkt.clouddn.com/home_bg.jpg');">
+      <div class="header-inner-post"><a class="site-home" href="/">Skytoby</a>
+
+<div class="site-meta ">
+  
+  
+  
+    <div class="site-meta-headline">
+      <a>
+        <img class="custom-logo-image" src="/images/logo.png" style="width: 50px" alt="Skytoby">
+      </a>
+    </div>
+  
+
+  
+  
+  
+  
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+           <li class="menu-item menu-item-关于">
+             <a href="/about" rel="section">
+               
+               
+               关于
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-目录">
+             <a href="/archives" rel="section">
+               
+               
+               目录
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-首页">
+             <a href="/" rel="section">
+               
+               
+               首页
+             </a>
+           </li>
+        
+      
+
+      
+    </ul>
+  
+
+  
+</nav> </div>
+      <div class="header-post"> 
+  <div class="post-header">
+      <div class="tags">
+      
+        <a href="/tags/音频/" rel="tag" title="音频">音频</a>
+      
+      </div>
+      <h1>Android音频基础知识</h1>
+      <h2 class="subtitle"></h2>
+      <div class="post-time">
+        <span class="post-meta-item-text">Posted on </span>
+        <time itemprop="dateCreated" datetime="2023-11-16T21:18:23+08:00" content="2023-11-16" title="2023-11-16 21:18:23">
+          2023-11-16
+        </time>
+      </div>
+  </div>
+ </div>
+    </header>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Android音频基础知识
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+		  
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2023-11-16T21:18:23+08:00" content="2023-11-16">
+              2023-11-16
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2023/Android音频基础知识/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/Android音频基础知识/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一、音频数据"><a href="#一、音频数据" class="headerlink" title="一、音频数据"></a>一、音频数据</h1><h2 id="1-1-声音概念"><a href="#1-1-声音概念" class="headerlink" title="1.1 声音概念"></a>1.1 声音概念</h2><p>音频文件的生成过程是将声音信息采样、量化和编码产生的数字信号的过程，我们人耳所能听到的声音频率范围为（20Hz~20KHz），因此音频文件格式的最大带宽是20KHZ。</p>
+<p>声音有三个属性：</p>
+<ul>
+<li>音调：声音频率的高低，表示人的听觉分辨一个声音的调子高低的程度。音调主要由声音的频率决定，同时也与声音强度有关。</li>
+<li>音量：由“振幅”（amplitude）和人离声源的距离决定，振幅越大响度越大。</li>
+<li>音色：又称声音的品质，波形决定了声音的音色。</li>
+</ul>
+<blockquote>
+<p>波长是决定音调高低；振幅是决定音量高低；波纹是决定音色。</p>
+</blockquote>
+<h2 id="1-2-PCM"><a href="#1-2-PCM" class="headerlink" title="1.2 PCM"></a>1.2 PCM</h2><p>PCM（Pulse Code Modulation），即脉冲编码调制技术。</p>
+<p>由于我们人耳听到的声音均为模拟信号，那么我们如何将听到的信息存储起来呢？这就涉及到了<code>PCM</code>技术。</p>
+<p><code>PCM</code>技术就是把声音从模拟信号转化为数字信号的技术，即对声音进行采样、量化的过程，经过<code>PCM</code>处理后的数据，是最原始的音频数据，即未对音频数据进行任何的编码和压缩处理。</p>
+<p>采样频率：单位时间内对模拟信号的采样次数，它用赫兹（Hz）来表示。采样频率越高，声音的还原就越真实越自然，当然数据量就越大。采样频率一般共分为<code>22.05KHz</code>、<code>44.1KHz</code>、<code>48KHz</code>三个等级。</p>
+<blockquote>
+<p>Tip：</p>
+</blockquote>
+<ul>
+<li><code>5kHz</code>的采样率仅能达到人们讲话的声音质量。</li>
+<li><code>11kHz</code>的采样率是播放小段声音的最低标准，是CD音质的四分之一。</li>
+<li><code>22kHz</code>采样率的声音可以达到CD音质的一半，目前大多数网站都选用这样的采样率。</li>
+<li><code>44kHz</code>的采样率是标准的CD音质，可以达到很好的听觉效果。</li>
+</ul>
+<p>采样位数（Sample Bits）：又称为采样精度，量化级，也相当于每个采样点所能被表示的数据范围。</p>
+<p>采样位数通常有<code>8bits</code>或<code>16bits</code>两种，采样位数越大，所能记录声音的变化度就越细腻，相应的数据量就越大。<code>8bits</code>为低品质，<code>16bits</code>为高品质，<code>16bits</code>最为常见。</p>
+<p>PCM格式的数据流</p>
+<p><img src="/2023/Android音频基础知识/pcm音频数据格式.PNG" alt=""></p>
+<ul>
+<li>码率：(也成位速、比特率) 是指在一个数据流中每秒钟能通过的信息量，代表了压缩质量。</li>
+</ul>
+<blockquote>
+<p>比如MP3常用码率有128kbit/s、160kbit/s、320kbit/s等等，越高代表着声音音质越好。</p>
+<p>MP3中的数据有ID3和音频数据组成，ID3用于存储歌名、演唱者、专辑、音轨等我们可以常见的信息。</p>
+<p>码率=采样率∗采样位数∗声道数</p>
+<p>例如：</p>
+<p>如果是CD音质，采样率44.1KHz，采样位数16bit，立体声(双声道)， 码率 = 44.1 <em> 1000 </em> 16 <em> 2 = 1411200bps = 176400Bps，那么录制一分钟的音乐， 大概176400 </em> 1 * 60 / 1024 / 1024 =10.09MB。</p>
+</blockquote>
+<h2 id="1-3-音频格式"><a href="#1-3-音频格式" class="headerlink" title="1.3 音频格式"></a>1.3 音频格式</h2><p><code>PCM</code>数据是最原始的音频数据，完全无损，所以PCM数据虽然音质优秀但体积庞大，为了解决这个问题先后诞生了一系列的音频格式，这些音频格式运用不同的方法对音频数据进行压缩，其中有无损压缩和有损压缩两种。</p>
+<p>WAV 格式定义</p>
+<p>该格式的实质就是在 PCM 文件的前面加了一个文件头，每个字段的的含义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">typedef struct &#123;</span><br><span class="line">    char          ChunkID[4]; //内容为&quot;RIFF&quot;</span><br><span class="line">    unsigned long ChunkSize;  //存储文件的字节数（不包含ChunkID和ChunkSize这8个字节）</span><br><span class="line">    char          Format[4];  //内容为&quot;WAVE“</span><br><span class="line">&#125; WAVE_HEADER;</span><br><span class="line">typedef struct &#123;</span><br><span class="line">   char           Subchunk1ID[4]; //内容为&quot;fmt&quot;</span><br><span class="line">   unsigned long  Subchunk1Size;  //存储该子块的字节数（不含前面的Subchunk1ID和Subchunk1Size这8个字节）</span><br><span class="line">   unsigned short AudioFormat;    //存储音频文件的编码格式，例如若为PCM则其存储值为1。</span><br><span class="line">   unsigned short NumChannels;    //声道数，单声道(Mono)值为1，双声道(Stereo)值为2，等等</span><br><span class="line">   unsigned long  SampleRate;     //采样率，如8k，44.1k等</span><br><span class="line">   unsigned long  ByteRate;       //每秒存储的bit数，其值 = SampleRate * NumChannels * BitsPerSample / 8</span><br><span class="line">   unsigned short BlockAlign;     //块对齐大小，其值 = NumChannels * BitsPerSample / 8</span><br><span class="line">   unsigned short BitsPerSample;  //每个采样点的bit数，一般为8,16,32等。</span><br><span class="line">&#125; WAVE_FMT;</span><br><span class="line">typedef struct &#123;</span><br><span class="line">   char          Subchunk2ID[4]; //内容为“data”</span><br><span class="line">   unsigned long Subchunk2Size;  //接下来的正式的数据部分的字节数，其值 = NumSamples * NumChannels * BitsPerSample / 8</span><br><span class="line">&#125; WAVE_DATA;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>无损压缩：将数据压缩之后，通过解码还能还原成与原始数据一模一样的数据为无损压缩。<ul>
+<li>ALAC、APE、FLAC</li>
+</ul>
+</li>
+<li>有损压缩：消除冗余信息，如人耳能听到的声音为20Hz - 20000Hz 以内，所以可以将此范围外的声音去除掉。<ul>
+<li>MP3、AAC、OGG、WMA</li>
+</ul>
+</li>
+</ul>
+<h1 id="二、Android音频播放流程"><a href="#二、Android音频播放流程" class="headerlink" title="二、Android音频播放流程"></a>二、Android音频播放流程</h1><p><strong>各层音频模块</strong></p>
+<p><img src="/2023/Android音频基础知识/android音频架构.png" alt=""></p>
+<p><strong>播放流程拆解</strong></p>
+<p><img src="/2023/Android音频基础知识/android播放流程.png" alt=""></p>
+<p><strong>音频播放链路</strong></p>
+<p><img src="/2023/Android音频基础知识/Android播放链路.png" alt=""></p>
+<h1 id="三、Android音频Pipeline"><a href="#三、Android音频Pipeline" class="headerlink" title="三、Android音频Pipeline"></a>三、Android音频Pipeline</h1><h2 id="1、音频Pipeline"><a href="#1、音频Pipeline" class="headerlink" title="1、音频Pipeline"></a>1、音频Pipeline</h2><p>要有好的音频效果，音频的pipeline基本如下：</p>
+<p>mic采集-&gt;Audio Codec-&gt;ADSP-&gt;AEC-&gt;beamforming-&gt;ANC-&gt;AGC-&gt;3A outbuffer-&gt;音频编码-&gt;发送</p>
+<p>接收-&gt;音频解码-&gt;EQ-&gt;DRC-&gt;PA/Codec-&gt;SPK播放</p>
+<h2 id="2、音频Pipeline详解"><a href="#2、音频Pipeline详解" class="headerlink" title="2、音频Pipeline详解"></a>2、音频Pipeline详解</h2><p><strong>MIC</strong>，全称是麦克风接口，即英文Microphone的缩写。在日常生活中，我们通常称之为麦克风接口。它是一种音频输入接口，用于将声音转换成电信号，以便进一步处理或传输。</p>
+<p><strong>Audio</strong> <strong>Codec</strong> 提供录音和播放功能，录音时模拟信号从麦克风输入或是线入，经过模拟部分增益放大，再转换成数字信号，最后从 I2S 接口输出，实现录音功能，支持立体声录音；回放时，音频信号从 I2S 接口输入，再由 DAC 转换成模拟信号输出，支持立体声音乐播放。</p>
+<p><strong>ADSP</strong>是音频数字信号处理器，专门设计用来处理音频信号。</p>
+<p><strong>3A算法</strong>(AEC、AGC、ANC)</p>
+<p><strong>AEC</strong>是回声消除器（Acoustic Echo Chancellor）,AEC可以消除各种延迟的回声）。AEC是对扬声器信号与由它产生的多路径回声的相关性为基础，建立远端信号的语音模型（高斯模型），利用它对回声进行估计，并不断地修改滤波器的系数，使得估计值更加逼近真实的回声。然后，将回声估计值从话筒的输入信号中减去，从而达到消除回声的目的，AEC还将话筒的输入与扬声器过去的值相比较，从而消除延长延迟的多次反射的声学回声。根椐存储器存放的过去的扬声器的输出值的多少，AEC可以消除各种延迟的回声。</p>
+<p><strong>AGC</strong>是自动增益补偿功能（Automatic Gain Control），AGC可以自动调麦克风的收音量，使与会者收到一定的音量水平，不会因发言者与麦克风的距离改变时，声音有忽大忽小声的缺点。</p>
+<p><strong>ANS</strong>是背景噪音抑制功能（Automatic Noise Suppression），ANS可探测出背景固定频率的杂音并消除背景噪音，例如：风扇、空调声自动滤除。呈现出与会者清晰的声音。</p>
+<p><strong>波束形成（Beamforming）</strong>，波束算法也叫作空域滤波器，它是利用麦克风阵列（个数大于1）的多通道空间信息，选择性的增强或者抑制空间中的某个方向的信号。相对于单通道语音，多通道波束算法可以有效的抑制干扰方向的信号，提高期望方向信号的信噪比，因此常常被用于远场语音的通信和识别。</p>
+<p><strong>EQ</strong>是均衡器的缩写。它的基本作用是通过对声音某一个或多个频段进行增益或衰减，达到调整音色的目的。当然，EQ还有一个显著的功能，降噪。EQ通常包括如下参数：F(requency)，频率――这是用于设定你要进行调整的频率点用的参数；G(ain)，增益――用于调整在你设定好的F值上进行增益或衰减的参数；Q(uantize)――用于设定你要进行增益或衰减的频段 “宽度”。</p>
+<p><strong>DRC</strong>（Dynamic range control，动态范围控制）。当输出的音频信号不是很大的时候，系统会按照原来的设定输出，但是当输出的音频信号过大的时候，为了保护喇叭DRC会将输出信号的幅度进行压缩将其限制在一个范围内。因为输出的音频信号过大会引起削峰，从而引起音频失真，并且损坏喇叭，所以需要有DRC的作用来将输出限制在一定的范围内。在信号很小的时候DRC是不会起作用的，只有当输出信号的功率超过了你设定的DRC门限的时候DRC才会工作。</p>
+<p><strong>PA</strong> (Power Amplifier): PA 是指功率放大器。它的主要功能是放大来自音频源的低功率信号，使其足以驱动扬声器发出声音。在移动电话和便携式音频播放器中，PA 对音频信号进行放大后，用户才能通过内置或外接的扬声器听到声音。功率放大器需要高效率，以最大化电池寿命，同时还需要保持音频信号的质量和保护扬声器不被损坏。</p>
+<p><strong>SPK</strong>（扬声器）</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>音频基础知识及PCM技术详解</p>
+<p><a href="https://zhuanlan.zhihu.com/p/550072985?utm_id=0&amp;wd=&amp;eqid=851e49d00004bbfe000000046465d25b" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/550072985?utm_id=0&amp;wd=&amp;eqid=851e49d00004bbfe000000046465d25b</a></p>
+<p>Android高性能音频解析</p>
+<p><a href="https://mp.weixin.qq.com/s/yQQ5q8vvi7ltVxVQrfcl0Q" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/yQQ5q8vvi7ltVxVQrfcl0Q</a></p>
+<p>Android音频系统介绍</p>
+<p><a href="https://zhuanlan.zhihu.com/p/460528800" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/460528800</a></p>
+<p>Android音频架构</p>
+<p><a href="https://www.rtcdeveloper.cn/cn/community/blog/23998" target="_blank" rel="noopener">https://www.rtcdeveloper.cn/cn/community/blog/23998</a></p>
+
+      
+    </div>
+
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/音频/" rel="tag">#音频</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/Android Framewok接口开发总结/" rel="next" title="Android Framework接口开发总结">
+                <i class="fa fa-chevron-left"></i> Android Framework接口开发总结
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2023/Android视频基础知识/" rel="prev" title="Android视频基础知识">
+                Android视频基础知识 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Skytoby">
+          <p class="site-author-name" itemprop="name">Skytoby</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br>Android、AI<br>座右铭：想法+行动+坚持</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/caoxiaoliang" target="_blank" title="GitHub">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://me.csdn.net/cao861544325" target="_blank" title="CSDN">
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、音频数据"><span class="nav-text">一、音频数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-声音概念"><span class="nav-text">1.1 声音概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-PCM"><span class="nav-text">1.2 PCM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-音频格式"><span class="nav-text">1.3 音频格式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、Android音频播放流程"><span class="nav-text">二、Android音频播放流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、Android音频Pipeline"><span class="nav-text">三、Android音频Pipeline</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、音频Pipeline"><span class="nav-text">1、音频Pipeline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、音频Pipeline详解"><span class="nav-text">2、音频Pipeline详解</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-text">参考资料</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2019 - 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Skytoby</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme Next
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'https-zproo-github-io';
+      var disqus_identifier = '2023/Android音频基础知识/';
+      var disqus_title = "Android音频基础知识";
+      var disqus_url = 'http://zproo.github.io/2023/Android音频基础知识/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+</html>
