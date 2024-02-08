@@ -4,8 +4,25 @@
 
     
   <url>
+    <loc>http://zproo.github.io/2024/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Android%20Camera%E6%9E%B6%E6%9E%84%E4%BA%8C-%E6%9C%8D%E5%8A%A1%E5%B1%82/</loc>
+    <lastmod>2024-02-08T08:43:01.487Z</lastmod>
+    <data>
+        <display>
+        <title>深入理解Android Camera架构二-服务层</title>
+        <pubTime>2024-02-20T13:18:23.000Z</pubTime>
+        
+        <tag>Android Camera</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://zproo.github.io/2024/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Android%20Camera%E6%9E%B6%E6%9E%84%E4%B8%80-%E5%BA%94%E7%94%A8%E5%B1%82/</loc>
-    <lastmod>2024-01-20T08:05:53.451Z</lastmod>
+    <lastmod>2024-02-08T08:41:46.733Z</lastmod>
     <data>
         <display>
         <title>深入理解Android Camera架构一-应用层</title>
@@ -232,9 +249,9 @@
         <title>Android系统SystemServer启动（上）</title>
         <pubTime>2019-05-16T13:18:23.000Z</pubTime>
         
-        <tag>systemserver</tag>
-         
         <tag>zygote</tag>
+         
+        <tag>systemserver</tag>
          
          
            

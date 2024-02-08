@@ -256,6 +256,107 @@
             
               
                 
+                <a class="post-title-link" href="/2024/深入理解Android Camera架构二-服务层/" itemprop="url">
+                  深入理解Android Camera架构二-服务层
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+		  
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2024-02-20T21:18:23+08:00" content="2024-02-20">
+              2024-02-20
+            </time>
+          </span>
+
+          
+
+          <!--  -->
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          一、概述Camera Service被设计成一个独立进程，作为一个服务端，处理来自Camera Framework 客户端的跨进程请求，并在内部进行一定的操作，随后作为客户端将请求再一次发送至作为服务端的Camera Provider，整个流程涉及到了两个跨进程操作，前者通过AIDL机制实现，后者通
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2024/深入理解Android Camera架构二-服务层/" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2024/深入理解Android Camera架构一-应用层/" itemprop="url">
                   深入理解Android Camera架构一-应用层
                 </a>
@@ -1765,117 +1866,6 @@ Binder
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2020/深入理解Binder机制2-注册服务addService/" itemprop="url">
-                  深入理解Binder机制2-注册服务addService
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-		  
-
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2020-01-10T22:28:28+08:00" content="2020-01-10">
-              2020-01-10
-            </time>
-          </span>
-
-          
-
-          <!-- 
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2020/深入理解Binder机制2-注册服务addService/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/深入理解Binder机制2-注册服务addService/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-           -->
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          一、概述本文将分析系统服务的注册流程，如注册ActivityManagerService时，通过ServiceManager中的静态方法addService注册具体的服务。ServiceManger是Binder IPC通信过程中的守护进程，是一个具体的服务，其功能主要是查询和注册服务。
-二、Ser
-          ...
-          <!--noindex-->
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2020/深入理解Binder机制2-注册服务addService/" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1919,7 +1909,7 @@ Binder
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">38</span>
+              <span class="site-state-item-count">39</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
