@@ -256,6 +256,118 @@
             
               
                 
+                <a class="post-title-link" href="/2020/深入理解Binder机制3-获取服务getService/" itemprop="url">
+                  深入理解Binder机制3-获取服务getService
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+		  
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2020-02-04T21:28:28+08:00" content="2020-02-04">
+              2020-02-04
+            </time>
+          </span>
+
+          
+
+          <!-- 
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2020/深入理解Binder机制3-获取服务getService/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/深入理解Binder机制3-获取服务getService/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+           -->
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          一、概述本文将介绍系统服务获取的具体流程，如获取ActivityManagerService时，通过ServiceManager中的getService静态方法获取具体的服务，这个流程经历Java层，Native层，Kernel层，其通信流程如下：
+
+1.发起端进程向Binder Driver发送b
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2020/深入理解Binder机制3-获取服务getService/" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2020/深入理解Binder机制2-注册服务addService/" itemprop="url">
                   深入理解Binder机制2-注册服务addService
                 </a>
@@ -1819,120 +1931,6 @@ WMS继承于IWindowManager.Stub,作为Binder服务端
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2019/android系统编译/" itemprop="url">
-                  android系统编译方法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-		  
-
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2019-07-11T22:18:23+08:00" content="2019-07-11">
-              2019-07-11
-            </time>
-          </span>
-
-          
-
-          <!-- 
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2019/android系统编译/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/android系统编译/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-           -->
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          1.下载好系统代码（ROM公司有自己的服务器下载）
-2.进入到android系统代码根目录
-123source build/envsetup.sh lunch （选择相应的分支）make -j32
-3.在某些情况下需要分模块编译
-12345678910111213//系统imgmake system
-          ...
-          <!--noindex-->
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2019/android系统编译/" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1976,7 +1974,7 @@ WMS继承于IWindowManager.Stub,作为Binder服务端
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">39</span>
+              <span class="site-state-item-count">40</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
