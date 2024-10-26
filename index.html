@@ -256,6 +256,410 @@
             
               
                 
+                <a class="post-title-link" href="/2024/深入理解Android Camera架构七-硬件层/" itemprop="url">
+                  深入理解Android Camera架构七-硬件层
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+		  
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2024-10-20T21:18:23+08:00" content="2024-10-20">
+              2024-10-20
+            </time>
+          </span>
+
+          
+
+          <!--  -->
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          一、简介相机的硬件层，作为整个框架的最底层，通过硬件模块接收来自客观世界的真实光影效果，将其转换为计算机所熟知的数字信号，并按照一定的数据格式向上源源不断提供成稳定并成像效果优秀的图像数据，整个部分复杂且高效，可以说是，一个优秀的硬件基础，就好比为整个相机框架的地基，拥有一个好的地基，便使得建造一座
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2024/深入理解Android Camera架构七-硬件层/" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2024/深入理解Android Camera架构六-高通KMD/" itemprop="url">
+                  深入理解Android Camera架构六-高通KMD
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+		  
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2024-08-20T21:18:23+08:00" content="2024-08-20">
+              2024-08-20
+            </time>
+          </span>
+
+          
+
+          <!--  -->
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          一、概览利用了V4L2可扩展这一特性，高通在相机驱动部分实现了自有的一套KMD框架，该框架通过V4L2标准方法在系统中创建设备节点，将控制接口直接暴露给UMD CSL进行访问，而其内部主要定义了一系列核心模块，包括CRM(Camera Request Manager)，用于管理整个KMD的Sessi
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2024/深入理解Android Camera架构六-高通KMD/" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2024/深入理解Android Camera架构五-驱动层V4L2/" itemprop="url">
+                  深入理解Android Camera架构五-驱动层V4L2
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+		  
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2024-06-20T21:18:23+08:00" content="2024-06-20">
+              2024-06-20
+            </time>
+          </span>
+
+          
+
+          <!--  -->
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          一、概览相机驱动层位于HAL Moudle与硬件层之间，借助linux内核驱动框架，以文件节点的方式暴露接口给用户空间，让HAL Module通过标准的文件访问接口，从而能够将请求顺利地下发到内核中，而在内核中，为了更好的支持视频流的操作，早先提出了v4l视频处理框架，但是由于操作复杂，并且代码无法
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2024/深入理解Android Camera架构五-驱动层V4L2/" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2024/深入理解Android Camera架构四-高通CamX-CHI/" itemprop="url">
+                  深入理解Android Camera架构四-高通CamX-CHI
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+		  
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2024-04-20T21:18:23+08:00" content="2024-04-20">
+              2024-04-20
+            </time>
+          </span>
+
+          
+
+          <!--  -->
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          一、概述回顾高通平台Camera HAL历史，之前高通采用的是QCamera &amp; MM-Camera架构，但是为了更精细化控制底层硬件(Sensor/ISP等关键硬件)，同时方便手机厂商自定义一些功能，现在提出了CamX-CHI架构，由于在CamX-CHI中完全看不到之前老架构的影子，所以它
+          ...
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2024/深入理解Android Camera架构四-高通CamX-CHI/" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2024/深入理解Android Camera架构三-硬件抽象层/" itemprop="url">
                   深入理解Android Camera架构三-硬件抽象层
                 </a>
@@ -1411,450 +1815,6 @@ SurfaceFlinger进程是由init进程创建，运行在独立的SurfaceFl
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2020/Android10.0如何hook Activity/" itemprop="url">
-                  Android10.0如何hook Activity
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-		  
-
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2020-04-04T20:22:28+08:00" content="2020-04-04">
-              2020-04-04
-            </time>
-          </span>
-
-          
-
-          <!-- 
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2020/Android10.0如何hook Activity/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/Android10.0如何hook Activity/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-           -->
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          在插件化中，hook Activity作为最基本的技术，用来在宿主app中新增Activity，而通常情况下，Activity必须在Manifest中注册在才可以使用，下面将就Android10.0来分析hook Activity的详细过程。
-要hook Activity之前，必须知道Activit
-          ...
-          <!--noindex-->
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2020/Android10.0如何hook Activity/" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2020/深入理解Binder机制6-总结篇/" itemprop="url">
-                  深入理解Binder机制6-总结篇
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-		  
-
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2020-03-15T21:28:28+08:00" content="2020-03-15">
-              2020-03-15
-            </time>
-          </span>
-
-          
-
-          <!-- 
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2020/深入理解Binder机制6-总结篇/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/深入理解Binder机制6-总结篇/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-           -->
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          深入理解Binder机制系列如下：
-深入理解Binder机制1-AIDL原理深入理解Binder机制2-注册服务addService深入理解Binder机制3-获取服务getService深入理解Binder机制4-bindService过程分析深入理解Binder机制5-binder驱动分析深入理
-          ...
-          <!--noindex-->
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2020/深入理解Binder机制6-总结篇/" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2020/深入理解Binder机制5-binder驱动分析/" itemprop="url">
-                  深入理解Binder机制5-binder驱动分析
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-		  
-
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2020-02-26T21:28:28+08:00" content="2020-02-26">
-              2020-02-26
-            </time>
-          </span>
-
-          
-
-          <!-- 
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2020/深入理解Binder机制5-binder驱动分析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/深入理解Binder机制5-binder驱动分析/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-           -->
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          一、概述Binder驱动是Android专用的，但底层的驱动架构与Linux驱动一样。binder驱动在以misc设备进行注册，作为虚拟字符设备，没有直接操作硬件，只是对设备内存的处理，主要是驱动设备的初始化（binder_init）,打开（binder_open）,映射（binder_mmap）,
-          ...
-          <!--noindex-->
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2020/深入理解Binder机制5-binder驱动分析/" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2020/深入理解Binder机制4-bindService过程分析/" itemprop="url">
-                  深入理解Binder机制4-bindService过程分析
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-		  
-
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2020-02-10T21:28:28+08:00" content="2020-02-10">
-              2020-02-10
-            </time>
-          </span>
-
-          
-
-          <!-- 
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2020/深入理解Binder机制4-bindService过程分析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/深入理解Binder机制4-bindService过程分析/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-           -->
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          一、概述1.1 Binder架构Android内核基于Linux系统，而Linux系统进程间通信方式有很多，如管道，共g享内存，信号，信号量，消息队列，套接字。而Android为什么要用binder进行进程间的通信，这里引用gityuan在知乎上的回答：
-（1）从性能的角度数据拷贝次数
-Binder
-          ...
-          <!--noindex-->
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2020/深入理解Binder机制4-bindService过程分析/" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1898,7 +1858,7 @@ Binder
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-count">44</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>

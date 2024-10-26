@@ -1,0 +1,726 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Android Camera,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="一、概览相机驱动层位于HAL Moudle与硬件层之间，借助linux内核驱动框架，以文件节点的方式暴露接口给用户空间，让HAL Module通过标准的文件访问接口，从而能够将请求顺利地下发到内核中，而在内核中，为了更好的支持视频流的操作，早先提出了v4l视频处理框架，但是由于操作复杂，并且代码无法进行较好的重构，难以维护等原因，之后便衍生出了v4l2框架。 按照v4l2标准，它将一个数据流设备抽">
+<meta name="keywords" content="Android Camera">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解Android Camera架构五-驱动层V4L2">
+<meta property="og:url" content="http://zproo.github.io/2024/深入理解Android Camera架构五-驱动层V4L2/index.html">
+<meta property="og:site_name" content="Skytoby">
+<meta property="og:description" content="一、概览相机驱动层位于HAL Moudle与硬件层之间，借助linux内核驱动框架，以文件节点的方式暴露接口给用户空间，让HAL Module通过标准的文件访问接口，从而能够将请求顺利地下发到内核中，而在内核中，为了更好的支持视频流的操作，早先提出了v4l视频处理框架，但是由于操作复杂，并且代码无法进行较好的重构，难以维护等原因，之后便衍生出了v4l2框架。 按照v4l2标准，它将一个数据流设备抽">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://zproo.github.io/2024/深入理解Android%20Camera架构五-驱动层V4L2/v4l2_flow.png">
+<meta property="og:image" content="http://zproo.github.io/2024/深入理解Android%20Camera架构五-驱动层V4L2/v4l2_struct.png">
+<meta property="og:updated_time" content="2024-10-26T03:03:13.039Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解Android Camera架构五-驱动层V4L2">
+<meta name="twitter:description" content="一、概览相机驱动层位于HAL Moudle与硬件层之间，借助linux内核驱动框架，以文件节点的方式暴露接口给用户空间，让HAL Module通过标准的文件访问接口，从而能够将请求顺利地下发到内核中，而在内核中，为了更好的支持视频流的操作，早先提出了v4l视频处理框架，但是由于操作复杂，并且代码无法进行较好的重构，难以维护等原因，之后便衍生出了v4l2框架。 按照v4l2标准，它将一个数据流设备抽">
+<meta name="twitter:image" content="http://zproo.github.io/2024/深入理解Android%20Camera架构五-驱动层V4L2/v4l2_flow.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: 'Author'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://zproo.github.io/2024/深入理解Android Camera架构五-驱动层V4L2/">
+
+  <title> 深入理解Android Camera架构五-驱动层V4L2 | Skytoby </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+    
+    <header id="header_post" class="header" itemscope="" itemtype="http://schema.org/WPHeader" style="background-image: url('http://ortur5wom.bkt.clouddn.com/home_bg.jpg');">
+      <div class="header-inner-post"><a class="site-home" href="/">Skytoby</a>
+
+<div class="site-meta ">
+  
+  
+  
+    <div class="site-meta-headline">
+      <a>
+        <img class="custom-logo-image" src="/images/logo.png" style="width: 50px" alt="Skytoby">
+      </a>
+    </div>
+  
+
+  
+  
+  
+  
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+           <li class="menu-item menu-item-关于">
+             <a href="/about" rel="section">
+               
+               
+               关于
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-目录">
+             <a href="/archives" rel="section">
+               
+               
+               目录
+             </a>
+           </li>
+        
+      
+        
+        
+        
+           <li class="menu-item menu-item-首页">
+             <a href="/" rel="section">
+               
+               
+               首页
+             </a>
+           </li>
+        
+      
+
+      
+    </ul>
+  
+
+  
+</nav> </div>
+      <div class="header-post"> 
+  <div class="post-header">
+      <div class="tags">
+      
+        <a href="/tags/Android-Camera/" rel="tag" title="Android Camera">Android Camera</a>
+      
+      </div>
+      <h1>深入理解Android Camera架构五-驱动层V4L2</h1>
+      <h2 class="subtitle"></h2>
+      <div class="post-time">
+        <span class="post-meta-item-text">Posted on </span>
+        <time itemprop="dateCreated" datetime="2024-06-20T21:18:23+08:00" content="2024-06-20" title="2024-06-20 21:18:23">
+          2024-06-20
+        </time>
+      </div>
+  </div>
+ </div>
+    </header>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                深入理解Android Camera架构五-驱动层V4L2
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+		  
+
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2024-06-20T21:18:23+08:00" content="2024-06-20">
+              2024-06-20
+            </time>
+          </span>
+
+          
+
+          <!--  -->
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一、概览"><a href="#一、概览" class="headerlink" title="一、概览"></a>一、概览</h2><p>相机驱动层位于HAL Moudle与硬件层之间，借助linux内核驱动框架，以文件节点的方式暴露接口给用户空间，让HAL Module通过标准的文件访问接口，从而能够将请求顺利地下发到内核中，而在内核中，为了更好的支持视频流的操作，早先提出了v4l视频处理框架，但是由于操作复杂，并且代码无法进行较好的重构，难以维护等原因，之后便衍生出了v4l2框架。</p>
+<p>按照v4l2标准，它将一个数据流设备抽象成一个videoX节点，从属的子设备都对应着各自的v4l2_subdev实现，并且通过media controller进行统一管理，整个流程复杂但高效，同时代码的扩展性也较高。</p>
+<p>而对高通平台而言，高通整个内核相机驱动是建立在v4l2框架上的，并且对其进行了相应的扩展，创建了一个整体相机控制者的CRM，它以节点video0暴露给用户空间，主要用于管理内核中的Session、Request以及与子设备，同时各个子模块都实现了各自的v4l2_subdev设备，并且以v4l2_subdev节点暴露给用户空间，与此同时，高通还创建了另一个video1设备Camera SYNC，该设备主要用于同步数据流，保证用户空间和内核空间的buffer能够高效得进行传递。</p>
+<p>再往下与相机驱动交互的便是整个相机框架的最底层Camera Hardware了，驱动部分控制着其上下电逻辑以及寄存器读取时序并按照I2C协议进行与硬件的通信，和根据MIPI CSI协议传递数据，从而达到控制各个硬件设备，并且获取图像数据的目的。</p>
+<p>V4L2英文是Video for Linux 2，该框架是诞生于Linux系统，用于提供一个标准的视频控制框架，其中一般默认会嵌入media controller框架中进行统一管理，v4l2提供给用户空间操作节点，media controller控制对于每一个设备的枚举控制能力，于此同时，由于v4l2包含了一定数量的子设备，而这一系列的子设备都是处于平级关系，但是在实际的图像采集过程中，子设备之间往往还存在着包含于被包含的关系，所以为了维护并管理这种关系，media controller针对多个子设备建立了的一个拓扑图，数据流也就按照这个拓扑图进行流转。</p>
+<h2 id="二、流程简介"><a href="#二、流程简介" class="headerlink" title="二、流程简介"></a>二、流程简介</h2><p>整个对于v4l2的操作主要包含了如下几个主要流程：</p>
+<p><img src="/2024/深入理解Android Camera架构五-驱动层V4L2/v4l2_flow.png" style="zoom: 50%;"></p>
+<p><strong>a) 打开video设备</strong></p>
+<p>在需要进行视频数据流的操作之前，首先要通过标准的字符设备操作接口open方法来打开一个video设备，并且将返回的字符句柄存在本地，之后的一系列操作都是基于该句柄，而在打开的过程中，会去给每一个子设备的上电，并完成各自的一系列初始化操作。</p>
+<p><strong>b) 查看并设置设备</strong></p>
+<p>在打开设备获取其文件句柄之后，就需要查询设备的属性，该动作主要通过ioctl传入VIDIOC_QUERYCAP参数来完成，其中该系列属性通过v4l2_capability结构体来表达，除此之外，还可以通过传入VIDIOC_ENUM_FMT来枚举支持的数据格式，通过传入VIDIOC_G_FMT/VIDIOC_S_FMT来分别获取和获取当前的数据格式，通过传入VIDIOC_G_PARM/VIDIOC_S_PARM来分别获取和设置参数。</p>
+<p><strong>c) 申请帧缓冲区</strong></p>
+<p>完成设备的配置之后，便可以开始向设备申请多个用于盛装图像数据的帧缓冲区，该动作通过调用ioctl并且传入VIDIOC_REQBUFS命令来完成，最后将缓冲区通过mmap方式映射到用户空间。</p>
+<p><strong>d) 将帧缓冲区入队</strong></p>
+<p>申请好帧缓冲区之后，通过调用ioctl方法传入VIDIOC_QBUF命令来将帧缓冲区加入到v4l2 框架中的缓冲区队列中，静等硬件模块将图像数据填充到缓冲区中。</p>
+<p><strong>e) 开启数据流</strong></p>
+<p>将所有的缓冲区都加入队列中之后便可以调用ioctl并且传入VIDIOC_STREAMON命令，来通知整个框架开始进行数据传输，其中大致包括了通知各个子设备开始进行工作，最终将数据填充到V4L2框架中的缓冲区队列中。</p>
+<p><strong>f）将帧缓冲区出队</strong></p>
+<p>一旦数据流开始进行流转了，我们就可以通过调用ioctl下发VIDIOC_DQBUF命令来获取帧缓冲区，并且将缓冲区的图像数据取出，进行预览、拍照或者录像的处理，处理完成之后，需要将此次缓冲区再次放入V4L2框架中的队列中等待下次的图像数据的填充。</p>
+<p>整个采集图像数据的流程现在看来还是比较简单的，接口的控制逻辑很清晰，主要原因是为了提供给用户的接口简单而且抽象，这样方便用户进行集成开发，其中的大部分复杂的业务处理都被V4L2很好的封装了，接下来我们来详细了解下V4L2框架内部是如何表达以及如何运转的。</p>
+<h2 id="三、关键结构体"><a href="#三、关键结构体" class="headerlink" title="三、关键结构体"></a>三、关键结构体</h2><p><img src="/2024/深入理解Android Camera架构五-驱动层V4L2/v4l2_struct.png" alt=""></p>
+<p>从上图不难看出，v4l2_device作为顶层管理者，一方面通过嵌入到一个video_device中，暴露video设备节点给用户空间进行控制，另一方面，video_device内部会创建一个media_entity作为在media controller中的抽象体，被加入到media_device中的entitie链表中，此外，为了保持对所从属子设备的控制，内部还维护了一个挂载了所有子设备的subdevs链表。</p>
+<p>而对于其中每一个子设备而言，统一采用了v4l2_subdev结构体来进行描述，一方面通过嵌入到video_device，暴露v4l2_subdev子设备节点给用户空间进行控制，另一方面其内部也维护着在media controller中的对应的一个media_entity抽象体，而该抽象体也会链入到media_device中的entities链表中。</p>
+<p>通过加入entities链表的方式，media_device保持了对所有的设备信息的查询和控制的能力，而该能力会通过media controller框架在用户空间创建meida设备节点，将这种能力暴露给用户进行控制。</p>
+<p>由此可见，V4L2框架都是围绕着以上几个主要结构体来进行的，接下来我们依次简单介绍下：</p>
+<h3 id="3-1-v4l2-device"><a href="#3-1-v4l2-device" class="headerlink" title="3.1 v4l2_device"></a>3.1 v4l2_device</h3><p>[-&gt;kernel/msm-4.19/include/media/v4l2-device.h]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * struct v4l2_device - main struct to for V4L2 device drivers</span><br><span class="line"> *</span><br><span class="line"> * @dev: pointer to struct device.</span><br><span class="line"> * @mdev: pointer to struct media_device, may be NULL.</span><br><span class="line"> * @subdevs: used to keep track of the registered subdevs</span><br><span class="line"> * @lock: lock this struct; can be used by the driver as well</span><br><span class="line"> *	if this struct is embedded into a larger struct.</span><br><span class="line"> * @name: unique device name, by default the driver name + bus ID</span><br><span class="line"> * @notify: notify operation called by some sub-devices.</span><br><span class="line"> * @ctrl_handler: The control handler. May be %NULL.</span><br><span class="line"> * @prio: Device&apos;s priority state</span><br><span class="line"> * @ref: Keep track of the references to this struct.</span><br><span class="line"> * @release: Release function that is called when the ref count</span><br><span class="line"> *	goes to 0.</span><br><span class="line"> *</span><br><span class="line"> * Each instance of a V4L2 device should create the v4l2_device struct,</span><br><span class="line"> * either stand-alone or embedded in a larger struct.</span><br><span class="line"> *</span><br><span class="line"> * It allows easy access to sub-devices (see v4l2-subdev.h) and provides</span><br><span class="line"> * basic V4L2 device-level support.</span><br><span class="line"> *</span><br><span class="line"> * .. note::</span><br><span class="line"> *</span><br><span class="line"> *    #) @dev-&gt;driver_data points to this struct.</span><br><span class="line"> *    #) @dev might be %NULL if there is no parent device</span><br><span class="line"> */</span><br><span class="line">struct v4l2_device &#123;</span><br><span class="line">	struct device *dev;</span><br><span class="line">	struct media_device *mdev;</span><br><span class="line">	struct list_head subdevs;</span><br><span class="line">	spinlock_t lock;</span><br><span class="line">	char name[V4L2_DEVICE_NAME_SIZE];</span><br><span class="line">	void (*notify)(struct v4l2_subdev *sd,</span><br><span class="line">			unsigned int notification, void *arg);</span><br><span class="line">	struct v4l2_ctrl_handler *ctrl_handler;</span><br><span class="line">	struct v4l2_prio_state prio;</span><br><span class="line">	struct kref ref;</span><br><span class="line">	void (*release)(struct v4l2_device *v4l2_dev);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>该结构体代表了一个整个V4L2设备，作为整个V4L2的顶层管理者，内部通过一个链表管理着整个从属的所有的子设备，并且如果将整个框架放入media conntroller进行管理，便在初始化的时候需要将创建成功的media_device赋值给内部变量 mdev，这样便建立了于与media_device的联系，驱动通过调用v4l2_device_register方法和v4l2_device_unregister方法分别向系统注册和释放一个v4l2_device。</p>
+<h3 id="3-2-v4l2-subdev"><a href="#3-2-v4l2-subdev" class="headerlink" title="3.2 v4l2_subdev"></a>3.2 v4l2_subdev</h3><p>[-&gt;kernel\msm-4.19\include\media\v4l2-subdev.h]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * struct v4l2_subdev - describes a V4L2 sub-device</span><br><span class="line"> *</span><br><span class="line"> * @entity: pointer to &amp;struct media_entity</span><br><span class="line"> * @list: List of sub-devices</span><br><span class="line"> * @owner: The owner is the same as the driver&apos;s &amp;struct device owner.</span><br><span class="line"> * @owner_v4l2_dev: true if the &amp;sd-&gt;owner matches the owner of @v4l2_dev-&gt;dev</span><br><span class="line"> *	owner. Initialized by v4l2_device_register_subdev().</span><br><span class="line"> * @flags: subdev flags. Can be:</span><br><span class="line"> *   %V4L2_SUBDEV_FL_IS_I2C - Set this flag if this subdev is a i2c device;</span><br><span class="line"> *   %V4L2_SUBDEV_FL_IS_SPI - Set this flag if this subdev is a spi device;</span><br><span class="line"> *   %V4L2_SUBDEV_FL_HAS_DEVNODE - Set this flag if this subdev needs a</span><br><span class="line"> *   device node;</span><br><span class="line"> *   %V4L2_SUBDEV_FL_HAS_EVENTS -  Set this flag if this subdev generates</span><br><span class="line"> *   events.</span><br><span class="line"> *</span><br><span class="line"> * @v4l2_dev: pointer to struct &amp;v4l2_device</span><br><span class="line"> * @ops: pointer to struct &amp;v4l2_subdev_ops</span><br><span class="line"> * @internal_ops: pointer to struct &amp;v4l2_subdev_internal_ops.</span><br><span class="line"> *	Never call these internal ops from within a driver!</span><br><span class="line"> * @ctrl_handler: The control handler of this subdev. May be NULL.</span><br><span class="line"> * @name: Name of the sub-device. Please notice that the name must be unique.</span><br><span class="line"> * @grp_id: can be used to group similar subdevs. Value is driver-specific</span><br><span class="line"> * @dev_priv: pointer to private data</span><br><span class="line"> * @host_priv: pointer to private data used by the device where the subdev</span><br><span class="line"> *	is attached.</span><br><span class="line"> * @devnode: subdev device node</span><br><span class="line"> * @dev: pointer to the physical device, if any</span><br><span class="line"> * @fwnode: The fwnode_handle of the subdev, usually the same as</span><br><span class="line"> *	    either dev-&gt;of_node-&gt;fwnode or dev-&gt;fwnode (whichever is non-NULL).</span><br><span class="line"> * @async_list: Links this subdev to a global subdev_list or @notifier-&gt;done</span><br><span class="line"> *	list.</span><br><span class="line"> * @asd: Pointer to respective &amp;struct v4l2_async_subdev.</span><br><span class="line"> * @notifier: Pointer to the managing notifier.</span><br><span class="line"> * @subdev_notifier: A sub-device notifier implicitly registered for the sub-</span><br><span class="line"> *		     device using v4l2_device_register_sensor_subdev().</span><br><span class="line"> * @pdata: common part of subdevice platform data</span><br><span class="line"> *</span><br><span class="line"> * Each instance of a subdev driver should create this struct, either</span><br><span class="line"> * stand-alone or embedded in a larger struct.</span><br><span class="line"> *</span><br><span class="line"> * This structure should be initialized by v4l2_subdev_init() or one of</span><br><span class="line"> * its variants: v4l2_spi_subdev_init(), v4l2_i2c_subdev_init().</span><br><span class="line"> */</span><br><span class="line">struct v4l2_subdev &#123;</span><br><span class="line">#if defined(CONFIG_MEDIA_CONTROLLER)</span><br><span class="line">	struct media_entity entity;</span><br><span class="line">#endif</span><br><span class="line">	struct list_head list;</span><br><span class="line">	struct module *owner;</span><br><span class="line">	bool owner_v4l2_dev;</span><br><span class="line">	u32 flags;</span><br><span class="line">	struct v4l2_device *v4l2_dev;</span><br><span class="line">	const struct v4l2_subdev_ops *ops;</span><br><span class="line">	const struct v4l2_subdev_internal_ops *internal_ops;</span><br><span class="line">	struct v4l2_ctrl_handler *ctrl_handler;</span><br><span class="line">	char name[V4L2_SUBDEV_NAME_SIZE];</span><br><span class="line">	u32 grp_id;</span><br><span class="line">	void *dev_priv;</span><br><span class="line">	void *host_priv;</span><br><span class="line">	struct video_device *devnode;</span><br><span class="line">	struct device *dev;</span><br><span class="line">	struct fwnode_handle *fwnode;</span><br><span class="line">	struct list_head async_list;</span><br><span class="line">	struct v4l2_async_subdev *asd;</span><br><span class="line">	struct v4l2_async_notifier *notifier;</span><br><span class="line">	struct v4l2_async_notifier *subdev_notifier;</span><br><span class="line">	struct v4l2_subdev_platform_data *pdata;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>该结构体代表了一个子设备，每一个子设备都需要在初始化的时候挂载到一个总的v4l2_device上，并且将该v4l2设备赋值给内部的v4l2_dev变量，之后将自身加入到v4l2_device中的子设备链表中进行统一管理，这种方式提高了遍历访问所有子设备的效率，同时为了表达不同硬件模块的特殊操作行为，v4l2_subdev定义了一个v4l2_subdev_ops 结构体来进行定义，其实现交由不同的硬件模块来具体完成。其中如果使能了CONFIG_MEDIA_CONTROLLER宏，便会在media_controller中生成一个对应的media_entity，来代表该子设备，而该entity便会存入子设备结构体中的entity变量中，最后，如果需要创建一个设备节点的话，通过video_device调用标准API接口进行实现，而相应的video_device便会存入其内部devnode变量中。</p>
+<h3 id="3-3-video-device"><a href="#3-3-video-device" class="headerlink" title="3.3 video_device"></a>3.3 video_device</h3><p>[-&gt;kernel\msm-4.19\include\media\v4l2-dev.h]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * struct video_device - Structure used to create and manage the V4L2 device</span><br><span class="line"> *	nodes.</span><br><span class="line"> *</span><br><span class="line"> * @entity: &amp;struct media_entity</span><br><span class="line"> * @intf_devnode: pointer to &amp;struct media_intf_devnode</span><br><span class="line"> * @pipe: &amp;struct media_pipeline</span><br><span class="line"> * @fops: pointer to &amp;struct v4l2_file_operations for the video device</span><br><span class="line"> * @device_caps: device capabilities as used in v4l2_capabilities</span><br><span class="line"> * @dev: &amp;struct device for the video device</span><br><span class="line"> * @cdev: character device</span><br><span class="line"> * @v4l2_dev: pointer to &amp;struct v4l2_device parent</span><br><span class="line"> * @dev_parent: pointer to &amp;struct device parent</span><br><span class="line"> * @ctrl_handler: Control handler associated with this device node.</span><br><span class="line"> *	 May be NULL.</span><br><span class="line"> * @queue: &amp;struct vb2_queue associated with this device node. May be NULL.</span><br><span class="line"> * @prio: pointer to &amp;struct v4l2_prio_state with device&apos;s Priority state.</span><br><span class="line"> *	 If NULL, then v4l2_dev-&gt;prio will be used.</span><br><span class="line"> * @name: video device name</span><br><span class="line"> * @vfl_type: V4L device type, as defined by &amp;enum vfl_devnode_type</span><br><span class="line"> * @vfl_dir: V4L receiver, transmitter or m2m</span><br><span class="line"> * @minor: device node &apos;minor&apos;. It is set to -1 if the registration failed</span><br><span class="line"> * @num: number of the video device node</span><br><span class="line"> * @flags: video device flags. Use bitops to set/clear/test flags.</span><br><span class="line"> *	   Contains a set of &amp;enum v4l2_video_device_flags.</span><br><span class="line"> * @index: attribute to differentiate multiple indices on one physical device</span><br><span class="line"> * @fh_lock: Lock for all v4l2_fhs</span><br><span class="line"> * @fh_list: List of &amp;struct v4l2_fh</span><br><span class="line"> * @dev_debug: Internal device debug flags, not for use by drivers</span><br><span class="line"> * @tvnorms: Supported tv norms</span><br><span class="line"> *</span><br><span class="line"> * @release: video device release() callback</span><br><span class="line"> * @ioctl_ops: pointer to &amp;struct v4l2_ioctl_ops with ioctl callbacks</span><br><span class="line"> *</span><br><span class="line"> * @valid_ioctls: bitmap with the valid ioctls for this device</span><br><span class="line"> * @lock: pointer to &amp;struct mutex serialization lock</span><br><span class="line"> *</span><br><span class="line"> * .. note::</span><br><span class="line"> *	Only set @dev_parent if that can&apos;t be deduced from @v4l2_dev.</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">struct video_device</span><br><span class="line">&#123;</span><br><span class="line">#if defined(CONFIG_MEDIA_CONTROLLER)</span><br><span class="line">	struct media_entity entity;</span><br><span class="line">	struct media_intf_devnode *intf_devnode;</span><br><span class="line">	struct media_pipeline pipe;</span><br><span class="line">#endif</span><br><span class="line">	const struct v4l2_file_operations *fops;</span><br><span class="line"></span><br><span class="line">	u32 device_caps;</span><br><span class="line"></span><br><span class="line">	/* sysfs */</span><br><span class="line">	struct device dev;</span><br><span class="line">	struct cdev *cdev;</span><br><span class="line"></span><br><span class="line">	struct v4l2_device *v4l2_dev;</span><br><span class="line">	struct device *dev_parent;</span><br><span class="line"></span><br><span class="line">	struct v4l2_ctrl_handler *ctrl_handler;</span><br><span class="line"></span><br><span class="line">	struct vb2_queue *queue;</span><br><span class="line"></span><br><span class="line">	struct v4l2_prio_state *prio;</span><br><span class="line"></span><br><span class="line">	/* device info */</span><br><span class="line">	char name[32];</span><br><span class="line">	enum vfl_devnode_type vfl_type;</span><br><span class="line">	enum vfl_devnode_direction vfl_dir;</span><br><span class="line">	int minor;</span><br><span class="line">	u16 num;</span><br><span class="line">	unsigned long flags;</span><br><span class="line">	int index;</span><br><span class="line"></span><br><span class="line">	/* V4L2 file handles */</span><br><span class="line">	spinlock_t		fh_lock;</span><br><span class="line">	struct list_head	fh_list;</span><br><span class="line"></span><br><span class="line">	int dev_debug;</span><br><span class="line"></span><br><span class="line">	v4l2_std_id tvnorms;</span><br><span class="line"></span><br><span class="line">	/* callbacks */</span><br><span class="line">	void (*release)(struct video_device *vdev);</span><br><span class="line">	const struct v4l2_ioctl_ops *ioctl_ops;</span><br><span class="line">	DECLARE_BITMAP(valid_ioctls, BASE_VIDIOC_PRIVATE);</span><br><span class="line"></span><br><span class="line">	struct mutex *lock;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>如果需要给v4l2_device或者v4l2_subdev在系统中创建节点的话，便需要实现该结构体，并且通过video_register_device方法进行创建，而其中的fops便是video_device所对应的操作方法集，在v4l2框架内部，会将video_device嵌入到一个具有特定主设备号的字符设备中，而其方法集会在操作节点时被调用到。除了这些标准的操作集外，还定义了一系列的ioctl操作集，通过内部ioctl_ops来描述。</p>
+<h3 id="3-4-media-device"><a href="#3-4-media-device" class="headerlink" title="3.4 media_device"></a>3.4 media_device</h3><p>[-&gt;kernel\msm-4.19\include\media\media-device.h]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line">**</span><br><span class="line"> * struct media_device - Media device</span><br><span class="line"> * @dev:	Parent device</span><br><span class="line"> * @devnode:	Media device node</span><br><span class="line"> * @driver_name: Optional device driver name. If not set, calls to</span><br><span class="line"> *		%MEDIA_IOC_DEVICE_INFO will return ``dev-&gt;driver-&gt;name``.</span><br><span class="line"> *		This is needed for USB drivers for example, as otherwise</span><br><span class="line"> *		they&apos;ll all appear as if the driver name was &quot;usb&quot;.</span><br><span class="line"> * @model:	Device model name</span><br><span class="line"> * @serial:	Device serial number (optional)</span><br><span class="line"> * @bus_info:	Unique and stable device location identifier</span><br><span class="line"> * @hw_revision: Hardware device revision</span><br><span class="line"> * @topology_version: Monotonic counter for storing the version of the graph</span><br><span class="line"> *		topology. Should be incremented each time the topology changes.</span><br><span class="line"> * @id:		Unique ID used on the last registered graph object</span><br><span class="line"> * @entity_internal_idx: Unique internal entity ID used by the graph traversal</span><br><span class="line"> *		algorithms</span><br><span class="line"> * @entity_internal_idx_max: Allocated internal entity indices</span><br><span class="line"> * @entities:	List of registered entities</span><br><span class="line"> * @interfaces:	List of registered interfaces</span><br><span class="line"> * @pads:	List of registered pads</span><br><span class="line"> * @links:	List of registered links</span><br><span class="line"> * @entity_notify: List of registered entity_notify callbacks</span><br><span class="line"> * @graph_mutex: Protects access to struct media_device data</span><br><span class="line"> * @pm_count_walk: Graph walk for power state walk. Access serialised using</span><br><span class="line"> *		   graph_mutex.</span><br><span class="line"> *</span><br><span class="line"> * @source_priv: Driver Private data for enable/disable source handlers</span><br><span class="line"> * @enable_source: Enable Source Handler function pointer</span><br><span class="line"> * @disable_source: Disable Source Handler function pointer</span><br><span class="line"> *</span><br><span class="line"> * @ops:	Operation handler callbacks</span><br><span class="line"> *</span><br><span class="line"> * This structure represents an abstract high-level media device. It allows easy</span><br><span class="line"> * access to entities and provides basic media device-level support. The</span><br><span class="line"> * structure can be allocated directly or embedded in a larger structure.</span><br><span class="line"> *</span><br><span class="line"> * The parent @dev is a physical device. It must be set before registering the</span><br><span class="line"> * media device.</span><br><span class="line"> *</span><br><span class="line"> * @model is a descriptive model name exported through sysfs. It doesn&apos;t have to</span><br><span class="line"> * be unique.</span><br><span class="line"> *</span><br><span class="line"> * @enable_source is a handler to find source entity for the</span><br><span class="line"> * sink entity  and activate the link between them if source</span><br><span class="line"> * entity is free. Drivers should call this handler before</span><br><span class="line"> * accessing the source.</span><br><span class="line"> *</span><br><span class="line"> * @disable_source is a handler to find source entity for the</span><br><span class="line"> * sink entity  and deactivate the link between them. Drivers</span><br><span class="line"> * should call this handler to release the source.</span><br><span class="line"> *</span><br><span class="line"> * Use-case: find tuner entity connected to the decoder</span><br><span class="line"> * entity and check if it is available, and activate the</span><br><span class="line"> * the link between them from @enable_source and deactivate</span><br><span class="line"> * from @disable_source.</span><br><span class="line"> *</span><br><span class="line"> * .. note::</span><br><span class="line"> *</span><br><span class="line"> *    Bridge driver is expected to implement and set the</span><br><span class="line"> *    handler when &amp;media_device is registered or when</span><br><span class="line"> *    bridge driver finds the media_device during probe.</span><br><span class="line"> *    Bridge driver sets source_priv with information</span><br><span class="line"> *    necessary to run @enable_source and @disable_source handlers.</span><br><span class="line"> *    Callers should hold graph_mutex to access and call @enable_source</span><br><span class="line"> *    and @disable_source handlers.</span><br><span class="line"> */</span><br><span class="line">struct media_device &#123;</span><br><span class="line">	/* dev-&gt;driver_data points to this struct. */</span><br><span class="line">	struct device *dev;</span><br><span class="line">	struct media_devnode *devnode;</span><br><span class="line"></span><br><span class="line">	char model[32];</span><br><span class="line">	char driver_name[32];</span><br><span class="line">	char serial[40];</span><br><span class="line">	char bus_info[32];</span><br><span class="line">	u32 hw_revision;</span><br><span class="line"></span><br><span class="line">	u64 topology_version;</span><br><span class="line"></span><br><span class="line">	u32 id;</span><br><span class="line">	struct ida entity_internal_idx;</span><br><span class="line">	int entity_internal_idx_max;</span><br><span class="line"></span><br><span class="line">	struct list_head entities;</span><br><span class="line">	struct list_head interfaces;</span><br><span class="line">	struct list_head pads;</span><br><span class="line">	struct list_head links;</span><br><span class="line"></span><br><span class="line">	/* notify callback list invoked when a new entity is registered */</span><br><span class="line">	struct list_head entity_notify;</span><br><span class="line"></span><br><span class="line">	/* Serializes graph operations. */</span><br><span class="line">	struct mutex graph_mutex;</span><br><span class="line">	struct media_graph pm_count_walk;</span><br><span class="line"></span><br><span class="line">	void *source_priv;</span><br><span class="line">	int (*enable_source)(struct media_entity *entity,</span><br><span class="line">			     struct media_pipeline *pipe);</span><br><span class="line">	void (*disable_source)(struct media_entity *entity);</span><br><span class="line"></span><br><span class="line">	const struct media_device_ops *ops;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>如果使能了CONFIG_MEDIA_CONTROLLER宏，则当v4l2_device初始化的过程中便会去创建一个media_device，而这个media_device便是整个media controller的抽象管理者，每一个v4l2设备以及从属的子设备都会对应的各自的entity，并且将其存入media_device中进行统一管理，与其它抽象设备一样，media_device也具有自身的行为，比如用户可以通过访问media节点，枚举出所有的从属于同一个v4l2_device的子设备，另外，在开启数据流的时候，media_device通过将各个media_entity按照一定的顺序连接起来，实现了数据流向的整体控制。</p>
+<h3 id="3-5-vb2-queue"><a href="#3-5-vb2-queue" class="headerlink" title="3.5 vb2_queue"></a>3.5 vb2_queue</h3><p>[-&gt;kernel\msm-4.19\include\media\videobuf2-core.h]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * struct vb2_queue - a videobuf queue.</span><br><span class="line"> *</span><br><span class="line"> * @type:	private buffer type whose content is defined by the vb2-core</span><br><span class="line"> *		caller. For example, for V4L2, it should match</span><br><span class="line"> *		the types defined on &amp;enum v4l2_buf_type.</span><br><span class="line"> * @io_modes:	supported io methods (see &amp;enum vb2_io_modes).</span><br><span class="line"> * @alloc_devs:	&amp;struct device memory type/allocator-specific per-plane device</span><br><span class="line"> * @dev:	device to use for the default allocation context if the driver</span><br><span class="line"> *		doesn&apos;t fill in the @alloc_devs array.</span><br><span class="line"> * @dma_attrs:	DMA attributes to use for the DMA.</span><br><span class="line"> * @bidirectional: when this flag is set the DMA direction for the buffers of</span><br><span class="line"> *		this queue will be overridden with %DMA_BIDIRECTIONAL direction.</span><br><span class="line"> *		This is useful in cases where the hardware (firmware) writes to</span><br><span class="line"> *		a buffer which is mapped as read (%DMA_TO_DEVICE), or reads from</span><br><span class="line"> *		buffer which is mapped for write (%DMA_FROM_DEVICE) in order</span><br><span class="line"> *		to satisfy some internal hardware restrictions or adds a padding</span><br><span class="line"> *		needed by the processing algorithm. In case the DMA mapping is</span><br><span class="line"> *		not bidirectional but the hardware (firmware) trying to access</span><br><span class="line"> *		the buffer (in the opposite direction) this could lead to an</span><br><span class="line"> *		IOMMU protection faults.</span><br><span class="line"> * @fileio_read_once:		report EOF after reading the first buffer</span><br><span class="line"> * @fileio_write_immediately:	queue buffer after each write() call</span><br><span class="line"> * @allow_zero_bytesused:	allow bytesused == 0 to be passed to the driver</span><br><span class="line"> * @quirk_poll_must_check_waiting_for_buffers: Return %EPOLLERR at poll when QBUF</span><br><span class="line"> *              has not been called. This is a vb1 idiom that has been adopted</span><br><span class="line"> *              also by vb2.</span><br><span class="line"> * @lock:	pointer to a mutex that protects the &amp;struct vb2_queue. The</span><br><span class="line"> *		driver can set this to a mutex to let the v4l2 core serialize</span><br><span class="line"> *		the queuing ioctls. If the driver wants to handle locking</span><br><span class="line"> *		itself, then this should be set to NULL. This lock is not used</span><br><span class="line"> *		by the videobuf2 core API.</span><br><span class="line"> * @owner:	The filehandle that &apos;owns&apos; the buffers, i.e. the filehandle</span><br><span class="line"> *		that called reqbufs, create_buffers or started fileio.</span><br><span class="line"> *		This field is not used by the videobuf2 core API, but it allows</span><br><span class="line"> *		drivers to easily associate an owner filehandle with the queue.</span><br><span class="line"> * @ops:	driver-specific callbacks</span><br><span class="line"> * @mem_ops:	memory allocator specific callbacks</span><br><span class="line"> * @buf_ops:	callbacks to deliver buffer information.</span><br><span class="line"> *		between user-space and kernel-space.</span><br><span class="line"> * @drv_priv:	driver private data.</span><br><span class="line"> * @buf_struct_size: size of the driver-specific buffer structure;</span><br><span class="line"> *		&quot;0&quot; indicates the driver doesn&apos;t want to use a custom buffer</span><br><span class="line"> *		structure type. for example, ``sizeof(struct vb2_v4l2_buffer)``</span><br><span class="line"> *		will be used for v4l2.</span><br><span class="line"> * @timestamp_flags: Timestamp flags; ``V4L2_BUF_FLAG_TIMESTAMP_*`` and</span><br><span class="line"> *		``V4L2_BUF_FLAG_TSTAMP_SRC_*``</span><br><span class="line"> * @gfp_flags:	additional gfp flags used when allocating the buffers.</span><br><span class="line"> *		Typically this is 0, but it may be e.g. %GFP_DMA or %__GFP_DMA32</span><br><span class="line"> *		to force the buffer allocation to a specific memory zone.</span><br><span class="line"> * @min_buffers_needed: the minimum number of buffers needed before</span><br><span class="line"> *		@start_streaming can be called. Used when a DMA engine</span><br><span class="line"> *		cannot be started unless at least this number of buffers</span><br><span class="line"> *		have been queued into the driver.</span><br><span class="line"> */</span><br><span class="line">/*</span><br><span class="line"> * Private elements (won&apos;t appear at the uAPI book):</span><br><span class="line"> * @mmap_lock:	private mutex used when buffers are allocated/freed/mmapped</span><br><span class="line"> * @memory:	current memory type used</span><br><span class="line"> * @dma_dir:	DMA mapping direction.</span><br><span class="line"> * @bufs:	videobuf buffer structures</span><br><span class="line"> * @num_buffers: number of allocated/used buffers</span><br><span class="line"> * @queued_list: list of buffers currently queued from userspace</span><br><span class="line"> * @queued_count: number of buffers queued and ready for streaming.</span><br><span class="line"> * @owned_by_drv_count: number of buffers owned by the driver</span><br><span class="line"> * @done_list:	list of buffers ready to be dequeued to userspace</span><br><span class="line"> * @done_lock:	lock to protect done_list list</span><br><span class="line"> * @done_wq:	waitqueue for processes waiting for buffers ready to be dequeued</span><br><span class="line"> * @streaming:	current streaming state</span><br><span class="line"> * @start_streaming_called: @start_streaming was called successfully and we</span><br><span class="line"> *		started streaming.</span><br><span class="line"> * @error:	a fatal error occurred on the queue</span><br><span class="line"> * @waiting_for_buffers: used in poll() to check if vb2 is still waiting for</span><br><span class="line"> *		buffers. Only set for capture queues if qbuf has not yet been</span><br><span class="line"> *		called since poll() needs to return %EPOLLERR in that situation.</span><br><span class="line"> * @is_multiplanar: set if buffer type is multiplanar</span><br><span class="line"> * @is_output:	set if buffer type is output</span><br><span class="line"> * @copy_timestamp: set if vb2-core should set timestamps</span><br><span class="line"> * @last_buffer_dequeued: used in poll() and DQBUF to immediately return if the</span><br><span class="line"> *		last decoded buffer was already dequeued. Set for capture queues</span><br><span class="line"> *		when a buffer with the %V4L2_BUF_FLAG_LAST is dequeued.</span><br><span class="line"> * @fileio:	file io emulator internal data, used only if emulator is active</span><br><span class="line"> * @threadio:	thread io internal data, used only if thread is active</span><br><span class="line"> */</span><br><span class="line">struct vb2_queue &#123;</span><br><span class="line">	unsigned int			type;</span><br><span class="line">	unsigned int			io_modes;</span><br><span class="line">	struct device			*dev;</span><br><span class="line">	unsigned long			dma_attrs;</span><br><span class="line">	unsigned			bidirectional:1;</span><br><span class="line">	unsigned			fileio_read_once:1;</span><br><span class="line">	unsigned			fileio_write_immediately:1;</span><br><span class="line">	unsigned			allow_zero_bytesused:1;</span><br><span class="line">	unsigned		   quirk_poll_must_check_waiting_for_buffers:1;</span><br><span class="line"></span><br><span class="line">	struct mutex			*lock;</span><br><span class="line">	void				*owner;</span><br><span class="line"></span><br><span class="line">	const struct vb2_ops		*ops;</span><br><span class="line">	const struct vb2_mem_ops	*mem_ops;</span><br><span class="line">	const struct vb2_buf_ops	*buf_ops;</span><br><span class="line"></span><br><span class="line">	void				*drv_priv;</span><br><span class="line">	unsigned int			buf_struct_size;</span><br><span class="line">	u32				timestamp_flags;</span><br><span class="line">	gfp_t				gfp_flags;</span><br><span class="line">	u32				min_buffers_needed;</span><br><span class="line"></span><br><span class="line">	struct device			*alloc_devs[VB2_MAX_PLANES];</span><br><span class="line"></span><br><span class="line">	/* private: internal use only */</span><br><span class="line">	struct mutex			mmap_lock;</span><br><span class="line">	unsigned int			memory;</span><br><span class="line">	enum dma_data_direction		dma_dir;</span><br><span class="line">	struct vb2_buffer		*bufs[VB2_MAX_FRAME];</span><br><span class="line">	unsigned int			num_buffers;</span><br><span class="line"></span><br><span class="line">	struct list_head		queued_list;</span><br><span class="line">	unsigned int			queued_count;</span><br><span class="line"></span><br><span class="line">	atomic_t			owned_by_drv_count;</span><br><span class="line">	struct list_head		done_list;</span><br><span class="line">	spinlock_t			done_lock;</span><br><span class="line">	wait_queue_head_t		done_wq;</span><br><span class="line"></span><br><span class="line">	unsigned int			streaming:1;</span><br><span class="line">	unsigned int			start_streaming_called:1;</span><br><span class="line">	unsigned int			error:1;</span><br><span class="line">	unsigned int			waiting_for_buffers:1;</span><br><span class="line">	unsigned int			waiting_in_dqbuf:1;</span><br><span class="line">	unsigned int			is_multiplanar:1;</span><br><span class="line">	unsigned int			is_output:1;</span><br><span class="line">	unsigned int			copy_timestamp:1;</span><br><span class="line">	unsigned int			last_buffer_dequeued:1;</span><br><span class="line"></span><br><span class="line">	struct vb2_fileio_data		*fileio;</span><br><span class="line">	struct vb2_threadio_data	*threadio;</span><br><span class="line"></span><br><span class="line">#ifdef CONFIG_VIDEO_ADV_DEBUG</span><br><span class="line">	/*</span><br><span class="line">	 * Counters for how often these queue-related ops are</span><br><span class="line">	 * called. Used to check for unbalanced ops.</span><br><span class="line">	 */</span><br><span class="line">	u32				cnt_queue_setup;</span><br><span class="line">	u32				cnt_wait_prepare;</span><br><span class="line">	u32				cnt_wait_finish;</span><br><span class="line">	u32				cnt_start_streaming;</span><br><span class="line">	u32				cnt_stop_streaming;</span><br><span class="line">#endif</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在整个V4L2框架运转过程中，最为核心的是图像数据缓冲区的管理，而这个管理工作便是由vb2_queue来完成的，vb2_queue通常在打开设备的时候被创建，其结构体中的vb2_ops可以由驱动自己进行实现，而vb2_mem_ops代表了内存分配的方法集，另外，还有一个用于将管理用户空间和内核空间的相互传递的方法集buf_ops，而该方法集一般都定义为v4l2_buf_ops这一标准方法集。除了这些方法集外，vb2_queue还通过一个vb2_buffer的数组来管理申请的所有数据缓冲区，并且通过queued_list来管理入队状态的所有buffer，通过done_list来管理被填充了数据等待消费的所有buffer。</p>
+<h3 id="3-6-vb2-buffer"><a href="#3-6-vb2-buffer" class="headerlink" title="3.6 vb2_buffer"></a>3.6 vb2_buffer</h3><p>[-&gt;kernel\msm-4.19\include\media\videobuf2-core.h]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * struct vb2_buffer - represents a video buffer.</span><br><span class="line"> * @vb2_queue:		pointer to &amp;struct vb2_queue with the queue to</span><br><span class="line"> *			which this driver belongs.</span><br><span class="line"> * @index:		id number of the buffer.</span><br><span class="line"> * @type:		buffer type.</span><br><span class="line"> * @memory:		the method, in which the actual data is passed.</span><br><span class="line"> * @num_planes:		number of planes in the buffer</span><br><span class="line"> *			on an internal driver queue.</span><br><span class="line"> * @timestamp:		frame timestamp in ns.</span><br><span class="line"> */</span><br><span class="line">struct vb2_buffer &#123;</span><br><span class="line">	struct vb2_queue	*vb2_queue;</span><br><span class="line">	unsigned int		index;</span><br><span class="line">	unsigned int		type;</span><br><span class="line">	unsigned int		memory;</span><br><span class="line">	unsigned int		num_planes;</span><br><span class="line">	u64			timestamp;</span><br><span class="line"></span><br><span class="line">	/* private: internal use only</span><br><span class="line">	 *</span><br><span class="line">	 * state:		current buffer state; do not change</span><br><span class="line">	 * queued_entry:	entry on the queued buffers list, which holds</span><br><span class="line">	 *			all buffers queued from userspace</span><br><span class="line">	 * done_entry:		entry on the list that stores all buffers ready</span><br><span class="line">	 *			to be dequeued to userspace</span><br><span class="line">	 * vb2_plane:		per-plane information; do not change</span><br><span class="line">	 */</span><br><span class="line">	enum vb2_buffer_state	state;</span><br><span class="line"></span><br><span class="line">	struct vb2_plane	planes[VB2_MAX_PLANES];</span><br><span class="line">	struct list_head	queued_entry;</span><br><span class="line">	struct list_head	done_entry;</span><br><span class="line">#ifdef CONFIG_VIDEO_ADV_DEBUG</span><br><span class="line">	/*</span><br><span class="line">	 * Counters for how often these buffer-related ops are</span><br><span class="line">	 * called. Used to check for unbalanced ops.</span><br><span class="line">	 */</span><br><span class="line">	u32		cnt_mem_alloc;</span><br><span class="line">	u32		cnt_mem_put;</span><br><span class="line">	u32		cnt_mem_get_dmabuf;</span><br><span class="line">	u32		cnt_mem_get_userptr;</span><br><span class="line">	u32		cnt_mem_put_userptr;</span><br><span class="line">	u32		cnt_mem_prepare;</span><br><span class="line">	u32		cnt_mem_finish;</span><br><span class="line">	u32		cnt_mem_attach_dmabuf;</span><br><span class="line">	u32		cnt_mem_detach_dmabuf;</span><br><span class="line">	u32		cnt_mem_map_dmabuf;</span><br><span class="line">	u32		cnt_mem_unmap_dmabuf;</span><br><span class="line">	u32		cnt_mem_vaddr;</span><br><span class="line">	u32		cnt_mem_cookie;</span><br><span class="line">	u32		cnt_mem_num_users;</span><br><span class="line">	u32		cnt_mem_mmap;</span><br><span class="line"></span><br><span class="line">	u32		cnt_buf_init;</span><br><span class="line">	u32		cnt_buf_prepare;</span><br><span class="line">	u32		cnt_buf_finish;</span><br><span class="line">	u32		cnt_buf_cleanup;</span><br><span class="line">	u32		cnt_buf_queue;</span><br><span class="line"></span><br><span class="line">	/* This counts the number of calls to vb2_buffer_done() */</span><br><span class="line">	u32		cnt_buf_done;</span><br><span class="line">#endif</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>该结构体代表了V4L2框架中的图像缓冲区，当处于入队状态时内部queued_entry会被链接到vb2_queue中的queued_list中，当处于等待消费的状态时其内部done_entry会被链接到vb2_queue 中的done_list中，而其中的vb2_queue便是该缓冲区的管理者。</p>
+<h3 id="3-7-小结"><a href="#3-7-小结" class="headerlink" title="3.7 小结"></a>3.7 小结</h3><p>以上便是V4L2框架的几个核心结构体，从上面的简单分析不难看出，v4l2_device作为一个相机内核体系的顶层管理者，内部使用一个链表控制着所有从属子设备v4l2_subdev，使用vb2_queue来申请并管理所有数据缓冲区，并且通过video_device向用户空间暴露设备节点以及控制接口，接收来自用户空间的控制指令，通过将自身嵌入media controller中来实现枚举、连接子设备同时控制数据流走向的目的。</p>
+<h2 id="四、模块初始化"><a href="#四、模块初始化" class="headerlink" title="四、模块初始化"></a>四、模块初始化</h2><p>整个v4l2框架是在linux内核中实现的，所以按照内核驱动的运行机制，会在系统启动的过程中，通过标准的module_init方式进行初始化操作，而其初始化主要包含两个方面，一个是v4l2_device的初始化，一个是子设备的初始化，首先我们来看下v4l2_device的初始化动作的基本流程。</p>
+<p>由于驱动的实现都交由各个平台厂商进行实现，所有内部逻辑都各不相同，这里我们抽离出主要方法来进行梳理：</p>
+<p>首先对于v4l2_device的初始化而言，在系统启动的过程中，linux内核会找到module_init声明的驱动，调用其probe方法进行探测相应设备，一旦探测成功，便表示初始化工作完成。</p>
+<p>而在probe方法内部，主要做了以下操作：</p>
+<ul>
+<li>获取dts硬件信息，初始化部分硬件设备。</li>
+<li>创建v4l2_device结构体，填充信息，通过v4l2_device_register方法向系统注册并且创建video设备节点。</li>
+<li>创建media_device结构体，填充信息，通过media_device_register向系统注册，并创建media设备节点，并将其赋值给v4l2_device中的mdev。</li>
+<li>创建v4l2_device的media_entity,并将其添加到media controller进行管理。</li>
+</ul>
+<p>类似于v4l2_device的初始化工作，子设备的流程如下：</p>
+<ul>
+<li>获取dts硬件信息，初始化子设备硬件模块</li>
+<li>创建v4l2_subdev结构体，填充信息，通过v4l2_device_register_subdev向系统注册，并将其挂载到v4l2_device设备中</li>
+<li>创建对应的media_entity，并通过media_device_register_entity方法其添加到media controller中进行统一管理。</li>
+<li>最后调用v4l2_device_register_subdev_nodes方法，为所有的设置了V4L2_SUBDEV_FL_HAS_DEVNODE属性的子设备创建设备节点。</li>
+</ul>
+<h2 id="五、处理用户空间请求"><a href="#五、处理用户空间请求" class="headerlink" title="五、处理用户空间请求"></a>五、处理用户空间请求</h2><p>系统启动之后，初始化工作便已经完成，现在一旦用户想要使用图像采集功能，便会触发整个视频采集流程，会通过操作相应的video节点来获取图像数据，一般来讲，标准的V4L2框架只需要通过操作video节点即可，但是由于现在的硬件功能越来越复杂，常规的v4l2_controller已经满足不了采集需求，所以现在的平台厂商通常会暴露子设备的设备节点，在用户空间直接通过标准的字符设备控制接口来控制各个设备，而现在我们的目的是梳理V4L2框架，所以暂时默认不创建子设备节点，简单介绍下整个流程。</p>
+<p>在操作之前，还有一个准备工作需要做，那就是需要找到哪些是我们所需要的设备，而它的设备节点是什么，此时便可以通过打开media设备节点，并且通过ioctl注入MEDIA_IOC_ENUM_ENTITIES参数来获取v4l2_device下的video设备节点，该操作会调用到内核中的media_device_ioctl方法，而之后根据传入的命令，进而调用到media_device_enum_entities方法来枚举所有的设备。</p>
+<p>整个采集流程，主要使用三个标准字符设备接口来完成，分别是用于打开设备的open方法、用于控制设备的ioctl方法以及关闭设备的close方法。</p>
+<h3 id="5-1-打开设备-open"><a href="#5-1-打开设备-open" class="headerlink" title="5.1 打开设备(open)"></a>5.1 打开设备(open)</h3><p>一旦确认了我们需要操作的video节点是哪一个，便可以通过调用字符设备标准接口open方法来打开设备，而这个方法会首先陷入内核空间，然后调用file_operations中的open方法，再到v4l2_file_operations中的open方法，而该方法由驱动自己进行实现，其中主要包括了给各个硬件模块上电，并且调用vb2_queue_init方法创建并初始化一个vb2_queue用于数据缓冲区的管理。</p>
+<h3 id="5-2-控制设备-ioctl"><a href="#5-2-控制设备-ioctl" class="headerlink" title="5.2 控制设备(ioctl)"></a>5.2 控制设备(ioctl)</h3><p>在打开设备之后，接下来的大部分操作都是通过ioctl方法来完成的，而在该方法中，会首先陷入到内核空间，之后调用字符设备的v4l2_fops中的v4l2_ioctl方法，而在该方法中又会去调用video_device的video_ioctl2方法，video_ioctl2方法定义了一系列video标准的方法，通过不同的命令在v4l2_ioctls中找到相应的标准方法实现，同时为了满足用户自定义命令的实现，在video_ioctl2方法中会去调用到之前注册video_device时赋予的ioctl_ops中的vidioc_default方法，在该方法中加入用户自己的控制逻辑。</p>
+<p>在整个控制流程中，首先通过命令VIDIOC_QUERYCAP来获取设备所具有的属性，通过VIDIOC_G_PARM/VIDIOC_S_PARM来分别获取和设置设备参数，在这一系列操作配置完成之后，便需要向内核申请用于数据流转的缓冲区(Buffer)，该操作通过命令VIDIOC_REQBUFS来完成，在内核部分主要调用了标准方法vb2_reqbufs，进而调用__vb2_queue_alloc来向内核申请已知个数的Buffer，并且将其存入之前创建的vb2_queue中进行管理。</p>
+<p>申请好了Buffer之后，便可以通过传入VIDIOC_QBUF命令将申请的Buffer入队，具体操作最终会调用vb2_qbuf方法，而在该方法中会从vb2_queue的bufs数组中取出Buffer，将其加入queued_list链表中，并且更新Buffer状态，等待数据的填充或者来自用户空间的出队操作。</p>
+<p>在完成上面的操作后，整个数据流并没有开始流转起来，所以需要下发VIDIOC_STREAMON命令来通知整个框架开始出数据，在驱动中主要会去调用vb2_streamon方法，进而调用vb2_start_streaming方法，其中该方法会去将队列中的的Buffer放入到相应的驱动中，等待被填充，紧接着会去调用vb2_queue.ops.start_streaming方法来通知设备开始出图，而该方法一般由驱动自己实现，最后会调用v4l2_subdev_call(subdev, video, s_stream, mode)方法通知各个子设备开始出图。</p>
+<p>当有图像产生时，会填充到之前传入的buffe中，并且调用vb2_buffer_done方法通知vb2_queue将buffer加入到done_list链表中，并更新状态为VB2_BUF_STATE_DONE。</p>
+<p>在整个数据流开启之后，并不会自动的将图像传入用户空间，必须通过VIDIOC_DQBUF命令来从设备中读取一个帧图像数据，具体操作是通过层层调用会调用到vb2_dqbuf方法，而在该方法中会调用<strong>vb2_get_done_vb方法去从done_list中获取Buffer，如果当前链表为空则会等待最终数据准备好，如果有准备好的buffer便直接从done_list取出，并且将其从queued_list中去掉，最后通过</strong>vb2_dqbuf方法将Buffer返回用户空间。</p>
+<p>获取到图像数据之后，便可以进行后期的图像处理流程了，在处理完成之后，需要下发VIDIOC_QBUF将此次buffer重新加入queued_list中，等待下一次的数据的填充和出队操作。</p>
+<p>但不需要进行图像的采集时，可以通过下发VIDIOC_STREAMOFF命令来停止整个流程，具体流程首先会调用v4l2_subdev_call(subdev, video, s_stream, 0)通知所有子设备停止出图操作，其次调用vb2_buffer_done唤醒可能的等待Buffer的线程，同时更新Buffer状态为VB2_BUF_STATE_ERROR，然后调用vb2_streamoff取消所有的数据流并更新vb2_queue.streaming的为disable状态。</p>
+<h3 id="5-3-关闭设备-close"><a href="#5-3-关闭设备-close" class="headerlink" title="5.3 关闭设备(close)"></a>5.3 关闭设备(close)</h3><p>但确认不使用当前设备进行图像采集操作之后，便可以调用标准方法close来关闭设备。其中主要包括了调用vb2_queue_release方法释放了vb2_queue以及设备下电操作和相关资源的释放。</p>
+<h2 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h2><p>通过上面的介绍，我相信我们已经对整个V4L2框架有了一个比较深入的认识， 然而对于一个优秀的软件架构而言，仅仅是支持现有的功能是远远不够的，随着功能的不断完善，势必会出现需要进行扩展的地方，而v4l2在设计之初便很好的考虑到了这一点，所以提供了用于扩展的方法集，开发者可以通过加入自定的命令来扩充整个框架，高通在这一点上做的非常好，在v4l2框架基础上，设计出了一个独特的KMD框架，提供给UMD CSL进行访问的接口。</p>
+
+      
+    </div>
+
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android-Camera/" rel="tag">#Android Camera</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/深入理解Android Camera架构四-高通CamX-CHI/" rel="next" title="深入理解Android Camera架构四-高通CamX-CHI">
+                <i class="fa fa-chevron-left"></i> 深入理解Android Camera架构四-高通CamX-CHI
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2024/深入理解Android Camera架构六-高通KMD/" rel="prev" title="深入理解Android Camera架构六-高通KMD">
+                深入理解Android Camera架构六-高通KMD <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Skytoby">
+          <p class="site-author-name" itemprop="name">Skytoby</p>
+          <p class="site-description motion-element" itemprop="description">现居深圳，毕业于电子科技大学 <br>Android、AI<br>座右铭：想法+行动+坚持</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/caoxiaoliang" target="_blank" title="GitHub">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://me.csdn.net/cao861544325" target="_blank" title="CSDN">
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+            </a>
+          </div>
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、概览"><span class="nav-text">一、概览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、流程简介"><span class="nav-text">二、流程简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、关键结构体"><span class="nav-text">三、关键结构体</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-v4l2-device"><span class="nav-text">3.1 v4l2_device</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-v4l2-subdev"><span class="nav-text">3.2 v4l2_subdev</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-video-device"><span class="nav-text">3.3 video_device</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-media-device"><span class="nav-text">3.4 media_device</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-vb2-queue"><span class="nav-text">3.5 vb2_queue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-vb2-buffer"><span class="nav-text">3.6 vb2_buffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-小结"><span class="nav-text">3.7 小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、模块初始化"><span class="nav-text">四、模块初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、处理用户空间请求"><span class="nav-text">五、处理用户空间请求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-打开设备-open"><span class="nav-text">5.1 打开设备(open)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-控制设备-ioctl"><span class="nav-text">5.2 控制设备(ioctl)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-关闭设备-close"><span class="nav-text">5.3 关闭设备(close)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、总结"><span class="nav-text">六、总结</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2019 - 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Skytoby</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme Next
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'https-zproo-github-io';
+      var disqus_identifier = '2024/深入理解Android Camera架构五-驱动层V4L2/';
+      var disqus_title = "深入理解Android Camera架构五-驱动层V4L2";
+      var disqus_url = 'http://zproo.github.io/2024/深入理解Android Camera架构五-驱动层V4L2/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+    </script>
+  
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+</html>

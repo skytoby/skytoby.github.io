@@ -4,12 +4,80 @@
 
     
   <url>
+    <loc>http://zproo.github.io/2024/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Android%20Camera%E6%9E%B6%E6%9E%84%E4%B8%83-%E7%A1%AC%E4%BB%B6%E5%B1%82/</loc>
+    <lastmod>2024-10-26T03:03:16.019Z</lastmod>
+    <data>
+        <display>
+        <title>深入理解Android Camera架构七-硬件层</title>
+        <pubTime>2024-10-20T13:18:23.000Z</pubTime>
+        
+        <tag>Android Camera</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2024/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Android%20Camera%E6%9E%B6%E6%9E%84%E4%BA%94-%E9%A9%B1%E5%8A%A8%E5%B1%82V4L2/</loc>
+    <lastmod>2024-10-26T03:03:13.039Z</lastmod>
+    <data>
+        <display>
+        <title>深入理解Android Camera架构五-驱动层V4L2</title>
+        <pubTime>2024-06-20T13:18:23.000Z</pubTime>
+        
+        <tag>Android Camera</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2024/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Android%20Camera%E6%9E%B6%E6%9E%84%E5%85%AD-%E9%AB%98%E9%80%9AKMD/</loc>
+    <lastmod>2024-10-26T03:03:10.518Z</lastmod>
+    <data>
+        <display>
+        <title>深入理解Android Camera架构六-高通KMD</title>
+        <pubTime>2024-08-20T13:18:23.000Z</pubTime>
+        
+        <tag>Android Camera</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://zproo.github.io/2024/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Android%20Camera%E6%9E%B6%E6%9E%84%E4%B8%89-%E7%A1%AC%E4%BB%B6%E6%8A%BD%E8%B1%A1%E5%B1%82/</loc>
-    <lastmod>2024-03-02T09:11:54.826Z</lastmod>
+    <lastmod>2024-10-26T03:03:07.558Z</lastmod>
     <data>
         <display>
         <title>深入理解Android Camera架构三-硬件抽象层</title>
         <pubTime>2024-03-20T13:18:23.000Z</pubTime>
+        
+        <tag>Android Camera</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://zproo.github.io/2024/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Android%20Camera%E6%9E%B6%E6%9E%84%E5%9B%9B-%E9%AB%98%E9%80%9ACamX-CHI/</loc>
+    <lastmod>2024-10-26T03:03:00.422Z</lastmod>
+    <data>
+        <display>
+        <title>深入理解Android Camera架构四-高通CamX-CHI</title>
+        <pubTime>2024-04-20T13:18:23.000Z</pubTime>
         
         <tag>Android Camera</tag>
          
