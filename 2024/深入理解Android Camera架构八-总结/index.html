@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="Android Framework,">
+  <meta name="keywords" content="Android Camera,">
 
 
 
@@ -90,18 +90,18 @@
 
 
 
-<meta name="description" content="经过一段时间的学习，对于Android Framework大部分有一定的了解，现在将之前的学习进行总结并分类。 1.Android系统启动相关Android系统SystemServer启动（上） Android系统SystemServer启动（下） 开机广播BOOT_COMPLETED发送流程分析 Android OTA升级流程分析 2.Binder机制相关深入理解Binder机制1-AIDL原理">
-<meta name="keywords" content="Android Framework">
+<meta name="description" content="总结在整个Android相机系统架构中，不难发现接口与实现相分离的这一简单设计原则在其身上随处可见，这样既保证了整体架构的足够稳定，也实现了系统细节实现的多样性，同时也体现出了强大的灵活性。 历时1年多，通过工作之外的时间，学习了Android Camera整体的架构，从应用，Framework，Hal，驱动，硬件。对于Android Camera整体的架构只能说有一定的了解，如果还要熟悉，还必须">
+<meta name="keywords" content="Android Camera">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android Framework学习总结">
-<meta property="og:url" content="http://zproo.github.io/2020/Android Framework学习总结/index.html">
+<meta property="og:title" content="深入理解Android Camera架构八-总结">
+<meta property="og:url" content="http://zproo.github.io/2024/深入理解Android Camera架构八-总结/index.html">
 <meta property="og:site_name" content="Skytoby">
-<meta property="og:description" content="经过一段时间的学习，对于Android Framework大部分有一定的了解，现在将之前的学习进行总结并分类。 1.Android系统启动相关Android系统SystemServer启动（上） Android系统SystemServer启动（下） 开机广播BOOT_COMPLETED发送流程分析 Android OTA升级流程分析 2.Binder机制相关深入理解Binder机制1-AIDL原理">
+<meta property="og:description" content="总结在整个Android相机系统架构中，不难发现接口与实现相分离的这一简单设计原则在其身上随处可见，这样既保证了整体架构的足够稳定，也实现了系统细节实现的多样性，同时也体现出了强大的灵活性。 历时1年多，通过工作之外的时间，学习了Android Camera整体的架构，从应用，Framework，Hal，驱动，硬件。对于Android Camera整体的架构只能说有一定的了解，如果还要熟悉，还必须">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2023-10-28T03:05:52.030Z">
+<meta property="og:updated_time" content="2024-10-26T04:37:57.845Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android Framework学习总结">
-<meta name="twitter:description" content="经过一段时间的学习，对于Android Framework大部分有一定的了解，现在将之前的学习进行总结并分类。 1.Android系统启动相关Android系统SystemServer启动（上） Android系统SystemServer启动（下） 开机广播BOOT_COMPLETED发送流程分析 Android OTA升级流程分析 2.Binder机制相关深入理解Binder机制1-AIDL原理">
+<meta name="twitter:title" content="深入理解Android Camera架构八-总结">
+<meta name="twitter:description" content="总结在整个Android相机系统架构中，不难发现接口与实现相分离的这一简单设计原则在其身上随处可见，这样既保证了整体架构的足够稳定，也实现了系统细节实现的多样性，同时也体现出了强大的灵活性。 历时1年多，通过工作之外的时间，学习了Android Camera整体的架构，从应用，Framework，Hal，驱动，硬件。对于Android Camera整体的架构只能说有一定的了解，如果还要熟悉，还必须">
 
 
 
@@ -122,9 +122,9 @@
 
 
 
-  <link rel="canonical" href="http://zproo.github.io/2020/Android Framework学习总结/">
+  <link rel="canonical" href="http://zproo.github.io/2024/深入理解Android Camera架构八-总结/">
 
-  <title> Android Framework学习总结 | Skytoby </title>
+  <title> 深入理解Android Camera架构八-总结 | Skytoby </title>
 </head>
 
 <body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
@@ -229,15 +229,15 @@
   <div class="post-header">
       <div class="tags">
       
-        <a href="/tags/Android-Framework/" rel="tag" title="Android Framework">Android Framework</a>
+        <a href="/tags/Android-Camera/" rel="tag" title="Android Camera">Android Camera</a>
       
       </div>
-      <h1>Android Framework学习总结</h1>
+      <h1>深入理解Android Camera架构八-总结</h1>
       <h2 class="subtitle"></h2>
       <div class="post-time">
         <span class="post-meta-item-text">Posted on </span>
-        <time itemprop="dateCreated" datetime="2020-07-31T21:18:23+08:00" content="2020-07-31" title="2020-07-31 21:18:23">
-          2020-07-31
+        <time itemprop="dateCreated" datetime="2024-10-26T21:18:23+08:00" content="2024-10-26" title="2024-10-26 21:18:23">
+          2024-10-26
         </time>
       </div>
   </div>
@@ -272,7 +272,7 @@
             
             
               
-                Android Framework学习总结
+                深入理解Android Camera架构八-总结
               
             
           </h1>
@@ -280,33 +280,20 @@
 
         <div class="post-meta">
 		  
-            <i class="fa fa-thumb-tack"></i>
-            <font color="BLUE">top</font>
-            <span class="post-meta-divider">|</span>
-          
 
           <span class="post-time">
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2020-07-31T21:18:23+08:00" content="2020-07-31">
-              2020-07-31
+            <time itemprop="dateCreated" datetime="2024-10-26T21:18:23+08:00" content="2024-10-26">
+              2024-10-26
             </time>
           </span>
 
           
 
-          <!-- 
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2020/Android Framework学习总结/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/Android Framework学习总结/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-           -->
+          <!--  -->
 
           
 
@@ -325,39 +312,15 @@
       
 
       
-        <p>经过一段时间的学习，对于Android Framework大部分有一定的了解，现在将之前的学习进行总结并分类。</p>
-<h4 id="1-Android系统启动相关"><a href="#1-Android系统启动相关" class="headerlink" title="1.Android系统启动相关"></a><strong>1.Android系统启动相关</strong></h4><p><a href="https://skytoby.github.io/2019/Android系统SystemServer启动（上）/" target="_blank" rel="noopener">Android系统SystemServer启动（上）</a></p>
-<p><a href="https://skytoby.github.io/2019/Android系统SystemServer启动（下）/" target="_blank" rel="noopener">Android系统SystemServer启动（下）</a></p>
-<p><a href="https://skytoby.github.io/2019/开机广播BOOT_COMPLETED发送流程分析/" target="_blank" rel="noopener">开机广播BOOT_COMPLETED发送流程分析</a></p>
-<p><a href="https://skytoby.github.io/2019/Android OTA升级流程分析/" target="_blank" rel="noopener">Android OTA升级流程分析</a></p>
-<h4 id="2-Binder机制相关"><a href="#2-Binder机制相关" class="headerlink" title="2.Binder机制相关"></a><strong>2.Binder机制相关</strong></h4><p><a href="https://skytoby.github.io/2019/深入理解Binder机制1-AIDL原理/" target="_blank" rel="noopener">深入理解Binder机制1-AIDL原理</a></p>
-<p><a href="https://skytoby.github.io/2020/深入理解Binder机制2-注册服务addService/" target="_blank" rel="noopener">深入理解Binder机制2-注册服务addService</a></p>
-<p><a href="https://skytoby.github.io/2020/深入理解Binder机制3-获取服务getService/" target="_blank" rel="noopener">深入理解Binder机制3-获取服务getService</a></p>
-<p><a href="https://skytoby.github.io/2020/深入理解Binder机制4-bindService过程分析/" target="_blank" rel="noopener">深入理解Binder机制4-bindService过程分析</a></p>
-<p><a href="https://skytoby.github.io/2020/深入理解Binder机制5-binder驱动分析/" target="_blank" rel="noopener">深入理解Binder机制5-binder驱动分析</a></p>
-<p><a href="https://skytoby.github.io/2020/深入理解Binder机制6-总结篇/" target="_blank" rel="noopener">深入理解Binder机制6-总结篇</a></p>
-<h4 id="3-PKMS相关"><a href="#3-PKMS相关" class="headerlink" title="3.PKMS相关"></a><strong>3.PKMS相关</strong></h4><p><a href="https://skytoby.github.io/2019/Android dex，odex，oat，vdex，art文件结构/" target="_blank" rel="noopener">Android dex，odex，oat，vdex，art文件结构</a></p>
-<p><a href="https://skytoby.github.io/2019/fstrim/" target="_blank" rel="noopener">fstrim解析</a></p>
-<p><a href="https://skytoby.github.io/2019/installd守护进程/" target="_blank" rel="noopener">installd守护进程</a></p>
-<p><a href="https://skytoby.github.io/2019/PKMS相关类分析/" target="_blank" rel="noopener">PKMS相关类分析</a></p>
-<p><a href="https://skytoby.github.io/2019/PackageManagerService启动流程分析/" target="_blank" rel="noopener">PackageManagerService启动流程分析</a></p>
-<h4 id="4-AMS相关（四大组件）"><a href="#4-AMS相关（四大组件）" class="headerlink" title="4.AMS相关（四大组件）"></a><strong>4.AMS相关（四大组件）</strong></h4><p><a href="https://skytoby.github.io/2019/AMS启动流程分析/" target="_blank" rel="noopener">AMS启动流程分析</a></p>
-<p><a href="https://skytoby.github.io/2019/startActivity启动过程/" target="_blank" rel="noopener">startActivity启动过程</a></p>
-<p><a href="https://skytoby.github.io/2019/startService启动过程/" target="_blank" rel="noopener">startServie启动过程</a></p>
-<p><a href="https://skytoby.github.io/2019/ContentProvider原理分析/" target="_blank" rel="noopener">ContentProvider原理分析</a></p>
-<p><a href="https://skytoby.github.io/2019/BroadcastCast广播机制原理/" target="_blank" rel="noopener">BroadcastCast广播机制原理</a></p>
-<p><a href="https://skytoby.github.io/2020/Android10.0如何hook Activity/" target="_blank" rel="noopener">Android10.0如何hook Activity</a></p>
-<h4 id="5-WMS相关"><a href="#5-WMS相关" class="headerlink" title="5.WMS相关"></a><strong>5.WMS相关</strong></h4><p><a href="https://skytoby.github.io/2019/WMS启动流程分析/" target="_blank" rel="noopener">WMS启动流程分析</a></p>
-<p><a href="https://skytoby.github.io/2020/Android刷新机制-View绘制原理/" target="_blank" rel="noopener">Android刷新机制-View绘制原理</a></p>
-<p><a href="https://skytoby.github.io/2020/Android刷新机制-SurfaceFlinger原理/" target="_blank" rel="noopener">Android刷新机制-SurfaceFlinger原理</a></p>
-<p><a href="https://skytoby.github.io/2020/Android刷新机制-Choreographer原理/" target="_blank" rel="noopener">Android刷新机制-Choreographer原理</a></p>
-<p>5.Android进程相关</p>
-<p><a href="https://skytoby.github.io/2019/Android进程创建流程分析/" target="_blank" rel="noopener">Android进程创建流程分析</a></p>
-<p><a href="https://skytoby.github.io/2019/Android四大组件与进程启动间关系/" target="_blank" rel="noopener">Android四大组件与进程启动间关系</a></p>
-<h4 id="6-其他"><a href="#6-其他" class="headerlink" title="6.其他"></a><strong>6.其他</strong></h4><p><a href="https://skytoby.github.io/2019/android系统编译/" target="_blank" rel="noopener">android系统编译方法</a></p>
-<p><a href="https://skytoby.github.io/2019/selinux修改/" target="_blank" rel="noopener">SELinux权限修改</a></p>
-<p><a href="https://skytoby.github.io/2019/Android SystemProperties系统属性分析/" target="_blank" rel="noopener">Android SystemProperties系统属性分析</a></p>
-<p><a href="https://skytoby.github.io/2020/Android JNI 原理分析/" target="_blank" rel="noopener">Android JNI原理分析</a></p>
+        <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在整个Android相机系统架构中，不难发现接口与实现相分离的这一简单设计原则在其身上随处可见，这样既保证了整体架构的足够稳定，也实现了系统细节实现的多样性，同时也体现出了强大的灵活性。</p>
+<p>历时1年多，通过工作之外的时间，学习了Android Camera整体的架构，从应用，Framework，Hal，驱动，硬件。对于Android Camera整体的架构只能说有一定的了解，如果还要熟悉，还必须要通过业务。但通过这些整体的学习，对于Android Camera整体的全貌有一个认识，当遇到问题需要深入了，知道从哪里开始入手。</p>
+<h2 id="深入理解Android-Camera架构系列链接"><a href="#深入理解Android-Camera架构系列链接" class="headerlink" title="深入理解Android Camera架构系列链接"></a>深入理解Android Camera架构系列链接</h2><p><a href="https://skytoby.github.io/2024/深入理解Android Camera架构一-应用层/" target="_blank" rel="noopener">深入理解Android Camera架构一-应用层 </a></p>
+<p><a href="https://skytoby.github.io/2024/深入理解Android Camera架构二-服务层/" target="_blank" rel="noopener">深入理解Android Camera架构二-服务层 </a></p>
+<p><a href="https://skytoby.github.io/2024/深入理解Android Camera架构三-硬件抽象层/" target="_blank" rel="noopener">深入理解Android Camera架构三-硬件抽象层 </a></p>
+<p><a href="https://skytoby.github.io/2024/深入理解Android Camera架构四-高通CamX-CHI/" target="_blank" rel="noopener">深入理解Android Camera架构四-高通CamX-CHI </a></p>
+<p><a href="https://skytoby.github.io/2024/深入理解Android Camera架构五-驱动层V4L2/" target="_blank" rel="noopener">深入理解Android Camera架构五-驱动层V4L2 </a></p>
+<p><a href="https://skytoby.github.io/2024/深入理解Android Camera架构六-高通KMD/" target="_blank" rel="noopener">深入理解Android Camera架构六-高通KMD </a></p>
+<p><a href="https://skytoby.github.io/2024/深入理解Android Camera架构七-硬件层/" target="_blank" rel="noopener">深入理解Android Camera架构七-硬件层 </a></p>
 
       
     </div>
@@ -381,7 +344,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Android-Framework/" rel="tag">#Android Framework</a>
+            <a href="/tags/Android-Camera/" rel="tag">#Android Camera</a>
           
         </div>
       
@@ -390,17 +353,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/Android刷新机制-SurfaceFlinger原理/" rel="next" title="Android刷新机制-SurfaceFlinger原理">
-                <i class="fa fa-chevron-left"></i> Android刷新机制-SurfaceFlinger原理
+              <a href="/2024/深入理解Android Camera架构七-硬件层/" rel="next" title="深入理解Android Camera架构七-硬件层">
+                <i class="fa fa-chevron-left"></i> 深入理解Android Camera架构七-硬件层
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2023/Android Framewok接口开发总结/" rel="prev" title="Android Framework接口开发总结">
-                Android Framework接口开发总结 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -424,17 +383,6 @@
 
 
           
-  <div class="comments" id="comments">
-    
-      <div id="disqus_thread">
-        <noscript>
-          Please enable JavaScript to view the
-          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
-        </noscript>
-      </div>
-    
-  </div>
-
 
         </div>
         
@@ -532,7 +480,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Android系统启动相关"><span class="nav-text">1.Android系统启动相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Binder机制相关"><span class="nav-text">2.Binder机制相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-PKMS相关"><span class="nav-text">3.PKMS相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-AMS相关（四大组件）"><span class="nav-text">4.AMS相关（四大组件）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-WMS相关"><span class="nav-text">5.WMS相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-其他"><span class="nav-text">6.其他</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深入理解Android-Camera架构系列链接"><span class="nav-text">深入理解Android Camera架构系列链接</span></a></li></ol></div>
             
           </div>
         </section>
@@ -664,9 +612,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'https-zproo-github-io';
-      var disqus_identifier = '2020/Android Framework学习总结/';
-      var disqus_title = "Android Framework学习总结";
-      var disqus_url = 'http://zproo.github.io/2020/Android Framework学习总结/';
+      var disqus_identifier = '2024/深入理解Android Camera架构八-总结/';
+      var disqus_title = "深入理解Android Camera架构八-总结";
+      var disqus_url = 'http://zproo.github.io/2024/深入理解Android Camera架构八-总结/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
@@ -677,8 +625,6 @@
       }
 
       run_disqus_script('count.js');
-      
-        run_disqus_script('embed.js');
       
     </script>
   
